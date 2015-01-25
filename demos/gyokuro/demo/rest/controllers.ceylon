@@ -6,10 +6,11 @@ import com.github.bjansen.gyokuro {
 	route
 }
 
+route("duck")
 controller class SimpleRestController() {
 	
-	route("coin")
-	shared void myfunc(Response resp) {
-		resp.writeString("Hello world!");
+	route("talk")
+	shared void makeDuckTalk(Response resp) {
+		resp.writeString("Quack world!");
 	}
 }

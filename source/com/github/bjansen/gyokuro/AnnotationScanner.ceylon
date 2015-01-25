@@ -19,7 +19,7 @@ object annotationScanner {
 	
 	Logger log = logger(`module com.github.bjansen.gyokuro`);
 	
-	shared HashMap<String, [Object, FunctionDeclaration]> scanControllersInPackage(Package pkg) {
+	shared HashMap<String, [Object, FunctionDeclaration]> scanControllersInPackage(String contextRoot, Package pkg) {
 		value members = pkg.members<NestableDeclaration>();
 		value handlers = HashMap<String, [Object, FunctionDeclaration]>();
 		
@@ -30,15 +30,24 @@ object annotationScanner {
 				if (exists controller = annotations(`ControllerAnnotation`, member)) {
 					log.trace("Scanning member ``member.name`` in package ``pkg.name``");
 					
+					String controllerRoute;
+					 
+					if (exists route = annotations(`RouteAnnotation`, member)) {
+						controllerRoute = buildRoute(contextRoot, route.path);
+					} else {
+						controllerRoute = contextRoot;
+					}
+					
 					value instance = member.classApply<Object, []>()();
 					
 					value functions = member.memberDeclarations<FunctionDeclaration>();
 
 					for (func in functions) {
 						if (exists route = annotations(`RouteAnnotation`, func)) {
-							log.trace("Binding function ``func.name`` to route ``route.path``");
-							
-							handlers.put(route.path, [instance, func]);
+							value functionRoute = buildRoute(controllerRoute, route.path);
+
+							log.trace("Binding function ``func.name`` to route ``functionRoute``");
+							handlers.put(functionRoute, [instance, func]);
 						}
 					}
 				}
@@ -48,4 +57,11 @@ object annotationScanner {
 		return handlers;
 	}
 
+	String buildRoute(String prefix, String suffix) {
+		 if (prefix.endsWith("/")) {
+		 	return prefix + suffix;
+		 }
+		 
+		 return prefix + "/" + suffix;
+	}
 }

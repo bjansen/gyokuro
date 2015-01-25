@@ -19,7 +19,7 @@ class RequestDispatcher(String contextRoot, Package|Object declaration) {
 
 	switch(declaration) 
 	case (is Package) {
-		handlers = annotationScanner.scanControllersInPackage(declaration);
+		handlers = annotationScanner.scanControllersInPackage(contextRoot, declaration);
 	}
 	else {
 		handlers = emptyMap;
@@ -31,7 +31,7 @@ class RequestDispatcher(String contextRoot, Package|Object declaration) {
 	
 	"Dispatch the incoming request to the matching method."	
 	void dispatch(Request req, Response resp) {
-		value matchingHandlers = handlers.filter((String->[Object, FunctionDeclaration] element) => req.path.equals("``contextRoot``/``element.key``"));
+		value matchingHandlers = handlers.filter((String->[Object, FunctionDeclaration] element) => req.path.equals(element.key));
 
 		if (exists firstHandler = matchingHandlers.first) {
 			value handler = firstHandler.item;

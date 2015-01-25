@@ -6,7 +6,7 @@ import ceylon.language.meta.declaration {
 shared annotation RouteAnnotation route(String path) => RouteAnnotation(path);
 
 shared final annotation class RouteAnnotation(path) 
-		satisfies OptionalAnnotation<RouteAnnotation, FunctionDeclaration> {
+		satisfies OptionalAnnotation<RouteAnnotation, FunctionDeclaration|ClassDeclaration> {
 	
 	shared String path;
 }
