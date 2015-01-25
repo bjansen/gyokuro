@@ -11,7 +11,7 @@ import ceylon.logging {
 }
 
 "Run an HTTP server listening on port 8080. REST controllers located in package `gyokuro.demo.rest`
- will be bound to the root context `/rest`."
+ will be bound to the root context `/rest`. Static assets will be served from the `assets` directory."
 shared void run() {
 	
 	defaultPriority = trace;

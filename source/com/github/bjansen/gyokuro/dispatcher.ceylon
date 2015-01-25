@@ -1,6 +1,8 @@
 import ceylon.language.meta.declaration {
 	FunctionDeclaration,
-	Package
+	Package,
+	ValueDeclaration,
+	FunctionOrValueDeclaration
 }
 import ceylon.net.http {
 	post,
@@ -35,10 +37,35 @@ class RequestDispatcher(String contextRoot, Package|Object declaration) {
 
 		if (exists firstHandler = matchingHandlers.first) {
 			value handler = firstHandler.item;
-			handler[1].memberInvoke(handler[0], [], resp);
+			value func = handler[1];
+			variable Anything[] args = [];
+			
+			for (param in func.parameterDeclarations) {
+				value arg = bindParameter(param, req, resp);
+				
+				if (exists arg) {
+					args = args.withTrailing(arg);
+				} else {
+					throw Exception("Cannot bind parameter ``param.name``");
+				}
+			}
+
+			func.memberInvoke(handler[0], [], *args);
 		} else {
 			resp.responseStatus = 404;
 			resp.writeString("Not found");
 		}
+	}
+	
+	Anything? bindParameter(FunctionOrValueDeclaration param, Request req, Response resp) {
+		if (is ValueDeclaration param) {
+			if (param.openType == `interface Response`.openType) {
+				return resp;
+			} else if (param.openType == `interface Request`.openType) {
+				return req;
+			}
+		}
+		
+		return null;
 	}
 }

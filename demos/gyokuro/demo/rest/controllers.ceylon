@@ -1,5 +1,6 @@
 import ceylon.net.http.server {
-	Response
+	Response,
+	Request
 }
 import com.github.bjansen.gyokuro {
 	controller,
@@ -10,7 +11,7 @@ route("duck")
 controller class SimpleRestController() {
 	
 	route("talk")
-	shared void makeDuckTalk(Response resp) {
+	shared void makeDuckTalk(Response resp, Request req) {
 		resp.writeString("Quack world!");
 	}
 }
