@@ -8,16 +8,16 @@ A web framework written in Ceylon, which allows:
 
 Create a new Ceylon module:
 
-````
+```ceylon
 module gyokuro.demo.rest "1.0.0" {
 	import com.github.bjansen.gyokuro "0.1";
 	import ceylon.net "1.1.1";
 }
-````
+```
 
 Add a runnable top level function that bootstraps a gyokuro application:
 
-````
+```ceylon
 import com.github.bjansen.gyokuro {
 	Application
 }
@@ -31,11 +31,11 @@ shared void run() {
 	
 	app.run();
 }
-````
+```
 
 The package `gyokuro.demo.rest` will be scanned for classes annotated with `controller`. Each function annotated with `route` will be mapped to the corresponding URL. For example:
 
-````
+```ceylon
 import ceylon.net.http.server {
 	Response
 }
@@ -52,6 +52,6 @@ controller class SimpleRestController() {
 		resp.writeString("Quack world!");
 	}
 }
-````
+```
 
 Will be mapped to `http://localhost:8080/rest/duck/talk`.
