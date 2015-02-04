@@ -1,10 +1,22 @@
 getDataFromServer = function() {
+	// Output manually written in Response
+	sendRequest('/rest/duck/talk', function(xhr) {
+		document.getElementById('response').innerHTML = 'Server said "' + xhr.responseText + '"';
+	});
+
+	// Object automatically serialized to JSON and written in Response
+	sendRequest('/rest/duck/actions', function(xhr) {
+      document.getElementById('response2').innerHTML = 'A duck can ' + xhr.responseText;
+	});
+}
+
+sendRequest = function(url, callback) {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/rest/duck/talk', true);
+	xhr.open('GET', url, true);
 	xhr.onload = function (e) {
 	  if (xhr.readyState === 4) {
 	    if (xhr.status === 200) {
-	      document.getElementById('response').innerHTML = 'Server said "' + xhr.responseText + '"';
+	      callback(xhr);
 	    } else {
 	      console.error(xhr.statusText);
 	    }
@@ -15,5 +27,5 @@ getDataFromServer = function() {
 	  console.error(xhr.statusText);
 	};
 	
-	xhr.send(null);
+	xhr.send(null);	
 }

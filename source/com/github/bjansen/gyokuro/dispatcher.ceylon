@@ -6,7 +6,8 @@ import ceylon.language.meta.declaration {
 }
 import ceylon.net.http {
 	post,
-	get
+	get,
+    contentType
 }
 import ceylon.net.http.server {
 	Response,
@@ -14,18 +15,14 @@ import ceylon.net.http.server {
 	Endpoint,
 	startsWith
 }
+import ceylon.io.charset { utf8 }
+import com.github.bjansen.gyokuro.json { jsonSerializer }
 
-class RequestDispatcher(String contextRoot, Package|Object declaration) {
+class RequestDispatcher(String contextRoot, Package declaration) {
 	
 	Map<String, [Object, FunctionDeclaration]> handlers;
 
-	switch(declaration) 
-	case (is Package) {
-		handlers = annotationScanner.scanControllersInPackage(contextRoot, declaration);
-	}
-	else {
-		handlers = emptyMap;
-	}
+	handlers = annotationScanner.scanControllersInPackage(contextRoot, declaration);
 	
 	shared Endpoint endpoint() {
 		return Endpoint(startsWith(contextRoot), dispatch, {get, post});
@@ -50,7 +47,8 @@ class RequestDispatcher(String contextRoot, Package|Object declaration) {
 				}
 			}
 
-			func.memberInvoke(handler[0], [], *args);
+			value result = func.memberInvoke(handler[0], [], *args);
+            writeResult(result, resp);
 		} else {
 			resp.responseStatus = 404;
 			resp.writeString("Not found");
@@ -68,4 +66,11 @@ class RequestDispatcher(String contextRoot, Package|Object declaration) {
 		
 		return null;
 	}
+
+    void writeResult(Anything result, Response resp) {
+        if (is Object result) {
+            resp.addHeader(contentType("application/json", utf8));
+            resp.writeString(jsonSerializer.serialize(result));
+        }
+    }
 }

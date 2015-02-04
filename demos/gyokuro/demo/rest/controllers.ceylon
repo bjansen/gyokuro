@@ -14,4 +14,9 @@ controller class SimpleRestController() {
 	shared void makeDuckTalk(Response resp, Request req) {
 		resp.writeString("Quack world!");
 	}
+
+    route("actions")
+    shared String[] listThingsDucksCanDo() {
+        return ["fly", "quack", "eat", "dive"];
+    }
 }

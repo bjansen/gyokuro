@@ -3,7 +3,6 @@ import ceylon.language.meta {
 }
 import ceylon.language.meta.declaration {
 	FunctionDeclaration,
-	NestableDeclaration,
 	Package,
 	ClassDeclaration
 }
@@ -20,35 +19,33 @@ object annotationScanner {
 	Logger log = logger(`module com.github.bjansen.gyokuro`);
 	
 	shared HashMap<String, [Object, FunctionDeclaration]> scanControllersInPackage(String contextRoot, Package pkg) {
-		value members = pkg.members<NestableDeclaration>();
+		value members = pkg.members<ClassDeclaration>();
 		value handlers = HashMap<String, [Object, FunctionDeclaration]>();
 		
 		log.trace("Scanning members in package ``pkg.name``");
 		
 		for (member in members) {
-			if (is ClassDeclaration member) { 
-				if (exists controller = annotations(`ControllerAnnotation`, member)) {
-					log.trace("Scanning member ``member.name`` in package ``pkg.name``");
-					
-					String controllerRoute;
-					 
-					if (exists route = annotations(`RouteAnnotation`, member)) {
-						controllerRoute = buildRoute(contextRoot, route.path);
-					} else {
-						controllerRoute = contextRoot;
-					}
-					
-					value instance = member.classApply<Object, []>()();
-					
-					value functions = member.memberDeclarations<FunctionDeclaration>();
+			if (exists controller = annotations(`ControllerAnnotation`, member)) {
+				log.trace("Scanning member ``member.name`` in package ``pkg.name``");
+				
+				String controllerRoute;
+				 
+				if (exists route = annotations(`RouteAnnotation`, member)) {
+					controllerRoute = buildRoute(contextRoot, route.path);
+				} else {
+					controllerRoute = contextRoot;
+				}
+				
+				value instance = member.classApply<Object, []>()();
+				
+				value functions = member.memberDeclarations<FunctionDeclaration>();
 
-					for (func in functions) {
-						if (exists route = annotations(`RouteAnnotation`, func)) {
-							value functionRoute = buildRoute(controllerRoute, route.path);
+				for (func in functions) {
+					if (exists route = annotations(`RouteAnnotation`, func)) {
+						value functionRoute = buildRoute(controllerRoute, route.path);
 
-							log.trace("Binding function ``func.name`` to route ``functionRoute``");
-							handlers.put(functionRoute, [instance, func]);
-						}
+						log.trace("Binding function ``func.name`` to route ``functionRoute``");
+						handlers.put(functionRoute, [instance, func]);
 					}
 				}
 			}
