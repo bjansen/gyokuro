@@ -1,5 +1,9 @@
-import ceylon.json { Builder }
-import ceylon.language.meta { type }
+import ceylon.json {
+	Builder
+}
+import ceylon.language.meta {
+	type
+}
 import ceylon.language.meta.declaration {
 	ValueDeclaration
 }
@@ -7,16 +11,22 @@ import ceylon.language.meta.declaration {
 "A serializer that transforms anything to a valid JSON string"
 shared object jsonSerializer {
 	
+	value maxDepth = 10;
+	
 	"Transforms anything to a valid JSON string"
     shared String serialize(Anything obj) {
         value builder = Builder();
 
-		visit(obj, builder);
+		visit(obj, builder, 1);
 		
         return builder.result.string;
     }
 
-	void visit(Anything obj, Builder builder) {
+	void visit(Anything obj, Builder builder, Integer depth) {
+		if (depth > maxDepth) {
+			return;
+		}
+		
 		switch (obj)
 		case (is String) {
 			visitString(obj, builder);
@@ -28,7 +38,7 @@ shared object jsonSerializer {
 			visitNumber(obj, builder);
 		}
 		case (is Sequential<Anything>) {
-			visitSequence(obj, builder);
+			visitSequence(obj, builder, depth + 1);
 		}
 		case (is Boolean) {
 			visitBoolean(obj, builder);
@@ -37,21 +47,21 @@ shared object jsonSerializer {
 			visitNull(builder);
 		}
 		else {
-			visitObject(obj, builder);
+			visitObject(obj, builder, depth + 1);
 		}
 	}
 	
-    void visitSequence(Anything[] obj, Builder builder) {
+    void visitSequence(Anything[] obj, Builder builder, Integer depth) {
         builder.onStartArray();
         
         for (item in obj) {
-            visit(item, builder);
+            visit(item, builder, depth + 1);
         }
         
         builder.onEndArray();
     }
 
-    void visitObject(Object obj, Builder builder) {
+    void visitObject(Object obj, Builder builder, Integer depth) {
         value model = type(obj);
 
 		builder.onStartObject();
@@ -65,7 +75,7 @@ shared object jsonSerializer {
 			
             builder.onKey(name);
 			
-            visit(decl.memberGet(obj), builder);
+            visit(decl.memberGet(obj), builder, depth + 1);
         }
         
         builder.onEndObject();
