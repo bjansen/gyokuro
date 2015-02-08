@@ -12,6 +12,7 @@ import ceylon.language.meta.declaration {
 shared object jsonSerializer {
 	
 	value maxDepth = 10;
+	shared variable CustomSerializer[] customSerializers = [];
 	
 	"Transforms anything to a valid JSON string"
     shared String serialize(Anything obj) {
@@ -27,6 +28,15 @@ shared object jsonSerializer {
 			return;
 		}
 		
+		if (exists obj) {
+			for (serializer in customSerializers) {
+				if (serializer.supports(obj)) {
+					serializer.serialize(obj, builder);
+					return;
+				}
+			}
+		}
+				
 		switch (obj)
 		case (is String) {
 			visitString(obj, builder);
@@ -98,3 +108,12 @@ shared object jsonSerializer {
     }
 }
 
+"Handles the serialization of a custom type"
+shared interface CustomSerializer {
+	
+	"Adds the object's serialized representation to a Builder"
+	shared formal void serialize(Object obj, Builder builder);
+	
+	"Checks if this serializer can serialize a given object"
+	shared formal Boolean supports(Object obj);
+}
