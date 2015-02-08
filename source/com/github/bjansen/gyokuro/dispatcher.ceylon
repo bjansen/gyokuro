@@ -2,7 +2,8 @@ import ceylon.language.meta.declaration {
 	FunctionDeclaration,
 	Package,
 	ValueDeclaration,
-	FunctionOrValueDeclaration
+	FunctionOrValueDeclaration,
+	OpenType
 }
 import ceylon.net.http {
 	post,
@@ -61,10 +62,30 @@ class RequestDispatcher(String contextRoot, Package declaration) {
 				return resp;
 			} else if (param.openType == `interface Request`.openType) {
 				return req;
+			} else {
+				return bindRequestParameter(param, req);
 			}
 		}
 		
 		return null;
+	}
+	
+	Anything? bindRequestParameter(ValueDeclaration param, Request req) {
+		String? requestParam = req.parameter(param.name);
+		
+		if (exists requestParam) {
+			return convertParameter(requestParam, param);
+		}
+		
+		return null;
+	}
+
+	Anything convertParameter(String requestParam, ValueDeclaration param) {
+		if (param.openType == `class Integer`.openType) {
+			return parseInteger(requestParam);
+		}
+		
+		throw Exception("Cannot bind parameter ``param.name``: no converter found for type ``param.openType``");
 	}
 
     void writeResult(Anything result, Response resp) {
