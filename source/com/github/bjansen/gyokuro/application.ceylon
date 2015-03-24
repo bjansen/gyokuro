@@ -18,9 +18,6 @@ import ceylon.net.http.server {
 	Server,
 	startsWith
 }
-import ceylon.net.http.server.endpoints {
-	serveStaticFile
-}
 
 shared class Application(Integer port, String rootContext, Package pkg) {
 	
@@ -50,7 +47,7 @@ shared class Application(Integer port, String rootContext, Package pkg) {
 			resp.responseStatus = 418;
 			resp.writeString("418 - I'm a teapot");
 		} else {
-			serveStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else req.path)(req, resp, () => {});
+			myServeStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else req.path)(req, resp, () => {});
 		}
 	}
 }
