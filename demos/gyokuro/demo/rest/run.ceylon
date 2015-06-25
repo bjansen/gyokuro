@@ -17,7 +17,7 @@ shared void run() {
 	defaultPriority = trace;
 	
 	addLogWriter {
-		void log(Priority p, Category c, String m, Exception? e) {
+		void log(Priority p, Category c, String m, Throwable? e) {
 			value print = p<=info
 			then process.writeLine
 			else process.writeError;

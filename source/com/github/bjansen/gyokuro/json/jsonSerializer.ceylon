@@ -20,7 +20,7 @@ shared object jsonSerializer {
 
 		visit(obj, builder, 1);
 		
-        return builder.result.string;
+        return builder.result?.string else "";
     }
 
 	void visit(Anything obj, Builder builder, Integer depth) {

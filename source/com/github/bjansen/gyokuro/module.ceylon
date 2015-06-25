@@ -1,3 +1,4 @@
+native("jvm")
 module com.github.bjansen.gyokuro "0.1" {
 	shared import ceylon.net "1.1.1";
 	//import ceylon.io "1.1.1";
