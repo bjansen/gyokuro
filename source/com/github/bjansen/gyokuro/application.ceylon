@@ -28,7 +28,7 @@ shared class Application(Integer port, String rootContext, Package pkg) {
 		value dispatcher = RequestDispatcher(rootContext, pkg);
 		
 		Server server = newServer({dispatcher.endpoint(), assetsEndpoint});
-		server.start(SocketAddress("localhost", port), Options());
+		server.start(SocketAddress("0.0.0.0", port), Options());
 	}
 	
 	object special satisfies Method {
