@@ -6,7 +6,8 @@ import ceylon.language.meta.declaration {
 	Package,
 	ValueDeclaration,
 	FunctionOrValueDeclaration,
-    OpenUnion
+    OpenUnion,
+    OpenType
 }
 import ceylon.net.http {
 	post,
@@ -26,8 +27,12 @@ import com.github.bjansen.gyokuro.json {
 import ceylon.logging {
     logger
 }
+import ceylon.language.meta {
+    type,
+    classDeclaration
+}
 
-class RequestDispatcher(String contextRoot, Package declaration) {
+class RequestDispatcher(String contextRoot, Package declaration, Boolean(Request, Response) filter) {
 	
 	value log = logger(`module com.github.bjansen.gyokuro`);
 	
@@ -43,6 +48,10 @@ class RequestDispatcher(String contextRoot, Package declaration) {
 	
 	"Dispatch the incoming request to the matching method."	
 	void dispatch(Request req, Response resp) {
+		if (!filter(req, resp)) {
+			return;
+		}
+
 		value matchingHandlers = handlers.filter((String->[Object, FunctionDeclaration] element) => req.path.equals(element.key));
 
 		if (exists firstHandler = matchingHandlers.first) {
@@ -50,21 +59,32 @@ class RequestDispatcher(String contextRoot, Package declaration) {
 			value func = handler[1];
 			variable Anything[] args = [];
 			
-			for (param in func.parameterDeclarations) {
-				value arg = bindParameter(param, req, resp);
-				
-				if (exists arg) {
-					args = args.withTrailing(arg);
-				} else if (param.defaulted) {
-					// TODO
-				} else if (isOptional(param)) {
-					args = args.withTrailing(null);
-				} else {
-					throw Exception("Cannot bind parameter ``param.name``");
-				}
-			}
+			try {
+    			for (param in func.parameterDeclarations) {
+    				value arg = bindParameter(param, req, resp);
+    				
+    				if (exists arg) {
+    					args = args.withTrailing(arg);
+    				} else if (param.defaulted) {
+    					// TODO We can't retrieve the default value, so even if we can
+    					// bind the next parameters, we can't use them in memberInvoke(),
+    					// so we just abort here.
+    					break;
+    				} else if (isOptional(param)) {
+    					args = args.withTrailing(null);
+    				} else {
+    					throw BindingException("Cannot bind parameter ``param.name``");
+    				}
+    			}
+    		} catch (BindingException e) {
+    			log.error("", e);
+    			resp.responseStatus = 400;
+    			resp.writeString("Bad request");
+    			return;
+    		}
 
             try {
+                //func.memberApply(type(handler[0]), *typeArguments)
     			value result = func.memberInvoke(handler[0], [], *args);
                 writeResult(result, resp);
             } catch (AssertionError|Exception e) {
@@ -87,12 +107,24 @@ class RequestDispatcher(String contextRoot, Package declaration) {
 		return false;
 	}
 	
+	OpenType getNonOptionalType(FunctionOrValueDeclaration param) {
+		assert(is OpenUnion paramType = param.openType);
+		
+		value nonOptionalType = paramType.caseTypes.find((elem) => elem != `class Null`.openType);
+		
+		assert(exists nonOptionalType);
+		
+		return nonOptionalType;
+	}
+	
 	Anything? bindParameter(FunctionOrValueDeclaration param, Request req, Response resp) {
 		if (is ValueDeclaration param) {
 			if (param.openType == `interface Response`.openType) {
 				return resp;
 			} else if (param.openType == `interface Request`.openType) {
 				return req;
+			} else if (param.annotated<SessionAnnotation>()) {
+				return bindSessionValue(param, req);
 			} else {
 				return bindRequestParameter(param, req);
 			}
@@ -101,10 +133,23 @@ class RequestDispatcher(String contextRoot, Package declaration) {
 		return null;
 	}
 	
+	Anything? bindSessionValue(ValueDeclaration param, Request req) {
+		if (exists val = req.session.get(param.name)) {
+			value valType = classDeclaration(val).qualifiedName;
+			
+			if (valType == param.openType.string) {
+				return val;
+			} else if (is String val) {
+				return convertParameter(val, param);
+			} else {
+				throw BindingException("Cannot bind parameter ``param.name`` from session: type ``valType`` cannot be assigned nor converted to ``param.openType``");
+			}
+		}
+		return null;
+	}
+	
 	Anything? bindRequestParameter(ValueDeclaration param, Request req) {
-		String? requestParam = req.parameter(param.name);
-		
-		if (exists requestParam) {
+		if (exists requestParam = req.parameter(param.name)) {
 			return convertParameter(requestParam, param);
 		}
 		
@@ -112,13 +157,15 @@ class RequestDispatcher(String contextRoot, Package declaration) {
 	}
 
 	Anything convertParameter(String requestParam, ValueDeclaration param) {
+		value targetType = if (isOptional(param)) then getNonOptionalType(param) else param.openType;
+		
 		for (converter in converters) {
-			if (converter.supports(param.openType)) {
-				return converter.convert(param.openType, requestParam);
+			if (converter.supports(targetType)) {
+				return converter.convert(targetType, requestParam);
 			}
 		}
 		
-		throw Exception("Cannot bind parameter ``param.name``: no converter found for type ``param.openType``");
+		throw BindingException("Cannot bind parameter ``param.name``: no converter found for type ``param.openType``");
 	}
 
     void writeResult(Anything result, Response resp) {
@@ -127,4 +174,7 @@ class RequestDispatcher(String contextRoot, Package declaration) {
             resp.writeString(jsonSerializer.serialize(result));
         }
     }
+}
+
+class BindingException(String? description = null, Throwable? cause = null) extends Exception(description, cause) {
 }
