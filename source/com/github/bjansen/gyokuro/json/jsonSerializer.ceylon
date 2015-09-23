@@ -56,6 +56,9 @@ shared object jsonSerializer {
 		case (is Null) {
 			visitNull(builder);
 		}
+		case (is Map<>) {
+			visitMap(obj, builder, depth + 1);
+		}
 		else {
 			visitObject(obj, builder, depth + 1);
 		}
@@ -105,6 +108,17 @@ shared object jsonSerializer {
     
     void visitNull(Builder builder) {
         builder.onNull();
+    }
+    
+    void visitMap(Map<> map, Builder builder, Integer depth) {
+        builder.onStartObject();
+
+        for (key -> val in map) {
+            builder.onKey(key.string);
+            visit(val, builder, depth + 1);
+        }
+
+        builder.onEndObject();
     }
 }
 
