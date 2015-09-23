@@ -28,7 +28,9 @@ shared void run() {
 		}		
 	};
 	
-	value app = Application(8080, "/rest", `package gyokuro.demo.rest`);
+	value app = Application {
+		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
+	};
 	
 	app.assetsPath = "assets";
 	

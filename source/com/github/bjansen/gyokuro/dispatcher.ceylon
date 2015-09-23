@@ -1,35 +1,34 @@
 import ceylon.io.charset {
-	utf8
+    utf8
+}
+import ceylon.language.meta {
+    classDeclaration
 }
 import ceylon.language.meta.declaration {
-	FunctionDeclaration,
-	Package,
-	ValueDeclaration,
-	FunctionOrValueDeclaration,
+    FunctionDeclaration,
+    Package,
+    ValueDeclaration,
+    FunctionOrValueDeclaration,
     OpenUnion,
     OpenType
-}
-import ceylon.net.http {
-	post,
-	get,
-	contentType
-}
-import ceylon.net.http.server {
-	Response,
-	Request,
-	Endpoint,
-	startsWith
-}
-
-import com.github.bjansen.gyokuro.json {
-	jsonSerializer
 }
 import ceylon.logging {
     logger
 }
-import ceylon.language.meta {
-    type,
-    classDeclaration
+import ceylon.net.http {
+    post,
+    get,
+    contentType
+}
+import ceylon.net.http.server {
+    Response,
+    Request,
+    Endpoint,
+    startsWith
+}
+
+import com.github.bjansen.gyokuro.json {
+    jsonSerializer
 }
 
 class RequestDispatcher(String contextRoot, Package declaration, Boolean(Request, Response) filter) {
