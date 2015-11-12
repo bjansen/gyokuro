@@ -22,6 +22,9 @@ shared object annotationScanner {
 	
 	Logger log = logger(`module com.github.bjansen.gyokuro`);
 	
+	"Looks for controller definitions in the given [[package|pkg]].
+	 The resulting map is keyed by full paths and valued by a tuple
+ 	 [handler instance, handler metamodel]."
 	shared HashMap<String, [Object, FunctionDeclaration]> scanControllersInPackage(String contextRoot, Package pkg) {
 		value members = pkg.members<ClassDeclaration>();
 		value handlers = HashMap<String, [Object, FunctionDeclaration]>();
@@ -59,10 +62,13 @@ shared object annotationScanner {
 	}
 
 	String buildRoute(String prefix, String suffix) {
+		value stripped = suffix.startsWith("/")
+				then suffix.spanFrom(1) else suffix;
+		
 		 if (prefix.endsWith("/")) {
-		 	return prefix + suffix;
+		 	return prefix + stripped;
 		 }
 		 
-		 return prefix + "/" + suffix;
+		 return prefix + "/" + stripped;
 	}
 }

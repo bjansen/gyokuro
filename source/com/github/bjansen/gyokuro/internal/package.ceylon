@@ -1,1 +1,1 @@
-package com.github.bjansen.gyokuro.internal;
+shared package com.github.bjansen.gyokuro.internal;
