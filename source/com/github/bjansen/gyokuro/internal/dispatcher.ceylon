@@ -31,7 +31,11 @@ import com.github.bjansen.gyokuro.json {
     jsonSerializer
 }
 
-class RequestDispatcher(String contextRoot, Package declaration, Boolean(Request, Response) filter) {
+import com.github.bjansen.gyokuro {
+	SessionAnnotation
+}
+
+shared class RequestDispatcher(String contextRoot, Package declaration, Boolean(Request, Response) filter) {
 	
 	value log = logger(`module com.github.bjansen.gyokuro`);
 	

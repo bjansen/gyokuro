@@ -13,8 +13,12 @@ import ceylon.logging {
 	Logger,
 	logger
 }
+import com.github.bjansen.gyokuro {
+	ControllerAnnotation,
+	RouteAnnotation
+}
 
-object annotationScanner {
+shared object annotationScanner {
 	
 	Logger log = logger(`module com.github.bjansen.gyokuro`);
 	
