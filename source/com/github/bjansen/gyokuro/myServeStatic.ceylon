@@ -52,27 +52,27 @@ shared void myServeStaticFile(
 
         if (exists etag = request.header("If-None-Match"), etag == file.lastModifiedMilliseconds.string) {
             response.responseStatus = 304;
-        }
-        value openFile = newOpenFile(file);
-        
-        void _onSuccess() {
-            openFile.close();
-            if (exists onSuccess) {
-                onSuccess(request);
-            }
-            complete();
-        }
-        
-        void _onError(ServerException exception) {
-            openFile.close();
-            if (exists onError) {
-                onError(exception,request);
-            }
-            complete();
-        }
-        
-        FileWriter(openFile, response, options, _onSuccess, _onError).send();
-        
+        } else {
+	        value openFile = newOpenFile(file);
+	        
+	        void _onSuccess() {
+	            openFile.close();
+	            if (exists onSuccess) {
+	                onSuccess(request);
+	            }
+	            complete();
+	        }
+	        
+	        void _onError(ServerException exception) {
+	            openFile.close();
+	            if (exists onError) {
+	                onError(exception,request);
+	            }
+	            complete();
+	        }
+	        
+	        FileWriter(openFile, response, options, _onSuccess, _onError).send();
+		}        
     } else {
         response.responseStatus=404;
         //TODO log
