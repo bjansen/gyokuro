@@ -30,4 +30,9 @@ controller class ParameterBinding() {
 	shared String func5(String s1, String? s2) {
 		return "``s1``e``s2 else "flip"``";
 	}
+	
+	route("f6")
+	shared String func6(String s1, Integer i = 4, String s2 = "ever") {
+		return s1 + i.string + s2;
+	}
 }

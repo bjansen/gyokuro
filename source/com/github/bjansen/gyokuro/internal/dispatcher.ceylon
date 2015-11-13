@@ -2,7 +2,8 @@ import ceylon.io.charset {
     utf8
 }
 import ceylon.language.meta {
-    classDeclaration
+    classDeclaration,
+	type
 }
 import ceylon.language.meta.declaration {
     FunctionDeclaration,
@@ -34,6 +35,9 @@ import com.github.bjansen.gyokuro.json {
 import com.github.bjansen.gyokuro {
 	SessionAnnotation
 }
+import ceylon.collection {
+	HashMap
+}
 
 shared class RequestDispatcher(String contextRoot, Package declaration, Boolean(Request, Response) filter) {
 	
@@ -60,21 +64,18 @@ shared class RequestDispatcher(String contextRoot, Package declaration, Boolean(
 		if (exists firstHandler = matchingHandlers.first) {
 			value handler = firstHandler.item;
 			value func = handler[1];
-			variable Anything[] args = [];
+			variable value args = HashMap<String, Anything>();
 			
 			try {
     			for (param in func.parameterDeclarations) {
     				value arg = bindParameter(param, req, resp);
     				
     				if (exists arg) {
-    					args = args.withTrailing(arg);
+    					args.put(param.name, arg);
     				} else if (param.defaulted) {
-    					// TODO We can't retrieve the default value, so even if we can
-    					// bind the next parameters, we can't use them in memberInvoke(),
-    					// so we just abort here.
-    					break;
+    					// use default value
     				} else if (isOptional(param)) {
-    					args = args.withTrailing(null);
+    					args.put(param.name, null);
     				} else {
     					throw BindingException("Cannot bind parameter ``param.name``");
     				}
@@ -87,8 +88,8 @@ shared class RequestDispatcher(String contextRoot, Package declaration, Boolean(
     		}
 
             try {
-                //func.memberApply(type(handler[0]), *typeArguments)
-    			value result = func.memberInvoke(handler[0], [], *args);
+                value method = func.memberApply<>(type(handler[0]));
+    			value result = method.bind(handler[0]).namedApply(args);
                 writeResult(result, resp);
             } catch (AssertionError|Exception e) {
                 log.error("Invocation of ``func.qualifiedName`` threw an error:\n", e);

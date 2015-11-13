@@ -76,9 +76,22 @@ void runTests() {
 	
 	// optional types
 	assertEquals(request("/param/f5",
-		{ Parameter("s1", "stup") }),
-	"stupeflip");
+			{ Parameter("s1", "stup") }),
+		"stupeflip");
 	
+	// default values
+	assertEquals(request("/param/f6",
+			{ Parameter("s1", "Ceylon") }),
+		"Ceylon4ever");
+	assertEquals(request("/param/f6",
+			{ Parameter("s1", "log"),
+				Parameter("s2", "j") }),
+		"log4j");
+	assertEquals(request("/param/f6",
+			{ Parameter("s1", "map"),
+				Parameter("s2", "list"),
+				Parameter("i", "2") }),
+		"map2list");
 }
 
 String request(String path, {Parameter*} params) {
