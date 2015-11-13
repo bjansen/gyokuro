@@ -1,3 +1,5 @@
+"A web framework that allows rapid development
+ of annotations-based web applications."
 native("jvm")
 module com.github.bjansen.gyokuro "0.1" {
 	shared import ceylon.net "1.2.0";

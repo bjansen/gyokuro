@@ -23,12 +23,23 @@ import com.github.bjansen.gyokuro.internal {
 	myServeStaticFile
 }
 
-shared class Application(String address = "0.0.0.0", Integer port = 8080, [String, Package]? restEndpoint = null) {
+"A web server application that can serve static assets and dynamic requests."
+shared class Application(
+	"The address or hostname on which the HTTP server will be bound."
+	String address = "0.0.0.0",
+	"The port on which the server will listen."
+	Integer port = 8080,
+	"A tuple [context root, package] used to scan [[controllers|controller]]
+	 that will be associated to the given context root."
+	[String, Package]? restEndpoint = null,
+	"A path to look for static assets served under `/`."
+	String assetsPath = "",
+	"Additional (chained) filters run before each request."
+	Filter[] filters = []) {
     
     shared alias Filter => Boolean(Request, Response);
-    shared variable String assetsPath = "";
-    shared variable Filter[] filters = [];
     
+    "Starts the web application."
     shared void run() {
         value assetsEndpoint = Endpoint(startsWith(""), serveRoot, { get, post, special });
         

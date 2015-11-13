@@ -30,9 +30,8 @@ shared void run() {
 	
 	value app = Application {
 		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
+		assetsPath = "assets";
 	};
-	
-	app.assetsPath = "assets";
 	
 	app.run();
 }
