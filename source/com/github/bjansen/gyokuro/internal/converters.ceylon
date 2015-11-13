@@ -17,10 +17,10 @@ object primitiveTypesConverter satisfies Converter {
 		} else if (type == `class String`.openType) {
 			return str;
 		} else if (type == `class Float`.openType) {
-			return parseFloat(string);
+			return parseFloat(str);
 		} else if (type == `class Boolean`.openType) {
-			if (str == '0') { return false; }
-			if (str == '1') { return true; }
+			if (str == "0") { return false; }
+			if (str == "1") { return true; }
 
 			return parseBoolean(str);
 		}
