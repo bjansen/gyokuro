@@ -7,7 +7,8 @@ import ceylon.net.http.client {
 import ceylon.net.http.server {
 	newServer,
 	Status,
-	started
+	started,
+	Response
 }
 import ceylon.net.uri {
 	Uri,
@@ -24,20 +25,23 @@ import ceylon.test {
 import com.github.bjansen.gyokuro.internal {
 	RequestDispatcher
 }
+import com.github.bjansen.gyokuro {
+	get
+}
 
 shared void plop() {
 	print(parseFloat("0"));
 }
 
 shared test
-void testOneParameter() {
-	value tAddress =
+void testDispatcher() {
+	value dispatcher =
 			RequestDispatcher(
 		["/", `package test.com.github.bjansen.gyokuro.internal.testdata`],
 		(req, resp) => true)
 		.endpoint();
 	
-	value server = newServer({ tAddress });
+	value server = newServer({ dispatcher });
 	server.addListener(void(Status status) {
 			if (status == started) {
 				try {
@@ -92,6 +96,16 @@ void runTests() {
 				Parameter("s2", "list"),
 				Parameter("i", "2") }),
 		"map2list");
+	
+	get("/myRoute", `myHandler`);
+	assertEquals(request("/myRoute",
+			{ Parameter("s1", "abc"),
+				Parameter("i1", "123") }),
+		"abc123");
+}
+
+void myHandler(String s1, Integer i1, Response resp) {
+	resp.writeString(s1 + i1.string);
 }
 
 String request(String path, {Parameter*} params) {

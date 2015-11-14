@@ -16,10 +16,6 @@ import ceylon.net.http.server {
 	Response
 }
 
-"Run an HTTP server listening on port 8080.
- REST controllers located in package `gyokuro.demo.rest`will be
- bound to the root context `/rest`.
- Static assets will be served from the `assets` directory."
 shared void run() {
 	
 	configureLogger();
@@ -29,19 +25,29 @@ shared void run() {
 		response.writeString("Hello yourself!");
 	});
 	
-	post("/hello", void (Request request, Response response) {
-		response.writeString("You're the POST master!");
-	});
+	// You can also use more advanced handlers
+	post("/hello", `postHandler`);
 	
 	value app = Application {
-		// You can also use REST-style annotated controllers
+		// You can also use annotated controllers, if you're
+		// a nostalgic Java developer ;-)
 		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
 
 		// And serve static assets
 		assetsPath = "assets";
 	};
 	
+	// By default, the server will be started on 0.0.0.0:8080
 	app.run();
+}
+
+"Advanced handlers have more flexible parameters, you're
+ not limited to `Request` and `Response`, you can bind
+ GET/POST values directly to handler parameters!"
+String postHandler(String who = "world") {
+	// `who` will get its value from POST data, and will
+	// be defaulted to "world".
+	return "Hello, " + who + "!\n";
 }
 
 void configureLogger() {

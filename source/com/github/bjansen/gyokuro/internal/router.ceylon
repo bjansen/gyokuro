@@ -1,28 +1,38 @@
-import ceylon.net.http.server {
-	Request,
-	Response
+import ceylon.collection {
+	HashMap
+}
+import ceylon.language.meta.declaration {
+	FunctionDeclaration
 }
 import ceylon.net.http {
 	Method,
 	get,
 	post
 }
-import ceylon.language.meta.declaration {
-	FunctionDeclaration
+import ceylon.net.http.server {
+	Request,
+	Response
 }
-import ceylon.collection {
-	HashMap
+import ceylon.language.meta.model {
+	Function
 }
 
 shared object router {
 	
-	shared alias Handler => [Object, FunctionDeclaration]|Callable<Anything, [Request, Response]>;
+	shared alias Handler => [Object?, FunctionDeclaration]|Callable<Anything,[Request, Response]>;
 	
-	value handlers = HashMap<[Method, String], Handler>();
+	value handlers = HashMap<[Method, String],Handler>();
 	
-	shared void registerRoute(String route, {Method+} methods, void handler(Request req, Response resp)) {
+	shared void registerRoute<Param>(String route, {Method+} methods,
+		Function<Anything,Param>|Callable<Anything,[Request, Response]> handler)
+			given Param satisfies Anything[] {
+		
 		for (method in methods) {
-			handlers.put([method, route], handler);
+			if (is Function<> handler) {
+				handlers.put([method, route], [null, handler.declaration]);
+			} else {
+				handlers.put([method, route], handler);
+			}
 		}
 	}
 	

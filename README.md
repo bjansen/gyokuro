@@ -37,7 +37,8 @@ shared void run() {
 		response.writeString("Hello yourself!");
 	});
 	
-	post("/hello", void (Request request, Response response) {
+	// Shorter syntax that lets Ceylon infer types
+	post("/hello", (request, response) {
 		response.writeString("You're the POST master!");
 	});
 
@@ -49,12 +50,36 @@ shared void run() {
 }
 ```
 
-## Leveraging the power of annotated controllers
+## Binding parameters
 
-In addition to `get` and `post` functions, gyokuro also allows you to define annotated controllers.
-Using annotations, you can easily group related route handlers in a same controller. These handlers
-are also much more powerful than `void (Request, Response)` functions, because you can bind GET/POST
-parameters directly to function parameters, and return an object that represents your response.
+In addition to basic handlers, gyokuro allows you to bind GET/POST data
+directly to function parameters, and return an object that represents your response:
+
+```ceylon
+shared void run() {
+	// ...
+	post("/hello", `postHandler`);
+	// ...
+}
+
+"Advanced handlers have more flexible parameters, you're
+ not limited to `Request` and `Response`, you can bind
+ GET/POST values directly to handler parameters!
+ The returned value will be written to the response."
+String postHandler(Float float, Integer? optionalInt, String who = "world") {
+	// `float` is required, `optionalInt` is optional and
+	// `who` will be defaulted to "world" if it's not in POST data.
+	return "Hello, " + who + "!\n";
+}
+```
+
+GET/POST values are mapped by name and automatically converted to the correct type.
+Note that optional types and default values are also supported!
+
+## Using annotated controllers
+
+In addition to `get` and `post` functions, gyokuro supports annotated controllers.
+Using annotations, you can easily group related handlers in a same controller.
 
 Let's see how it works on a simple example:
 
@@ -93,15 +118,6 @@ controller class SimpleRestController() {
 ```
 
 Will be mapped to `http://localhost:8080/rest/duck/talk`.
-
-GET/POST parameters can easily be mapped to function parameters, with support for optional types and default values:
-
-```ceylon
-route("awesome")
-shared void bindParameters(String string, Integer? int, Float float = 1.23) {
-    // if `int` or `float` can't be found in GET/POST values, the function can still be called
-}
-```
 
 ## Want to learn more?
 

@@ -64,7 +64,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 		}
 
 		if (exists handler = router.routeRequest(req)) {
-			if (is [Object, FunctionDeclaration] handler) {
+			if (is [Object?, FunctionDeclaration] handler) {
 				dispatchToController(req, resp, handler);
 			} else {
 				handler(req, resp);
@@ -75,7 +75,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 		}
 	}
 
-	void dispatchToController(Request req, Response resp, [Object, FunctionDeclaration] handler) {
+	void dispatchToController(Request req, Response resp, [Object?, FunctionDeclaration] handler) {
 		value func = handler[1];
 		value args = HashMap<String, Anything>();
 		
@@ -101,8 +101,10 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 		}
 		
 		try {
-			value method = func.memberApply<>(type(handler[0]));
-			value result = method.bind(handler[0]).namedApply(args);
+			value method = if (exists o = handler[0])
+						then func.memberApply<>(type(o)).bind(o)
+						else func.apply<Anything, Nothing>();
+			value result = method.namedApply(args);
 			writeResult(result, resp);
 		} catch (AssertionError|Exception e) {
 			log.error("Invocation of ``func.qualifiedName`` threw an error:\n", e);
