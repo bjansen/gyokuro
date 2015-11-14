@@ -43,9 +43,7 @@ shared class Application(
     shared void run() {
         value assetsEndpoint = Endpoint(startsWith(""), serveRoot, { get, post, special });
         
-        value endpoints = if (exists restEndpoint)
-                          then {RequestDispatcher(restEndpoint[0], restEndpoint[1], filter).endpoint(), assetsEndpoint}
-                          else {assetsEndpoint};
+        value endpoints = {RequestDispatcher(restEndpoint, filter).endpoint(), assetsEndpoint};
         
         Server server = newServer(endpoints);
         server.start(SocketAddress(address, port), Options());

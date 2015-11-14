@@ -1,56 +1,60 @@
+import ceylon.collection {
+	HashMap
+}
 import ceylon.io.charset {
-    utf8
+	utf8
 }
 import ceylon.language.meta {
-    classDeclaration,
+	classDeclaration,
 	type
 }
 import ceylon.language.meta.declaration {
-    FunctionDeclaration,
-    Package,
-    ValueDeclaration,
-    FunctionOrValueDeclaration,
-    OpenUnion,
-    OpenType
+	FunctionDeclaration,
+	Package,
+	ValueDeclaration,
+	FunctionOrValueDeclaration,
+	OpenUnion,
+	OpenType
 }
 import ceylon.logging {
-    logger
+	logger
 }
 import ceylon.net.http {
-    post,
-    get,
-    contentType
+	post,
+	get,
+	contentType
 }
 import ceylon.net.http.server {
-    Response,
-    Request,
-    Endpoint,
-    startsWith
-}
-
-import com.github.bjansen.gyokuro.json {
-    jsonSerializer
+	Response,
+	Request,
+	Endpoint,
+	Matcher
 }
 
 import com.github.bjansen.gyokuro {
 	SessionAnnotation
 }
-import ceylon.collection {
-	HashMap
+import com.github.bjansen.gyokuro.json {
+	jsonSerializer
 }
 
-shared class RequestDispatcher(String contextRoot, Package declaration, Boolean(Request, Response) filter) {
+shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter) {
 	
 	value log = logger(`module com.github.bjansen.gyokuro`);
 	
-	Map<String, [Object, FunctionDeclaration]> handlers;
-	
 	Converter[] converters = [primitiveTypesConverter];
 
-	handlers = annotationScanner.scanControllersInPackage(contextRoot, declaration);
+	if (exists [contextRoot, declaration] = packageToScan) {
+		annotationScanner.scanControllersInPackage(contextRoot, declaration);
+	}
 	
+	object routerMatcher extends Matcher() {
+		shared actual Boolean matches(String path)
+				=> router.canHandlePath(path);
+	}
+
 	shared Endpoint endpoint() {
-		return Endpoint(startsWith(contextRoot), dispatch, {get, post});
+		return Endpoint(routerMatcher, dispatch, {get, post});
 	}
 	
 	"Dispatch the incoming request to the matching method."	
@@ -59,46 +63,51 @@ shared class RequestDispatcher(String contextRoot, Package declaration, Boolean(
 			return;
 		}
 
-		value matchingHandlers = handlers.filter((String->[Object, FunctionDeclaration] element) => req.path.equals(element.key));
-
-		if (exists firstHandler = matchingHandlers.first) {
-			value handler = firstHandler.item;
-			value func = handler[1];
-			variable value args = HashMap<String, Anything>();
-			
-			try {
-    			for (param in func.parameterDeclarations) {
-    				value arg = bindParameter(param, req, resp);
-    				
-    				if (exists arg) {
-    					args.put(param.name, arg);
-    				} else if (param.defaulted) {
-    					// use default value
-    				} else if (isOptional(param)) {
-    					args.put(param.name, null);
-    				} else {
-    					throw BindingException("Cannot bind parameter ``param.name``");
-    				}
-    			}
-    		} catch (BindingException e) {
-    			log.error("", e);
-    			resp.responseStatus = 400;
-    			resp.writeString("Bad request");
-    			return;
-    		}
-
-            try {
-                value method = func.memberApply<>(type(handler[0]));
-    			value result = method.bind(handler[0]).namedApply(args);
-                writeResult(result, resp);
-            } catch (AssertionError|Exception e) {
-                log.error("Invocation of ``func.qualifiedName`` threw an error:\n", e);
-                resp.responseStatus = 500;
-                resp.writeString("<html><head><title>Error</title></head><body>500 - Internal Server Error</body></html>");
-            }
+		if (exists handler = router.routeRequest(req)) {
+			if (is [Object, FunctionDeclaration] handler) {
+				dispatchToController(req, resp, handler);
+			} else {
+				handler(req, resp);
+			}
 		} else {
 			resp.responseStatus = 404;
 			resp.writeString("Not found");
+		}
+	}
+
+	void dispatchToController(Request req, Response resp, [Object, FunctionDeclaration] handler) {
+		value func = handler[1];
+		value args = HashMap<String, Anything>();
+		
+		try {
+			for (param in func.parameterDeclarations) {
+				value arg = bindParameter(param, req, resp);
+				
+				if (exists arg) {
+					args.put(param.name, arg);
+				} else if (param.defaulted) {
+					// use default value
+				} else if (isOptional(param)) {
+					args.put(param.name, null);
+				} else {
+					throw BindingException("Cannot bind parameter ``param.name``");
+				}
+			}
+		} catch (BindingException e) {
+			log.error("", e);
+			resp.responseStatus = 400;
+			resp.writeString("Bad request");
+			return;
+		}
+		
+		try {
+			value method = func.memberApply<>(type(handler[0]));
+			value result = method.bind(handler[0]).namedApply(args);
+			writeResult(result, resp);
+		} catch (AssertionError|Exception e) {
+			log.error("Invocation of ``func.qualifiedName`` threw an error:\n", e);
+			resp.responseStatus = 500;
+			resp.writeString("<html><head><title>Error</title></head><body>500 - Internal Server Error</body></html>");
 		}
 	}
 	

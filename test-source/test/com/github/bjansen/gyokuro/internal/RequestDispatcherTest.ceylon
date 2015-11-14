@@ -32,8 +32,8 @@ shared void plop() {
 shared test
 void testOneParameter() {
 	value tAddress =
-			RequestDispatcher("/",
-		`package test.com.github.bjansen.gyokuro.internal.testdata`,
+			RequestDispatcher(
+		["/", `package test.com.github.bjansen.gyokuro.internal.testdata`],
 		(req, resp) => true)
 		.endpoint();
 	

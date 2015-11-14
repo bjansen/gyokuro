@@ -6,13 +6,11 @@ import ceylon.language.meta.declaration {
 	Package,
 	ClassDeclaration
 }
-import ceylon.collection {
-	HashMap
-}
 import ceylon.logging {
 	Logger,
 	logger
 }
+
 import com.github.bjansen.gyokuro {
 	ControllerAnnotation,
 	RouteAnnotation
@@ -23,11 +21,10 @@ shared object annotationScanner {
 	Logger log = logger(`module com.github.bjansen.gyokuro`);
 	
 	"Looks for controller definitions in the given [[package|pkg]].
-	 The resulting map is keyed by full paths and valued by a tuple
- 	 [handler instance, handler metamodel]."
-	shared HashMap<String, [Object, FunctionDeclaration]> scanControllersInPackage(String contextRoot, Package pkg) {
+	 Scanned controllers and routes will be registered in the [[router]]
+	 for GET and POST methods."
+	shared void scanControllersInPackage(String contextRoot, Package pkg) {
 		value members = pkg.members<ClassDeclaration>();
-		value handlers = HashMap<String, [Object, FunctionDeclaration]>();
 		
 		log.trace("Scanning members in package ``pkg.name``");
 		
@@ -52,13 +49,11 @@ shared object annotationScanner {
 						value functionRoute = buildRoute(controllerRoute, route.path);
 
 						log.trace("Binding function ``func.name`` to route ``functionRoute``");
-						handlers.put(functionRoute, [instance, func]);
+						router.registerControllerRoute(functionRoute, [instance, func]);
 					}
 				}
 			}
 		}
-		
-		return handlers;
 	}
 
 	String buildRoute(String prefix, String suffix) {
