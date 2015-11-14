@@ -19,19 +19,42 @@ Add a runnable top level function that bootstraps a gyokuro application:
 
 ```ceylon
 import com.github.bjansen.gyokuro {
-	Application
+	Application,
+	get,
+	post
 }
 
-"Run an HTTP server listening on port 8080. REST controllers located in package `gyokuro.demo.rest`
- will be bound to the root context `/rest`. Static assets will be served from the `assets` directory."
+"Run an HTTP server listening on port 8080, that will react to requests on /hello.
+Static assets will be served from the `assets` directory."
 shared void run() {
+
+	// React to GET/POST requests using a basic handler
+	get("/hello", void (Request request, Response response) {
+		response.writeString("Hello yourself!");
+	});
+	
+	post("/hello", void (Request request, Response response) {
+		response.writeString("You're the POST master!");
+	});
+
 	value app = Application {
-		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
 		assetsPath = "assets";
 	};
 	
 	app.run();
 }
+```
+
+## Leveraging the power of annotated controllers
+
+In addition to `get` and `post` functions, gyokuro also allows you to define annotated controllers.
+Using annotations, you can easily group related route handlers in a same controller. These handlers
+are also much more powerful than `void (Request, Response)` functions, because you can bind GET/POST
+parameters directly to function parameters, and return an object that represents your response.
+
+Let's see how it works on a simple example:
+
+```ceylon
 ```
 
 The package `gyokuro.demo.rest` will be scanned for classes annotated with `controller`.
