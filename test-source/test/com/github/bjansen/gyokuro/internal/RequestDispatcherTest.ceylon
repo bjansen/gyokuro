@@ -19,14 +19,16 @@ import ceylon.net.uri {
 }
 import ceylon.test {
 	test,
-	assertEquals
+	assertEquals,
+	assertTrue
 }
 
 import com.github.bjansen.gyokuro.internal {
 	RequestDispatcher
 }
 import com.github.bjansen.gyokuro {
-	get
+	get,
+	halt
 }
 
 shared void plop() {
@@ -102,10 +104,18 @@ void runTests() {
 			{ Parameter("s1", "abc"),
 				Parameter("i1", "123") }),
 		"abc123");
+	
+	get("/testHalt", `testHalt`);
+	assertTrue(request("/testHalt", {})
+		.contains("500 - I can haz an error"));	
 }
 
 void myHandler(String s1, Integer i1, Response resp) {
 	resp.writeString(s1 + i1.string);
+}
+
+void testHalt() {
+	halt(500, "I can haz an error");
 }
 
 String request(String path, {Parameter*} params) {

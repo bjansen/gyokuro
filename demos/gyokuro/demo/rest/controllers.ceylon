@@ -4,7 +4,8 @@ import ceylon.net.http.server {
 }
 import com.github.bjansen.gyokuro {
 	controller,
-	route
+	route,
+	halt
 }
 
 route("duck")
@@ -19,4 +20,13 @@ controller class SimpleRestController() {
     shared String[] listThingsDucksCanDo() {
         return ["fly", "quack", "eat", "dive"];
     }
+    
+    route("find")
+    shared String findDuck(Integer id) {
+        // If we can't find the duck in DB,
+        // return a 404 response.
+        return daoFind(id) else halt(404, "Duck not found");
+    }
+    
+    String? daoFind(Integer id) => null;
 }

@@ -70,8 +70,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 				handler(req, resp);
 			}
 		} else {
-			resp.responseStatus = 404;
-			resp.writeString("Not found");
+			respond(404, "Not Found", resp);
 		}
 	}
 
@@ -95,8 +94,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			}
 		} catch (BindingException e) {
 			log.error("", e);
-			resp.responseStatus = 400;
-			resp.writeString("Bad request");
+			respond(400, "Bad Request", resp);
 			return;
 		}
 		
@@ -106,10 +104,11 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 						else func.apply<Anything, Nothing>();
 			value result = method.namedApply(args);
 			writeResult(result, resp);
+		} catch (HaltException e) {
+			respond(e.errorCode, e.message, resp);
 		} catch (AssertionError|Exception e) {
 			log.error("Invocation of ``func.qualifiedName`` threw an error:\n", e);
-			resp.responseStatus = 500;
-			resp.writeString("<html><head><title>Error</title></head><body>500 - Internal Server Error</body></html>");
+			respond(500, "Internal Server Error", resp);
 		}
 	}
 	
@@ -189,7 +188,18 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
             resp.writeString(jsonSerializer.serialize(result));
         }
     }
+    
+    void respond(Integer code, String? message, Response resp) {
+        resp.responseStatus = code;
+        resp.writeString("<html><head><title>Error</title></head><body>"
+                          + code.string + " - " + (message else "") + "</body></html>");
+    }
 }
 
-class BindingException(String? description = null, Throwable? cause = null) extends Exception(description, cause) {
+class BindingException(String? description = null, Throwable? cause = null)
+		extends Exception(description, cause) {
+}
+
+shared class HaltException(shared Integer errorCode, String? message = null)
+	extends Exception(message) {
 }
