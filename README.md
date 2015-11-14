@@ -1,8 +1,12 @@
 # gyokuro
 A web framework written in Ceylon, which allows:
 
-* creating controllers and routes using Spring-MVC-like annotations
-* serving static assets (HTML, CSS, JS, ...)
+* routing GET/POST requests to simple `(Request, Response)` handlers
+* creating annotated controllers containing more powerful handlers
+* serving static assets (HTML, CSS, JS, ...) from a directory
+
+gyokuro is based on the [Ceylon SDK](http://github.com/ceylon/ceylon-sdk), 
+and uses `ceylon.net`'s server API.
 
 ## Creating a simple webapp
 
