@@ -55,10 +55,19 @@ parameters directly to function parameters, and return an object that represents
 Let's see how it works on a simple example:
 
 ```ceylon
+shared void run() {
+
+	value app = Application {
+		// You can use REST-style annotated controllers like this:
+		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
+	};
+	
+	app.run();
+}
 ```
 
 The package `gyokuro.demo.rest` will be scanned for classes annotated with `controller`.
-Each function annotated with `route` will be mapped to the corresponding URL. For example:
+Each function annotated with `route` will be mapped to the corresponding path. For example:
 
 ```ceylon
 import ceylon.net.http.server {
