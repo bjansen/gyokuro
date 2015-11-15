@@ -31,10 +31,6 @@ import com.github.bjansen.gyokuro {
 	halt
 }
 
-shared void plop() {
-	print(parseFloat("0"));
-}
-
 shared test
 void testDispatcher() {
 	value dispatcher =
