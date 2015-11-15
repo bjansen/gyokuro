@@ -1,6 +1,11 @@
 import ceylon.io {
 	SocketAddress
 }
+import ceylon.logging {
+	addLogWriter,
+	Priority,
+	Category
+}
 import ceylon.net.http.client {
 	Request
 }
@@ -23,12 +28,12 @@ import ceylon.test {
 	assertTrue
 }
 
-import com.github.bjansen.gyokuro.internal {
-	RequestDispatcher
-}
 import com.github.bjansen.gyokuro {
 	get,
 	halt
+}
+import com.github.bjansen.gyokuro.internal {
+	RequestDispatcher
 }
 
 shared test
@@ -38,6 +43,15 @@ void testDispatcher() {
 		["/", `package test.com.github.bjansen.gyokuro.internal.testdata`],
 		(req, resp) => true)
 		.endpoint();
+	
+	addLogWriter {
+		void log(Priority p, Category c, String m, Throwable? e) {
+			print("``p.string`` ``m``");
+			if (exists e) {
+				printStackTrace(e, print);
+			}
+		}		
+	};
 	
 	value server = newServer({ dispatcher });
 	server.addListener(void(Status status) {
@@ -103,7 +117,24 @@ void runTests() {
 	
 	get("/testHalt", `testHalt`);
 	assertTrue(request("/testHalt", {})
-		.contains("500 - I can haz an error"));	
+		.contains("500 - I can haz an error"));
+	
+	assertEquals(request("/lists/list", {
+		Parameter("strings", "a"),
+		Parameter("strings", "b"),
+		Parameter("strings", "c"),
+		Parameter("strings", "d"),
+		Parameter("strings", "e")
+	}), "abcde");
+
+	
+	assertEquals(request("/lists/list2", {
+		Parameter("bools", "1"),
+		Parameter("bools", "0"),
+		Parameter("ints", "6"),
+		Parameter("ints", "2"),
+		Parameter("ints", "4")
+	}), "truefalse624");
 }
 
 void myHandler(String s1, Integer i1, Response resp) {

@@ -42,7 +42,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 	
 	value log = logger(`module com.github.bjansen.gyokuro`);
 	
-	Converter[] converters = [primitiveTypesConverter];
+	Converter<out Object>[] converters = [primitiveTypesConverter, listsConverter];
 
 	if (exists [contextRoot, declaration] = packageToScan) {
 		annotationScanner.scanControllersInPackage(contextRoot, declaration);
@@ -154,7 +154,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			if (valType == param.openType.string) {
 				return val;
 			} else if (is String val) {
-				return convertParameter(val, param);
+				return convertParameter(param, val);
 			} else {
 				throw BindingException("Cannot bind parameter ``param.name`` from session: type ``valType`` cannot be assigned nor converted to ``param.openType``");
 			}
@@ -164,18 +164,22 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 	
 	Anything? bindRequestParameter(ValueDeclaration param, Request req) {
 		if (exists requestParam = req.parameter(param.name)) {
-			return convertParameter(requestParam, param);
+			return convertParameter(param, requestParam, req.parameters(param.name));
 		}
 		
 		return null;
 	}
 
-	Anything convertParameter(String requestParam, ValueDeclaration param) {
+	Anything convertParameter(ValueDeclaration param, String val, String[]? values = null) {
 		value targetType = if (isOptional(param)) then getNonOptionalType(param) else param.openType;
 		
 		for (converter in converters) {
 			if (converter.supports(targetType)) {
-				return converter.convert(targetType, requestParam);
+				if (exists values, is MultiConverter converter) {
+					return converter.convert(targetType, values);
+				} else if (is Converter<String> converter) {
+					return converter.convert(targetType, val);
+				}
 			}
 		}
 		
