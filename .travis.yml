@@ -1,0 +1,14 @@
+language: java
+jdk:
+  - oraclejdk7
+install: 
+  - wget --quiet --output-document=ceylon.deb $CEYLON
+  - sudo dpkg --install ceylon.deb
+before_script: 
+  - ceylon compile
+script: 
+  - ceylon test $TEST_MODULE
+env:
+  global:
+    - CEYLON="http://ceylon-lang.org/download/dist/1_2_0_deb"
+    - TEST_MODULE="test.com.github.bjansen.gyokuro"
