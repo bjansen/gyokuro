@@ -1,26 +1,29 @@
 import ceylon.io {
-    SocketAddress
+	SocketAddress
 }
 import ceylon.language.meta.declaration {
-    Package
+	Package
 }
 import ceylon.net.http {
-    post,
-    get,
-    Method
+	post,
+	get,
+	Method
 }
 import ceylon.net.http.server {
-    Options,
-    Request,
-    newServer,
-    Response,
-    Endpoint,
-    Server,
-    startsWith
+	Options,
+	Request,
+	newServer,
+	Response,
+	Server,
+	startsWith,
+	AsynchronousEndpoint
 }
+import ceylon.net.http.server.endpoints {
+	serveStaticFile
+}
+
 import com.github.bjansen.gyokuro.internal {
-	RequestDispatcher,
-	myServeStaticFile
+	RequestDispatcher
 }
 
 "A web server application that can serve static assets and dynamic requests."
@@ -41,7 +44,7 @@ shared class Application(
     
     "Starts the web application."
     shared void run() {
-        value assetsEndpoint = Endpoint(startsWith(""), serveRoot, { get, post, special });
+        value assetsEndpoint = AsynchronousEndpoint(startsWith(""), serveRoot, { get, post, special });
         
         value endpoints = {RequestDispatcher(restEndpoint, filter).endpoint(), assetsEndpoint};
         
@@ -71,7 +74,7 @@ shared class Application(
         return true;
     }
     
-    void serveRoot(Request req, Response resp) {
+    void serveRoot(Request req, Response resp, void complete()) {
         if (!filter(req, resp)) {
             return;
         }
@@ -80,7 +83,7 @@ shared class Application(
             resp.responseStatus = 418;
             resp.writeString("418 - I'm a teapot");
         } else {
-            myServeStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else req.path)(req, resp, () => {});
+            serveStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else req.path)(req, resp, complete);
         }
     }
 }
