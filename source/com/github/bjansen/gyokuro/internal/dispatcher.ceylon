@@ -28,7 +28,8 @@ import ceylon.net.http.server {
 	Response,
 	Request,
 	Endpoint,
-	Matcher
+	Matcher,
+	UploadedFile
 }
 
 import com.github.bjansen.gyokuro {
@@ -163,25 +164,46 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 	}
 	
 	Anything? bindRequestParameter(ValueDeclaration param, Request req) {
-		if (exists requestParam = req.parameter(param.name)) {
-			return convertParameter(param, requestParam, req.parameters(param.name));
+
+		if (exists val = getValueFromRequest(req, param)) {
+			return convertParameter(param, val);
 		}
 		// missing values can still be mapped to List or Sequential
 		if (listsConverter.supports(param.openType)) {
 			return listsConverter.convert(param.openType, []);
 		}
-		
+    		
 		return null;
 	}
+	
+	Anything getValueFromRequest(Request req, ValueDeclaration decl) {
+		value targetType = if (isOptional(decl))
+				then getNonOptionalType(decl)
+				else decl.openType;
 
-	Anything convertParameter(ValueDeclaration param, String val, String[]? values = null) {
+		// file uploads are broken because of https://github.com/ceylon/ceylon-sdk/issues/412
+		if (targetType == `UploadedFile`.declaration.openType) {
+			return req.file(decl.name);
+		} else if (listsConverter.supports(targetType)) {
+			if (exists typeArg = listsConverter.getTypeArgument(targetType),
+				typeArg == `UploadedFile`.declaration.openType) {
+				
+				return req.files(decl.name);
+			}
+			return req.parameters(decl.name);
+		}
+		
+		return req.parameter(decl.name);
+	}
+
+	Anything convertParameter(ValueDeclaration param, Object val) {
 		value targetType = if (isOptional(param)) then getNonOptionalType(param) else param.openType;
 		
 		for (converter in converters) {
 			if (converter.supports(targetType)) {
-				if (exists values, is MultiConverter converter) {
-					return converter.convert(targetType, values);
-				} else if (is Converter<String> converter) {
+				if (is String[] val, is MultiConverter converter) {
+					return converter.convert(targetType, val);
+				} else if (is String val, is Converter<String> converter) {
 					return converter.convert(targetType, val);
 				}
 			}

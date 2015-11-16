@@ -11,13 +11,16 @@ import ceylon.language.meta {
 import ceylon.language.meta.model {
 	ClassOrInterface
 }
+import ceylon.net.http.server {
+	UploadedFile
+}
 
 interface Converter<Type=String> {
 	shared formal Boolean supports(OpenType type);
 	shared formal Anything convert(OpenType type, Type str);
 }
 
-interface MultiConverter satisfies Converter<String[]> {
+interface MultiConverter satisfies Converter<Object[]> {
 
 }
 
@@ -50,13 +53,14 @@ object listsConverter satisfies MultiConverter {
 	value supportedTypes = [`List<>`, `Sequential<>`, `Sequence<>`]
 			.map((_) => _.declaration.qualifiedName);
 	
-	shared actual Anything convert(OpenType t, String[] values) {
-		if (is OpenClassOrInterfaceType t,
-			supportedTypes.contains(t.declaration.qualifiedName),
-			is OpenClassOrInterfaceType typeArg = t.typeArgumentList.first) {
-			
-			if (!primitiveTypesConverter.supports(typeArg)) {
-				throw BindingException("Only lists of primitive types are supported");
+	shared actual Anything convert(OpenType t, Object[] values) {
+		if (exists typeArg = getTypeArgument(t)) {
+			assert(is OpenClassOrInterfaceType t);
+
+			if (!primitiveTypesConverter.supports(typeArg)
+				&& typeArg != `UploadedFile`.declaration.openType) {
+				throw BindingException("Only lists of primitive types or
+				                        UploadedFile are supported");
 			}
 			value closedTypeArg = typeArg.declaration.apply<Anything>();
 			value tName = t.declaration.qualifiedName;
@@ -84,10 +88,26 @@ object listsConverter satisfies MultiConverter {
 		return false;
 	}
 
-	Anything convertList(ClassOrInterface<Anything> closedTypeArg, String[] values, OpenClassOrInterfaceType typeArg) {
+	shared OpenClassOrInterfaceType? getTypeArgument(OpenType t) {
+		if (is OpenClassOrInterfaceType t,
+			supportedTypes.contains(t.declaration.qualifiedName),
+			is OpenClassOrInterfaceType typeArg = t.typeArgumentList.first) {
+
+			return typeArg;
+		}
+		
+		return null;
+	}
+	
+	Anything convertList(ClassOrInterface<Anything> closedTypeArg, Object[] values, OpenClassOrInterfaceType typeArg) {
 		value list = `class ArrayList`.instantiate([closedTypeArg]);
 		for (val in values) {
-			if (exists converted = primitiveTypesConverter.convert(typeArg, val)) {
+			value converted = switch(val)
+			case (is String) primitiveTypesConverter.convert(typeArg, val)
+			case (is UploadedFile) val
+			else null;
+			
+			if (exists converted) {
 				`function ArrayList.add`
 						.memberApply<>(type(list))
 						.bind(list).apply(converted);
@@ -96,7 +116,7 @@ object listsConverter satisfies MultiConverter {
 		return list;
 	}
 
-	Anything convertSequence(ClassOrInterface<Anything> closedTypeArg, String[] values, OpenClassOrInterfaceType typeArg) {
+	Anything convertSequence(ClassOrInterface<Anything> closedTypeArg, Object[] values, OpenClassOrInterfaceType typeArg) {
 		if (is Object list = convertList(closedTypeArg, values, typeArg)) {
 			return `function ArrayList.sequence`
 					.memberApply<>(type(list))
