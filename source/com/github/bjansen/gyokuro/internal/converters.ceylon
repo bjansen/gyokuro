@@ -8,6 +8,9 @@ import ceylon.collection {
 import ceylon.language.meta {
 	type
 }
+import ceylon.language.meta.model {
+	ClassOrInterface
+}
 
 interface Converter<Type=String> {
 	shared formal Boolean supports(OpenType type);
@@ -44,28 +47,29 @@ object primitiveTypesConverter satisfies Converter<> {
 
 object listsConverter satisfies MultiConverter {
 	
+	value supportedTypes = [`List<>`, `Sequential<>`, `Sequence<>`]
+			.map((_) => _.declaration.qualifiedName);
+	
 	shared actual Anything convert(OpenType t, String[] values) {
 		if (is OpenClassOrInterfaceType t,
-			t.declaration.qualifiedName == "ceylon.language::List") {
-			assert(is OpenClassOrInterfaceType typeArg = t.typeArgumentList.first);
+			supportedTypes.contains(t.declaration.qualifiedName),
+			is OpenClassOrInterfaceType typeArg = t.typeArgumentList.first) {
 			
 			if (!primitiveTypesConverter.supports(typeArg)) {
 				throw BindingException("Only lists of primitive types are supported");
 			}
-			if (values.empty) {
-				return empty;
-			} else {
-				value closedTypeArg = typeArg.declaration.apply<Anything>();
-				value list = `class ArrayList`.instantiate([closedTypeArg]);
+			value closedTypeArg = typeArg.declaration.apply<Anything>();
+			value tName = t.declaration.qualifiedName;
 
-				for (val in values) {
-					if (exists converted = primitiveTypesConverter.convert(typeArg, val)) {
-						`function ArrayList.add`
-								.memberApply<>(type(list))
-								.bind(list).apply(converted);
-					}
+			if (values.empty) {
+				if (tName == `Sequence<>`.declaration.qualifiedName) {
+					throw BindingException("Cannot bind empty array to nonempty sequence");
 				}
-				return list;
+				return empty;
+			} else if (tName == `List<>`.declaration.qualifiedName) {
+				return convertList(closedTypeArg, values, typeArg);
+			} else {
+				return convertSequence(closedTypeArg, values, typeArg);
 			}
 		}
 
@@ -74,13 +78,32 @@ object listsConverter satisfies MultiConverter {
 	
 	shared actual Boolean supports(OpenType type) {
 		if (is OpenClassOrInterfaceType type,
-			type.declaration.qualifiedName == "ceylon.language::List") {
+			supportedTypes.contains(type.declaration.qualifiedName)) {
 			return true;
 		}
 		return false;
 	}
-}
 
-// TODO array, sequence, iterator, collections?
+	Anything convertList(ClassOrInterface<Anything> closedTypeArg, String[] values, OpenClassOrInterfaceType typeArg) {
+		value list = `class ArrayList`.instantiate([closedTypeArg]);
+		for (val in values) {
+			if (exists converted = primitiveTypesConverter.convert(typeArg, val)) {
+				`function ArrayList.add`
+						.memberApply<>(type(list))
+						.bind(list).apply(converted);
+			}
+		}
+		return list;
+	}
+
+	Anything convertSequence(ClassOrInterface<Anything> closedTypeArg, String[] values, OpenClassOrInterfaceType typeArg) {
+		if (is Object list = convertList(closedTypeArg, values, typeArg)) {
+			return `function ArrayList.sequence`
+					.memberApply<>(type(list))
+					.bind(list).apply();
+		}
+		return null;
+	}
+}
 
 // TODO convert to a bean using reflection

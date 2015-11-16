@@ -25,7 +25,8 @@ import ceylon.net.uri {
 import ceylon.test {
 	test,
 	assertEquals,
-	assertTrue
+	assertTrue,
+	fail
 }
 
 import com.github.bjansen.gyokuro {
@@ -126,7 +127,6 @@ void runTests() {
 		Parameter("strings", "d"),
 		Parameter("strings", "e")
 	}), "abcde");
-
 	
 	assertEquals(request("/lists/list2", {
 		Parameter("bools", "1"),
@@ -135,6 +135,20 @@ void runTests() {
 		Parameter("ints", "2"),
 		Parameter("ints", "4")
 	}), "truefalse624");
+
+	assertEquals(request("/lists/sequential", {
+		Parameter("ints", "8"),
+		Parameter("ints", "4"),
+		Parameter("ints", "5")
+	}), "845");
+
+	assertEquals(request("/lists/sequence", {
+		Parameter("ints", "8")
+	}), "8");
+
+	// can't bind an empty array to a [Integer+]
+	assertTrue(request("/lists/sequence", {})
+		.contains("400"));
 }
 
 void myHandler(String s1, Integer i1, Response resp) {

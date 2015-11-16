@@ -166,6 +166,10 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 		if (exists requestParam = req.parameter(param.name)) {
 			return convertParameter(param, requestParam, req.parameters(param.name));
 		}
+		// missing values can still be mapped to List or Sequential
+		if (listsConverter.supports(param.openType)) {
+			return listsConverter.convert(param.openType, []);
+		}
 		
 		return null;
 	}
