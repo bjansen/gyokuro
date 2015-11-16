@@ -1,14 +1,16 @@
+sudo: false
 language: java
 jdk:
   - oraclejdk7
 install: 
-  - wget --quiet --output-document=ceylon.deb $CEYLON
-  - sudo dpkg --install ceylon.deb
+  - wget --quiet --output-document=/tmp/ceylon.zip $CEYLON
+  - unzip /tmp/ceylon.zip
+  - export PATH=$PATH:$PWD/ceylon-1.2.0/bin/
 before_script: 
   - ceylon compile
 script: 
   - ceylon test $TEST_MODULE
 env:
   global:
-    - CEYLON="http://ceylon-lang.org/download/dist/1_2_0_deb"
+    - CEYLON="http://ceylon-lang.org/download/dist/1_2_0"
     - TEST_MODULE="test.com.github.bjansen.gyokuro"
