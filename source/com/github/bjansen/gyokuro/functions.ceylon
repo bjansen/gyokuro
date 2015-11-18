@@ -1,6 +1,7 @@
 import ceylon.net.http {
 	getMethod=get,
-	postMethod=post
+	postMethod=post,
+    sdkContentType=contentType
 }
 
 import com.github.bjansen.gyokuro.internal {
@@ -13,6 +14,10 @@ import ceylon.language.meta.model {
 import ceylon.net.http.server {
 	Request,
 	Response
+}
+import ceylon.io.charset {
+    Charset,
+    utf8
 }
 
 shared void get<Params>(String route,
@@ -42,4 +47,25 @@ shared void post<Params>(String route,
  "
 shared Nothing halt(Integer errorCode, String? message = null) {
 	throw HaltException(errorCode, message);
+}
+
+"A template that can be called by a [[TemplateRenderer]]."
+shared alias Template => Callable<Anything, [TemplateRenderer, Request, Response]>;
+
+"Renders a template that will be returned as the response body."
+shared void render(
+		"The template name"
+		String templateName,
+		"A map of things to pass to the template."
+		Map<String, Anything> context,
+		"The content type to be used in the response."
+		String contentType = "text/html",
+		"The charset to be used in the response."
+		Charset charset = utf8)
+		(TemplateRenderer renderer, Request request, Response response) {
+
+	value result = renderer.render(templateName, context);
+	
+	response.addHeader(sdkContentType(contentType, charset));
+	response.writeString(result);
 }

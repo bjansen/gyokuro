@@ -33,13 +33,16 @@ import ceylon.net.http.server {
 }
 
 import com.github.bjansen.gyokuro {
-	SessionAnnotation
+	SessionAnnotation,
+    Template,
+    TemplateRenderer
 }
 import com.github.bjansen.gyokuro.json {
 	jsonSerializer
 }
 
-shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter) {
+shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter,
+		TemplateRenderer? renderer = null) {
 	
 	value log = logger(`module com.github.bjansen.gyokuro`);
 	
@@ -104,7 +107,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 						then func.memberApply<>(type(o)).bind(o)
 						else func.apply<Anything, Nothing>();
 			value result = method.namedApply(args);
-			writeResult(result, resp);
+			writeResult(result, req, resp);
 		} catch (HaltException e) {
 			respond(e.errorCode, e.message, resp);
 		} catch (AssertionError|Exception e) {
@@ -212,8 +215,16 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 		throw BindingException("Cannot bind parameter ``param.name``: no converter found for type ``param.openType``");
 	}
 
-    void writeResult(Anything result, Response resp) {
-        if (is Object result) {
+    void writeResult(Anything result, Request req, Response resp) {
+    	if (is Template result) {
+    		if (exists renderer) {
+    			result(renderer, req, resp);
+			} else {
+				respond(500, "No template renderer is configured.", resp);
+			}
+		} else if (is String result) {
+			resp.writeString(result);
+		} else if (is Object result) {
             resp.addHeader(contentType("application/json", utf8));
             resp.writeString(jsonSerializer.serialize(result));
         }

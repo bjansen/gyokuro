@@ -38,7 +38,9 @@ shared class Application(
 	"A path to look for static assets served under `/`."
 	String assetsPath = "",
 	"Additional (chained) filters run before each request."
-	Filter[] filters = []) {
+	Filter[] filters = [],
+    "A template renderer"
+    TemplateRenderer? renderer = null) {
     
     shared alias Filter => Boolean(Request, Response);
     
@@ -46,7 +48,7 @@ shared class Application(
     shared void run() {
         value assetsEndpoint = AsynchronousEndpoint(startsWith(""), serveRoot, { get, post, special });
         
-        value endpoints = {RequestDispatcher(restEndpoint, filter).endpoint(), assetsEndpoint};
+        value endpoints = {RequestDispatcher(restEndpoint, filter, renderer).endpoint(), assetsEndpoint};
         
         Server server = newServer(endpoints);
         server.start(SocketAddress(address, port), Options());

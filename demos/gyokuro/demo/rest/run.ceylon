@@ -1,7 +1,10 @@
 import com.github.bjansen.gyokuro {
 	Application,
 	get,
-	post
+	post,
+    Template,
+    render,
+    TemplateRenderer
 }
 import ceylon.logging {
 	addLogWriter,
@@ -27,7 +30,10 @@ shared void run() {
 	
 	// You can also use more advanced handlers
 	post("/hello", `postHandler`);
-	
+
+	// And render templates
+	get("/render", `renderingHandler`);
+
 	value app = Application {
 		// You can also use annotated controllers, if you're
 		// a nostalgic Java developer ;-)
@@ -35,6 +41,21 @@ shared void run() {
 
 		// And serve static assets
 		assetsPath = "assets";
+
+		// You can use any template engine you want
+		renderer = object satisfies TemplateRenderer {
+
+			// this is a dummy template renderer
+		    shared actual String render(String templateName, Map<String,Anything> context) {
+		    	variable value result = templateName;
+		    	for (key -> val in context) {
+		    		if (exists val) {
+		    			result = result.replace(key, val.string);
+					}
+				}
+				return result;
+			}
+		};
 	};
 	
 	// By default, the server will be started on 0.0.0.0:8080
@@ -48,6 +69,10 @@ String postHandler(String who = "world") {
 	// `who` will get its value from POST data, and will
 	// be defaulted to "world".
 	return "Hello, " + who + "!\n";
+}
+
+Template renderingHandler() {
+	return render("foobar", map({"bar" -> "baz"}));
 }
 
 void configureLogger() {
