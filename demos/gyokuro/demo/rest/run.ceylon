@@ -4,7 +4,9 @@ import com.github.bjansen.gyokuro {
 	post,
     Template,
     render,
-    TemplateRenderer
+    TemplateRenderer,
+	serve,
+	bind
 }
 import ceylon.logging {
 	addLogWriter,
@@ -37,10 +39,10 @@ shared void run() {
 	value app = Application {
 		// You can also use annotated controllers, if you're
 		// a nostalgic Java developer ;-)
-		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
+		controllers = bind(`package gyokuro.demo.rest`, "/rest");
 
 		// And serve static assets
-		assetsPath = "assets";
+		assets = serve("assets");
 
 		// You can use any template engine you want
 		renderer = object satisfies TemplateRenderer {

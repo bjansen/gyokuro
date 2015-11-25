@@ -16,7 +16,8 @@ import ceylon.net.http.server {
 	Response,
 	Server,
 	startsWith,
-	AsynchronousEndpoint
+	AsynchronousEndpoint,
+	HttpEndpoint
 }
 import ceylon.net.http.server.endpoints {
 	serveStaticFile
@@ -24,6 +25,9 @@ import ceylon.net.http.server.endpoints {
 
 import com.github.bjansen.gyokuro.internal {
 	RequestDispatcher
+}
+import ceylon.collection {
+	ArrayList
 }
 
 "A web server application that can serve static assets and dynamic requests."
@@ -33,10 +37,11 @@ shared class Application(
 	"The port on which the server will listen."
 	Integer port = 8080,
 	"A tuple [context root, package] used to scan [[controllers|controller]]
-	 that will be associated to the given context root."
-	[String, Package]? restEndpoint = null,
-	"A path to look for static assets served under `/`."
-	String assetsPath = "",
+	 that will be associated to the given context root. See the [[bind]] function."
+	[String, Package]? controllers = null,
+	"A tuple [filesystem folder, context root] used to serve static assets.
+ 	 See the [[serve]] function."
+	[String, String]? assets = null,
 	"Additional (chained) filters run before each request."
 	Filter[] filters = [],
     "A template renderer"
@@ -46,9 +51,17 @@ shared class Application(
     
     "Starts the web application."
     shared void run() {
-        value assetsEndpoint = AsynchronousEndpoint(startsWith(""), serveRoot, { get, post, special });
-        
-        value endpoints = {RequestDispatcher(restEndpoint, filter, renderer).endpoint(), assetsEndpoint};
+        value endpoints = ArrayList<HttpEndpoint>();
+
+		endpoints.add(RequestDispatcher(controllers, filter, renderer).endpoint());
+		
+        if (exists assets) {
+            value assetsEndpoint = AsynchronousEndpoint(startsWith(assets[1]),
+                serveRoot(assets), 
+                { get, post, special });
+            
+            endpoints.add(assetsEndpoint);
+        }
         
         Server server = newServer(endpoints);
         server.start(SocketAddress(address, port), Options());
@@ -76,7 +89,7 @@ shared class Application(
         return true;
     }
     
-    void serveRoot(Request req, Response resp, void complete()) {
+    void serveRoot([String, String] conf)(Request req, Response resp, void complete()) {
         if (!filter(req, resp)) {
             return;
         }
@@ -85,7 +98,34 @@ shared class Application(
             resp.responseStatus = 418;
             resp.writeString("418 - I'm a teapot");
         } else {
-            serveStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else req.path)(req, resp, complete);
+            value root = conf[1];
+            value assetsPath = conf[0];
+            value file = root.empty then req.path else req.path[root.size...];
+            serveStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else file)(req, resp, complete);
         }
     }
+}
+
+"Tells gyokuro to bind [[controllers|controller]] scanned in [[pkgToScan]] to the given
+ [[context]] root. This function is meant to be used for [[Application.controllers]].
+ 
+     value app = Application {
+     	controllers = bind(\"rest\", `package com.myapp.controllers`);
+     };
+ 
+ "
+shared [String, Package] bind(Package pkgToScan, String context = "/") {
+	return [context, pkgToScan];
+}
+
+"Tells gyokuro to serve static assets located in the filesystem folder [[path]] under the
+ given [[context]] root. For example, all routes starting with `/public` will serve files
+ located in `./assets`:
+ 
+     value app = Application {
+     	assets = serve(\"assets\", \"/public\");
+     };
+ "
+shared [String, String] serve(String path, String context = "") {
+	return [path, context]; 
 }
