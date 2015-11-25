@@ -57,7 +57,7 @@ shared void render(
 		"The template name"
 		String templateName,
 		"A map of things to pass to the template."
-		Map<String, Anything> context,
+		Map<String, Anything> context = emptyMap,
 		"The content type to be used in the response."
 		String contentType = "text/html",
 		"The charset to be used in the response."
