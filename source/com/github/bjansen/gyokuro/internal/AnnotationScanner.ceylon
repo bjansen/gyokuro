@@ -49,7 +49,7 @@ shared object annotationScanner {
 						value functionRoute = buildRoute(controllerRoute, route.path);
 
 						log.trace("Binding function ``func.name`` to route ``functionRoute``");
-						router.registerControllerRoute(functionRoute, [instance, func]);
+						router.registerControllerRoute(functionRoute, [instance, func], route.methods);
 					}
 				}
 			}

@@ -1,7 +1,12 @@
 import ceylon.language.meta.declaration {
 	FunctionDeclaration,
 	ClassDeclaration,
-    ValueDeclaration
+	ValueDeclaration
+}
+import ceylon.net.http {
+	AbstractMethod,
+	get,
+	post
 }
 
 "Declares a partial path associated to a class or a function.
@@ -15,12 +20,14 @@ import ceylon.language.meta.declaration {
          void hello() { }
      }
  "
-shared annotation RouteAnnotation route(String path) => RouteAnnotation(path);
+shared annotation RouteAnnotation route(String path,
+	{AbstractMethod+} methods = {get, post}) => RouteAnnotation(path, methods);
 
-shared final annotation class RouteAnnotation(path) 
+shared final annotation class RouteAnnotation(path, methods) 
 		satisfies OptionalAnnotation<RouteAnnotation, FunctionDeclaration|ClassDeclaration> {
 	
 	shared String path;
+	shared {AbstractMethod+} methods;
 }
 
 "Declares a class as a controller, allowing routes to be scanned."

@@ -69,3 +69,7 @@ shared void render(
 	response.addHeader(sdkContentType(contentType, charset));
 	response.writeString(result);
 }
+
+shared void clearRoutes() {
+	router.clear();
+}

@@ -25,13 +25,13 @@ import ceylon.net.uri {
 import ceylon.test {
 	test,
 	assertEquals,
-	assertTrue,
-	fail
+	assertTrue
 }
 
 import com.github.bjansen.gyokuro {
 	get,
-	halt
+	halt,
+	clearRoutes
 }
 import com.github.bjansen.gyokuro.internal {
 	RequestDispatcher
@@ -39,6 +39,8 @@ import com.github.bjansen.gyokuro.internal {
 
 shared test
 void testDispatcher() {
+	clearRoutes();
+	
 	value dispatcher =
 			RequestDispatcher(
 		["/", `package test.com.github.bjansen.gyokuro.internal.testdata`],

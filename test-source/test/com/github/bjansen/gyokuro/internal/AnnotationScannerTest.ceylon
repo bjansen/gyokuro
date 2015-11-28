@@ -7,8 +7,12 @@ import com.github.bjansen.gyokuro.internal {
 	annotationScanner,
 	router
 }
+import com.github.bjansen.gyokuro {
+	clearRoutes
+}
 
 shared test void scanClass() {
+	clearRoutes();
 	annotationScanner.scanControllersInPackage("/",
 		`package test.com.github.bjansen.gyokuro.internal.testdata`);
 	
@@ -22,6 +26,7 @@ shared test void scanClass() {
 }
 
 shared test void scanPathWithSlashes() {
+	clearRoutes();
 	annotationScanner.scanControllersInPackage("/",
 		`package test.com.github.bjansen.gyokuro.internal.testdata`);
 	
@@ -29,6 +34,7 @@ shared test void scanPathWithSlashes() {
 }
 
 shared test void scanControllerWithoutRoute() {
+	clearRoutes();
 	annotationScanner.scanControllersInPackage("/",
 		`package test.com.github.bjansen.gyokuro.internal.testdata`);
 	
