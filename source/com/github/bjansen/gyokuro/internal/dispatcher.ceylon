@@ -36,7 +36,8 @@ import ceylon.net.http.server {
 import com.github.bjansen.gyokuro {
 	SessionAnnotation,
     Template,
-    TemplateRenderer
+    TemplateRenderer,
+	Flash
 }
 import com.github.bjansen.gyokuro.json {
 	jsonSerializer
@@ -145,6 +146,8 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 				return resp;
 			} else if (param.openType == `interface Request`.openType) {
 				return req;
+			} else if (param.openType == `interface Flash`.openType) {
+				return DefaultFlash(req.session);
 			} else if (param.annotated<SessionAnnotation>()) {
 				return bindSessionValue(param, req);
 			} else {
