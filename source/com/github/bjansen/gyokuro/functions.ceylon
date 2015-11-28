@@ -6,7 +6,8 @@ import ceylon.net.http {
 
 import com.github.bjansen.gyokuro.internal {
 	router,
-	HaltException
+	HaltException,
+	RedirectException
 }
 import ceylon.language.meta.model {
 	Function
@@ -47,6 +48,21 @@ shared void post<Params>(String route,
  "
 shared Nothing halt(Integer errorCode, String? message = null) {
 	throw HaltException(errorCode, message);
+}
+
+"Interrupts the current handler immediately, and asks the client
+ browser to redirect to the specified [[url]].
+ 
+ 	shared void login(String username, String password) {
+ 		if (exists user = ...) {
+ 			session.put(\"user\", user);
+ 			redirect(\"/\");
+ 		}
+ 		...
+ 	}
+ "
+shared Nothing redirect(String url, Integer redirectCode = 303) {
+	throw RedirectException(url, redirectCode);
 }
 
 "A template that can be called by a [[TemplateRenderer]]."

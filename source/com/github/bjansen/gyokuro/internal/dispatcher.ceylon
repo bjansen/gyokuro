@@ -22,7 +22,8 @@ import ceylon.logging {
 import ceylon.net.http {
 	post,
 	get,
-	contentType
+	contentType,
+	Header
 }
 import ceylon.net.http.server {
 	Response,
@@ -110,6 +111,9 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			writeResult(result, req, resp);
 		} catch (HaltException e) {
 			respond(e.errorCode, e.message, resp);
+		} catch (RedirectException e) {
+			resp.addHeader(Header("Location", e.url));
+			respond(e.redirectCode, "Moved", resp);
 		} catch (AssertionError|Exception e) {
 			log.error("Invocation of ``func.qualifiedName`` threw an error:\n", e);
 			respond(500, "Internal Server Error", resp);
@@ -243,4 +247,8 @@ class BindingException(String? description = null, Throwable? cause = null)
 
 shared class HaltException(shared Integer errorCode, String? message = null)
 	extends Exception(message) {
+}
+
+shared class RedirectException(shared String url, shared Integer redirectCode)
+		extends Exception() {
 }
