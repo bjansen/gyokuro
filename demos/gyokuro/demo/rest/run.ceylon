@@ -48,7 +48,9 @@ shared void run() {
 		renderer = object satisfies TemplateRenderer {
 
 			// this is a dummy template renderer
-		    shared actual String render(String templateName, Map<String,Anything> context) {
+		    shared actual String render(String templateName, Map<String,Anything> context,
+				Request req, Response resp) {
+				
 		    	variable value result = templateName;
 		    	for (key -> val in context) {
 		    		if (exists val) {

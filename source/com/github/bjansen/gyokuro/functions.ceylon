@@ -64,7 +64,7 @@ shared void render(
 		Charset charset = utf8)
 		(TemplateRenderer renderer, Request request, Response response) {
 
-	value result = renderer.render(templateName, context);
+	value result = renderer.render(templateName, context, request, response);
 	
 	response.addHeader(sdkContentType(contentType, charset));
 	response.writeString(result);
