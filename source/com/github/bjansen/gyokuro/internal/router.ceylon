@@ -23,16 +23,16 @@ shared object router {
 	
 	value root = Node("");
 	
-	shared void registerRoute<Param>(String route, {Method+} methods,
+	shared void registerRoute<Param>(String path, {Method+} methods,
 		Function<Anything,Param>|Callable<Anything,[Request, Response]> handler)
 			given Param satisfies Anything[] {
 		
-		value parts = route.rest.split('/'.equals);
+		value parts = path.rest.split('/'.equals);
 		value node = findOrCreateNode(root, parts);
 		
 		for (method in methods) {
 			if (node.handles(method)) {
-				throw Exception("Route '``route``' already defined for method '``method``'.");
+				throw Exception("Path '``path``' already defined for method '``method``'.");
 			}
 			if (is Function<> handler) {
 				node.addHandler(method, [null, handler.declaration]);
@@ -42,11 +42,11 @@ shared object router {
 		}
 	}
 	
-	shared void registerControllerRoute(String route,
+	shared void registerControllerRoute(String path,
 		[Object, FunctionDeclaration] controllerHandler,
 		{AbstractMethod+} methods) {
 		
-		value node = findOrCreateNode(root, route.rest.split('/'.equals));
+		value node = findOrCreateNode(root, path.rest.split('/'.equals));
 
 		for (method in methods) {
 			if (node.handles(method)) {
@@ -55,7 +55,7 @@ shared object router {
 				case (is [Object?, FunctionDeclaration]) handler[1].string
 				else (handler?.string else "<unknown>");
 				
-				throw Exception("Route '``route``' already defined for method '``method``'
+				throw Exception("Path '``path``' already defined for method '``method``'
 				                 by handler '``desc``'.");
 			}
 			node.addHandler(method, controllerHandler);

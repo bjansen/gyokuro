@@ -35,7 +35,7 @@ shared object annotationScanner {
 				String controllerRoute;
 				 
 				if (exists route = annotations(`RouteAnnotation`, member)) {
-					controllerRoute = buildRoute(contextRoot, route.path);
+					controllerRoute = buildPath(contextRoot, route.path);
 				} else {
 					controllerRoute = contextRoot;
 				}
@@ -46,9 +46,9 @@ shared object annotationScanner {
 
 				for (func in functions) {
 					if (exists route = annotations(`RouteAnnotation`, func)) {
-						value functionRoute = buildRoute(controllerRoute, route.path);
+						value functionRoute = buildPath(controllerRoute, route.path);
 
-						log.trace("Binding function ``func.name`` to route ``functionRoute``");
+						log.trace("Binding function ``func.name`` to path ``functionRoute``");
 						router.registerControllerRoute(functionRoute, [instance, func], route.methods);
 					}
 				}
@@ -56,7 +56,7 @@ shared object annotationScanner {
 		}
 	}
 
-	String buildRoute(String prefix, String suffix) {
+	String buildPath(String prefix, String suffix) {
 		value stripped = suffix.startsWith("/")
 				then suffix.spanFrom(1) else suffix;
 		

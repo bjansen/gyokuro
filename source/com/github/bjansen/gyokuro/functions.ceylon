@@ -21,18 +21,18 @@ import ceylon.io.charset {
     utf8
 }
 
-shared void get<Params>(String route,
+shared void get<Params>(String path,
 	Function<Anything,Params>|Callable<Anything,[Request, Response]> handler)
 		given Params satisfies Anything[] {
 	
-	router.registerRoute(route, { getMethod }, handler);
+	router.registerRoute(path, { getMethod }, handler);
 }
 
-shared void post<Params>(String route,
+shared void post<Params>(String path,
 	Function<Anything,Params>|Callable<Anything,[Request, Response]> handler)
 		given Params satisfies Anything[] {
 	
-	router.registerRoute(route, { postMethod }, handler);
+	router.registerRoute(path, { postMethod }, handler);
 }
 
 "Interrupts the current handler immediately, resulting in an HTTP

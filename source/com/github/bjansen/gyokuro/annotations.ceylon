@@ -10,7 +10,7 @@ import ceylon.net.http {
 }
 
 "Declares a partial path associated to a class or a function.
- Routes declared on a class will be concatenated with its members
+ Routes declared on a class will be concatenated with its member
  routes.
  For example, the following code will result in a route `/foo/bar`:
  
