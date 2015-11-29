@@ -35,4 +35,7 @@ controller class ParameterBinding() {
 	shared String func6(String s1, Integer i = 4, String s2 = "ever") {
 		return s1 + i.string + s2;
 	}
+	
+	route("hello/:who")
+	shared String hello(String who) => "Hello, ``who``!";
 }

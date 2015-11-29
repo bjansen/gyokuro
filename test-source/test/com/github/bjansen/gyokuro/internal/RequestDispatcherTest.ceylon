@@ -151,6 +151,10 @@ void runTests() {
 	// can't bind an empty array to a [Integer+]
 	assertTrue(request("/lists/sequence", {})
 		.contains("400"));
+	
+	// named arguments
+	assertEquals(request("/param/hello/world", {}), "Hello, world!");
+	assertEquals(request("/param/hello/234", {}), "Hello, 234!");
 }
 
 void myHandler(String s1, Integer i1, Response resp) {

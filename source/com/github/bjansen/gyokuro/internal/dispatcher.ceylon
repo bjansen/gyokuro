@@ -69,11 +69,16 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			return;
 		}
 
-		if (exists handler = router.routeRequest(req)) {
+		value namedParams = HashMap<String, String>();
+		
+		if (exists handler = router.routeRequest(req, namedParams)) {
+			value enhancedReq = if (namedParams.empty)
+			then req else RequestWrapper(req, namedParams);
+			
 			if (is [Object?, FunctionDeclaration] handler) {
-				dispatchToController(req, resp, handler);
+				dispatchToController(enhancedReq, resp, handler);
 			} else {
-				handler(req, resp);
+				handler(enhancedReq, resp);
 			}
 		} else {
 			respond(404, "Not Found", resp);

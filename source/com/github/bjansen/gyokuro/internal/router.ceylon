@@ -27,7 +27,7 @@ shared object router {
 		Function<Anything,Param>|Callable<Anything,[Request, Response]> handler)
 			given Param satisfies Anything[] {
 		
-		value parts = route.split('/'.equals);
+		value parts = route.rest.split('/'.equals);
 		value node = findOrCreateNode(root, parts);
 		
 		for (method in methods) {
@@ -46,7 +46,7 @@ shared object router {
 		[Object, FunctionDeclaration] controllerHandler,
 		{AbstractMethod+} methods) {
 		
-		value node = findOrCreateNode(root, route.split('/'.equals));
+		value node = findOrCreateNode(root, route.rest.split('/'.equals));
 
 		for (method in methods) {
 			if (node.handles(method)) {
@@ -66,19 +66,30 @@ shared object router {
 		return findNodeByPath(path) exists;
 	}
 	
-	shared Handler? routeRequest(Request request) {
-		if (exists node = findNodeByPath(request.path)) {
+	shared Handler? routeRequest(Request request, HashMap<String,String> namedParams) {
+		if (exists node = findNodeByPath(request, namedParams)) {
 			return node.getHandler(request.method);
 		}
 		
 		return null;
 	}
 	
-	Node? findNodeByPath(String path) {
-		value parts = path.split('/'.equals);
+	Node? findNodeByPath(String|Request obj, HashMap<String,String>? namedParams = null) {
+		value path = if (is String obj) then obj else obj.path;
+		value parts = path.rest.split('/'.equals, true, false);
 		variable value node = root;
 		value foundNode = parts.every((part) {
 			if (exists result = node.findChild(part)) {
+				if (result.isNamedParameter,
+					is Request req = obj,
+					exists namedParams) {
+					if (part == "") {
+						// TODO halt(404) because the route is not valid,
+						// or throw later if the handler's parameter is not optional?
+					} else {
+						namedParams.put(result.subPath.rest, part);
+					}
+				}
 				node = result;
 				return true;
 			}
@@ -100,6 +111,24 @@ shared object router {
 }
 
 class Node(shared String subPath) {
+
+	shared Boolean isNamedParameter = 
+			if (exists first = subPath.first, first == ':')
+			then true else false;
+	
+	if (isNamedParameter) {
+		value isValidIdentifier = if (subPath.size > 1,
+			exists firstChar = subPath[1],
+			firstChar.lowercase || firstChar == '_',
+			subPath.rest.every((e) => e.letter || e == '_' || e.digit))
+			then true else false;
+		
+		if (!isValidIdentifier) {
+			throw BindingException("Invalid named parameter '``subPath``', expected
+			                        semicolon followed by a valid Ceylon LIdentifier");
+		}
+	}
+
 	value kids = ArrayList<Node>();
 	variable Map<Method, Handler> handlers = emptyMap;
 	
@@ -108,7 +137,7 @@ class Node(shared String subPath) {
 	}
 	
 	shared Node? findChild(String path) {
-		return kids.find((el) => el.subPath == path);
+		return kids.find((el) => el.isNamedParameter || el.subPath == path);
 	}
 	
 	shared Node findOrCreateChild(String path) {
