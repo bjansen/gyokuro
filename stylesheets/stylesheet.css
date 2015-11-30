@@ -188,7 +188,7 @@ pre {
 pre code {
   padding: 0;
   color: #f2f2f2;
-  background-color: #303030;
+  background-color: transparent;
   border: none;
 }
 
@@ -295,9 +295,15 @@ blockquote {
 }
 
 ul li {
-  list-style-position: inside;
-  list-style: disc;
-  padding-left: 20px;
+  list-style-type: none;
+  padding-left: 10px;
+}
+
+ul li:before {
+    content: "»";
+    color: #111;
+    font-size: 1.1em;
+    margin-right: 5px;
 }
 
 ol li {
@@ -371,3 +377,14 @@ footer a:hover {
 
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) { }
+
+.hero-code {
+    width: 100vw;
+    margin-left: calc(-1 * ((100vw - 100%) / 2));
+    background-color: #2f1e2e;
+}
+
+.hero-code pre {
+    margin: auto;
+    width: 620px;
+}
