@@ -105,14 +105,14 @@ In addition to binding request parameters by name, gyokuro can also inject "spec
 
 * a `ceylon.net.http.server::Request`
 * a `ceylon.net.http.server::Response`
-* a `com.github.bjansen.gyokuro::Flash`
+* a [`com.github.bjansen.gyokuro::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/com/github/bjansen/gyokuro/Flash.ceylon)
 
 You can use any name you want for these:
 
     void myHandler(Request req, Response myResponse, Flash ahaaaa) {}
     get("/special", `myHandler`);
 
-Finally, you can groupd handlers together in **annotated controllers** (see next section).
+Finally, you can group handlers together in **annotated controllers** (see next section).
 
 ## Annotated controllers
 
@@ -131,7 +131,7 @@ In addition to the routes we saw before, gyokuro allows you to define annotated 
     }
 
 Controllers allow you to group related handlers together, and define a "hierarchy" of routes, 
-because function will inherit the path of their parent controller. In the above example, the full
+because functions will inherit the path of their parent controller. In the above example, the full
 paths will be `/users/:id` or `/users/`.
 
 To declare a controller, create a class and annotate it with `controller`. Controllers don't have
@@ -156,7 +156,7 @@ Leading and trailing slashes are optional, and consecutive slashes will be merge
         route("") shared void foo3() {}
     }
 
-Controller handlers must be annotated with `route`, otherwise they are ignore. They will inherit
+Controller handlers must be annotated with `route`, otherwise they are ignored. They will inherit
 their parent controller's route, if it exists. Controller handlers can have the same signature
 as [regular handlers](#handlers).
 
@@ -166,7 +166,7 @@ Annotated controllers need to be scanned during the `Application` instantiation:
 		controllers = bind(`package my.application.pkg`, "/rest");
     }.run();
 
-gyokuro will scan the package `my.application.pkg` for annotated controller, and expose them
+gyokuro will scan the package `my.application.pkg` for annotated controller classes, and expose them
 under the root context `/rest`. For the controller `UserController` defined above, this means
 that the complete paths will be `/rest/users/:id` and `/rest/users/`.
 
@@ -210,7 +210,7 @@ the browser to redirect to another URL:
         // show the form again...
     }
 
-Optionnally, you can specify an HTTP code for the response. By default, it is `303` ("See other").
+Optionally, you can specify an HTTP code for the response. By default, it is `303` ("See other").
 
 <div class="gotcha" markdown="span">
   Like its friend `halt()`, `redirect()` throws an exception to interrupt the handler, so
