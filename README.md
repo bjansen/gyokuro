@@ -15,7 +15,7 @@ Create a new Ceylon module:
 ```ceylon
 module gyokuro.demo.rest "1.0.0" {
 	import com.github.bjansen.gyokuro "0.1";
-	import ceylon.net "1.2.0";
+	import ceylon.net "1.2.0-3";
 }
 ```
 
@@ -25,7 +25,8 @@ Add a runnable top level function that bootstraps a gyokuro application:
 import com.github.bjansen.gyokuro {
 	Application,
 	get,
-	post
+	post,
+	serve
 }
 
 "Run an HTTP server listening on port 8080, that will react to requests on /hello.
@@ -37,13 +38,12 @@ shared void run() {
 		response.writeString("Hello yourself!");
 	});
 	
-	// Shorter syntax that lets Ceylon infer types
-	post("/hello", (request, response) {
-		response.writeString("You're the POST master!");
-	});
+	// Shorter syntax that lets Ceylon infer types and lets gyokuro
+	// write the response
+	post("/hello", (request, response) => "You're the POST master!");
 
 	value app = Application {
-		assetsPath = "assets";
+		assets = serve("assets");
 	};
 	
 	app.run();
@@ -88,7 +88,7 @@ shared void run() {
 
 	value app = Application {
 		// You can use REST-style annotated controllers like this:
-		restEndpoint = ["/rest", `package gyokuro.demo.rest`];
+		controllers = bind(`package gyokuro.demo.rest`, "/rest");
 	};
 	
 	app.run();
@@ -121,4 +121,4 @@ Will be mapped to `http://localhost:8080/rest/duck/talk`.
 
 ## Want to learn more?
 
-See the [wiki](https://github.com/bjansen/gyokuro/wiki) for more documentation.
+See the [complete documentation](http://bjansen.github.io/gyokuro/doc/0.1/) for more info.
