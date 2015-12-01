@@ -409,3 +409,14 @@ footer a:hover {
 .gotcha code {
     background-color: #f2c8cf;
 }
+
+#markdown-toc {
+    position: fixed;
+    top: 190px;
+    left: 50%;
+    margin-left: 320px
+}
+
+#markdown-toc ul {
+    margin-bottom: 0;
+}

@@ -3,8 +3,11 @@ layout: default
 ---
 
 ## gyokuro 0.1 (dev version)
-
+{:.no_toc}
 This is the complete documentation for gyokuro 0.1.
+
+* TOC
+{:toc}
 
 ## Routes
 
@@ -31,7 +34,7 @@ Paths can contain **named parameters**:
     get("/hello/:who", (req, resp)
         =>  "Hello, ``req.parameter("who") else "John Doe"``!");
 
-Named parameters start with a semicolon followed by a valid lowercase identifier as defined by
+Named parameters start with a colon followed by a valid lowercase identifier as defined by
 the [Ceylon specification](http://ceylon-lang.org/documentation/1.2/spec/html/lexical.html#identifiersandkeywords):
 a lowercase letter or underscore followed by 0 or more letter, digit or underscore.
 
@@ -51,7 +54,7 @@ because they use a different verb:
     // valid, not a duplicate:
     post("/hello/:who", (req, resp) =>  "Hello other");
  
-### <a id="link-handlers">Handlers</a>
+### Handlers
  
 In their simplest forms, handlers are functions that take two parameters, 
 a [Request](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.2.0-3/module-doc/api/http/server/Request.type.html)
@@ -155,7 +158,7 @@ Leading and trailing slashes are optional, and consecutive slashes will be merge
 
 Controller handlers must be annotated with `route`, otherwise they are ignore. They will inherit
 their parent controller's route, if it exists. Controller handlers can have the same signature
-as [regular handlers](#link-handlers).
+as [regular handlers](#handlers).
 
 Annotated controllers need to be scanned during the `Application` instantiation:
 
