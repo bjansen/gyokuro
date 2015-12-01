@@ -23,7 +23,13 @@ import ceylon.net.http {
 	post,
 	get,
 	contentType,
-	Header
+	Header,
+	options,
+	head,
+	put,
+	delete,
+	trace,
+	connect
 }
 import ceylon.net.http.server {
 	Response,
@@ -60,7 +66,8 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 	}
 
 	shared Endpoint endpoint() {
-		return Endpoint(routerMatcher, dispatch, {get, post});
+		return Endpoint(routerMatcher, dispatch, 
+			{options, get, head, post, put, delete, trace, connect});
 	}
 	
 	"Dispatch the incoming request to the matching method."	
@@ -172,7 +179,9 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			} else if (is String val) {
 				return convertParameter(param, val);
 			} else {
-				throw BindingException("Cannot bind parameter ``param.name`` from session: type ``valType`` cannot be assigned nor converted to ``param.openType``");
+				throw BindingException("Cannot bind parameter ``param.name`` from session: \
+				                        type ``valType`` cannot be assigned nor converted \
+				                        to ``param.openType``");
 			}
 		}
 		return null;
@@ -224,7 +233,8 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			}
 		}
 		
-		throw BindingException("Cannot bind parameter ``param.name``: no converter found for type ``param.openType``");
+		throw BindingException("Cannot bind parameter ``param.name``: \
+		                        no converter found for type ``param.openType``");
 	}
 
     void writeResult(Anything result, Request req, Response resp) {

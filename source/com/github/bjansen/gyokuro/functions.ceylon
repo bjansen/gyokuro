@@ -1,7 +1,13 @@
 import ceylon.net.http {
 	getMethod=get,
 	postMethod=post,
-    sdkContentType=contentType
+	optionsMethod=options,
+	deleteMethod=delete,
+	connectMethod=connect,
+	traceMethod=trace,
+	putMethod=put,
+	headMethod=head,
+	sdkContentType=contentType
 }
 
 import com.github.bjansen.gyokuro.internal {
@@ -17,23 +23,52 @@ import ceylon.net.http.server {
 	Response
 }
 import ceylon.io.charset {
-    Charset,
-    utf8
+	Charset,
+	utf8
 }
 
-shared void get<Params>(String path,
-	Function<Anything,Params>|Callable<Anything,[Request, Response]> handler)
-		given Params satisfies Anything[] {
-	
-	router.registerRoute(path, { getMethod }, handler);
-}
+"A function capable of handling a request."
+shared alias Handler<Params> => Function<Anything,Params>|Callable<Anything,[Request, Response]>;
 
-shared void post<Params>(String path,
-	Function<Anything,Params>|Callable<Anything,[Request, Response]> handler)
-		given Params satisfies Anything[] {
-	
-	router.registerRoute(path, { postMethod }, handler);
-}
+"Declares a new GET route for the given [[path]] and [[handler]]."
+shared void get<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { getMethod }, handler);
+
+"Declares a new POST route for the given [[path]] and [[handler]]."
+shared void post<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { postMethod }, handler);
+
+"Declares a new OPTIONS route for the given [[path]] and [[handler]]."
+shared void options<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { optionsMethod }, handler);
+
+"Declares a new DELET route for the given [[path]] and [[handler]]."
+shared void delete<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { deleteMethod }, handler);
+
+"Declares a new CONNECT route for the given [[path]] and [[handler]]."
+shared void connect<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { connectMethod }, handler);
+
+"Declares a new TRACE route for the given [[path]] and [[handler]]."
+shared void trace<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { traceMethod }, handler);
+
+"Declares a new PUT route for the given [[path]] and [[handler]]."
+shared void put<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { putMethod }, handler);
+
+"Declares a new HEAD route for the given [[path]] and [[handler]]."
+shared void head<Params>(String path, Handler<Params> handler)
+		given Params satisfies Anything[]
+		=> router.registerRoute(path, { headMethod }, handler);
 
 "Interrupts the current handler immediately, resulting in an HTTP
  response with code [[errorCode]] and a body equal to [[message]].
@@ -70,16 +105,16 @@ shared alias Template => Callable<Anything, [TemplateRenderer, Request, Response
 
 "Renders a template that will be returned as the response body."
 shared void render(
-		"The template name"
-		String templateName,
-		"A map of things to pass to the template."
-		Map<String, Anything> context = emptyMap,
-		"The content type to be used in the response."
-		String contentType = "text/html",
-		"The charset to be used in the response."
-		Charset charset = utf8)
-		(TemplateRenderer renderer, Request request, Response response) {
-
+	"The template name"
+	String templateName,
+	"A map of things to pass to the template."
+	Map<String, Anything> context = emptyMap,
+	"The content type to be used in the response."
+	String contentType = "text/html",
+	"The charset to be used in the response."
+	Charset charset = utf8)
+(TemplateRenderer renderer, Request request, Response response) {
+	
 	value result = renderer.render(templateName, context, request, response);
 	
 	response.addHeader(sdkContentType(contentType, charset));
