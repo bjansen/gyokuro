@@ -216,3 +216,48 @@ Optionally, you can specify an HTTP code for the response. By default, it is `30
   Like its friend `halt()`, `redirect()` throws an exception to interrupt the handler, so
   `try` not to `catch` it 😉.
 </div>
+
+## Templating
+
+While gyokuro does not embed any templating engine, it provides an extension point that allows
+you to plug your favorite engine. Extensions have to satisfy an interface named `TemplateRenderer`:
+
+    shared interface TemplateRenderer {
+        shared formal String render(String templateName,
+                Map<String, Anything> context,
+                Request req, Response resp);
+    }
+
+For example:
+
+    shared object pebbleRenderer satisfies TemplateRenderer {
+	
+        value loader = FileLoader();
+        value engine = PebbleEngine(loader);
+        
+        loader.suffix = ".pebble"; 
+
+        shared actual String render(String templateName,
+            Map<String,Anything> context, Request req, Response resp) {
+            
+            value tpl = engine.getTemplate(templateName);
+            value writer = StringWriter();
+            tpl.evaluate(writer, context);
+            return writer.string;
+        }
+    }
+
+To make gyokuro use this template renderer, you have to pass it to the `Application`:
+
+    Application {
+        renderer = pebbleRenderer;
+    }.run();
+
+Finally, to render templates, handlers can use `render()` to return an instance 
+of a `Template`:
+
+    Template hello() => render("views/hello");
+    get("/hello", `hello`);
+
+`render()` takes two parameters, a template name and an optional map of things (sometimes
+called "model" or "context") that can be used to render the template.
