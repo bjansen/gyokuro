@@ -78,7 +78,7 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 			if (is [Object?, FunctionDeclaration] handler) {
 				dispatchToController(enhancedReq, resp, handler);
 			} else {
-				handler(enhancedReq, resp);
+				writeResult(handler(enhancedReq, resp), req, resp);
 			}
 		} else {
 			respond(404, "Not Found", resp);

@@ -112,6 +112,9 @@ void runTests() {
 				Parameter("i", "2") }),
 		"map2list");
 	
+	get("/simple", (req, res) => "Hello!");
+	assertEquals(request("/simple", {}), "Hello!");
+	
 	get("/myRoute", `myHandler`);
 	assertEquals(request("/myRoute",
 			{ Parameter("s1", "abc"),
