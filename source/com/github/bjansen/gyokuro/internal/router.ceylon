@@ -66,12 +66,12 @@ shared object router {
 		return findNodeByPath(path) exists;
 	}
 	
-	shared Handler? routeRequest(Request request, HashMap<String,String> namedParams) {
+	shared Handler?|Boolean routeRequest(Request request, HashMap<String,String> namedParams) {
 		if (exists node = findNodeByPath(request, namedParams)) {
 			return node.getHandler(request.method);
 		}
 		
-		return null;
+		return false;
 	}
 	
 	Node? findNodeByPath(String|Request obj, HashMap<String,String>? namedParams = null) {

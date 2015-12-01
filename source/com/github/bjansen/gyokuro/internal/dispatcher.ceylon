@@ -78,7 +78,12 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
 
 		value namedParams = HashMap<String, String>();
 		
-		if (exists handler = router.routeRequest(req, namedParams)) {
+		if (is Handler? handler = router.routeRequest(req, namedParams)) {
+			if (!exists handler) {
+				// We know this path, but not for this method
+				respond(405, "Method Not Allowed", resp);
+				return;
+			}
 			value enhancedReq = if (namedParams.empty)
 			then req else RequestWrapper(req, namedParams);
 			

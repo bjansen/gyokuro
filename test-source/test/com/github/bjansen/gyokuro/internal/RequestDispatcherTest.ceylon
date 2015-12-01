@@ -36,6 +36,11 @@ import com.github.bjansen.gyokuro {
 import com.github.bjansen.gyokuro.internal {
 	RequestDispatcher
 }
+import ceylon.net.http {
+	Method,
+	getMethod=get,
+	postMethod=post
+}
 
 shared test
 void testDispatcher() {
@@ -51,7 +56,7 @@ void testDispatcher() {
 		void log(Priority p, Category c, String m, Throwable? e) {
 			print("``p.string`` ``m``");
 			if (exists e) {
-				printStackTrace(e, print);
+				printStackTrace(e);
 			}
 		}		
 	};
@@ -125,6 +130,12 @@ void runTests() {
 	assertTrue(request("/testHalt", {})
 		.contains("500 - I can haz an error"));
 	
+	assertTrue(request("/simple", {}, postMethod)
+		.contains("405 - Method Not Allowed"));
+
+	assertTrue(request("/notfound", {})
+		.contains("404 - Not Found"));
+
 	assertEquals(request("/lists/list", {
 		Parameter("strings", "a"),
 		Parameter("strings", "b"),
@@ -158,6 +169,7 @@ void runTests() {
 	// named arguments
 	assertEquals(request("/param/hello/world", {}), "Hello, world!");
 	assertEquals(request("/param/hello/234", {}), "Hello, 234!");
+	
 }
 
 void myHandler(String s1, Integer i1, Response resp) {
@@ -168,7 +180,7 @@ void testHalt() {
 	halt(500, "I can haz an error");
 }
 
-String request(String path, {Parameter*} params) {
+String request(String path, {Parameter*} params, Method method = getMethod) {
 	value segments = path.split('/'.equals, true, false)
 		.filter((_) => !_.empty)
 		.map((el) => PathSegment(el));
@@ -179,6 +191,7 @@ String request(String path, {Parameter*} params) {
 	value request = Request {
 		uri = uri;
 		initialParameters = params;
+		method = method;
 	};
 	
 	value response = request.execute();
