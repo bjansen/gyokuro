@@ -105,7 +105,7 @@ In addition to binding request parameters by name, gyokuro can also inject "spec
 
 * a `ceylon.net.http.server::Request`
 * a `ceylon.net.http.server::Response`
-* a `com.github.bjansen.gyokuro::Flash`
+* a [`com.github.bjansen.gyokuro::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/com/github/bjansen/gyokuro/Flash.ceylon)
 
 You can use any name you want for these:
 
