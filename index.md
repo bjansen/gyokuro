@@ -60,3 +60,11 @@ gyokuro is still in development, so you have to build it from sources before usi
 The above example will bootstrap a web server that runs by default on `0.0.0.0:8080`. The
 path `/hello` will be bound to a handler that takes two parameters, a `Request` and a `Response`,
 and returns a `String` containing `"Hello world"`. This string will be the response body.
+
+## Documentation
+
+The full documentation for the latest version (0.1.0-dev) is available here:
+
+<a href="{{ "/doc/0.1" | prepend: site.baseurl }}" class="button" id="doc-link"><span>Full documentation</span></a>
+
+<br/>
