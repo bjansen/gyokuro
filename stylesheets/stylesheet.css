@@ -186,7 +186,7 @@ pre {
 }
 pre code {
   padding: 0;
-  color: #f2f2f2;
+  color: #888;
   background-color: transparent;
   border: none;
 }
@@ -419,4 +419,40 @@ footer a:hover {
 
 #markdown-toc ul {
     margin-bottom: 0;
+}
+
+body {
+    counter-reset: h2counter;
+}
+h1 {
+    counter-reset: h2counter;
+}
+h2:before {
+    content: counter(h2counter) ".\0000a0\0000a0";
+    counter-increment: h2counter;
+}
+h2 {
+    counter-reset: h3counter;
+}
+h3:before {
+    content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0";
+    counter-increment: h3counter;
+}
+
+#markdown-toc {
+    counter-reset: h2counter2;
+}
+
+#markdown-toc > li > a:before {
+    content: counter(h2counter2) ".\0000a0\0000a0";
+    counter-increment: h2counter2;
+}
+
+#markdown-toc > li > a {
+    counter-reset: h3counter2;
+} 
+
+#markdown-toc > li > ul > li > a:before {
+    content: counter(h2counter2) "." counter(h3counter2) ".\0000a0\0000a0";
+    counter-increment: h3counter2;
 }

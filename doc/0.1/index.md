@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## gyokuro 0.1 (dev version)
+# gyokuro 0.1 (dev version)
 {:.no_toc}
 This is the complete documentation for gyokuro 0.1.
 
@@ -204,7 +204,7 @@ The `redirect()` helper is very similar to `halt()`: it interrupts the current h
 the browser to redirect to another URL:
 
     shared void login(String username, String password) {
-        if (connect(username, password)) {
+        if (connect(username, password)) {
             redirect("/");
         }
         // show the form again...
