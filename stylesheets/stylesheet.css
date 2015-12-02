@@ -427,14 +427,14 @@ body {
 h1 {
     counter-reset: h2counter;
 }
-h2:before {
+#main_content h2:before {
     content: counter(h2counter) ".\0000a0\0000a0";
     counter-increment: h2counter;
 }
-h2 {
+#main_content h2 {
     counter-reset: h3counter;
 }
-h3:before {
+#main_content h3:before {
     content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0";
     counter-increment: h3counter;
 }
