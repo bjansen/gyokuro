@@ -21,6 +21,7 @@ controller class SimpleRestController() {
         return ["fly", "quack", "eat", "dive"];
     }
     
+    suppressWarnings("expressionTypeNothing")
     route("find")
     shared String findDuck(Integer id) {
         // If we can't find the duck in DB,

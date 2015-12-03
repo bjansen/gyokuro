@@ -176,6 +176,7 @@ void myHandler(String s1, Integer i1, Response resp) {
 	resp.writeString(s1 + i1.string);
 }
 
+suppressWarnings("expressionTypeNothing")
 void testHalt() {
 	halt(500, "I can haz an error");
 }
