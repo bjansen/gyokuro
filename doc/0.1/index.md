@@ -112,11 +112,71 @@ You can use any name you want for these:
     void myHandler(Request req, Response myResponse, Flash ahaaaa) {}
     get("/special", `myHandler`);
 
-Finally, you can group handlers together in **annotated controllers** (see next section).
+Finally, you can group handlers together in [**annotated controllers**](#annotated-controllers).
+
+### Clearing routes
+
+You can clear all the registered routes using `clearRoutes()`. This can come in handy during debug
+sessions, or in unit tests.
+
+## Application
+
+Once routes are defined, you can start an application, which will run an embedded HTTP server
+provided by `ceylon.net`. By default, the server will listen on `0.0.0.0:8080`, but you can use
+other settings:
+
+    Application {
+        address = "127.0.0.1";
+        port = 1337;
+    }.run();  
+
+### Static assets
+
+Besides calling handlers, gyokuro can process a request by serving **static assets**:
+
+    Application {
+        assets = serve("assets", "/public");
+    }.run();
+
+With the above configuration, every request whose path starts with `/public` will be served with
+a file contained in `assets`. For example, for the path `/public/css/style.css`, gyokuro will
+return the file `assets/css/style.css` if it exists. Otherwise, it will respond with a 404.
+
+Static assets can be considered as a special case of routes, therefore it is not possible to
+have a route that starts with the same path as static assets:
+
+    route("/public/hello", (req, resp) => "hello");
+    
+    Application {
+        // ERROR, duplicates route "/public/hello"
+        assets = serve("assets", "/public"); 
+    }.run();
+
+### Filters
+
+It is possible to declare **filters** that will be called for each new incoming request. Filters
+are chained, and each filters returns a `Boolean` indicating if the next filter should be called.
+If a filter returns `false`, it is its responsibility to modify the `Response` such as it
+becomes valid and can be returned to the client. Filters are called in the order in which they are
+passed to the `Application`.
+
+    Boolean authenticationFilter(Request req, Response resp) {
+	    if (needsAuthentication(req)) {	
+            resp.responseStatus = 401;
+            resp.writeString("401 - Unauthorized. Please log in.");
+            return false;
+	    }
+        return true;
+	}
+    
+    Application {
+        filters = [authenticationFilter];
+    }.run();
+
 
 ## Annotated controllers
 
-In addition to the routes we saw before, gyokuro allows you to define annotated controllers:
+In addition to the routes we saw before, gyokuro allows you to define **annotated controllers**:
 
     route("/users")
     controller class UserController {
@@ -169,6 +229,27 @@ Annotated controllers need to be scanned during the `Application` instantiation:
 gyokuro will scan the package `my.application.pkg` for annotated controller classes, and expose them
 under the root context `/rest`. For the controller `UserController` defined above, this means
 that the complete paths will be `/rest/users/:id` and `/rest/users/`.
+
+## Flash attributes
+
+Flash attributes are special values, stored in the session, that are automatically removed once you access
+them. They are one-time messages that can for example survive a redirect:
+
+    shared void logout(Flash flash) {
+        logoutUser();
+        flash.add("message", "You have been logged out");
+        redirect("/");
+    }
+    
+You can then access a flash object from a template:
+
+{% raw %}
+    {% if flash.peek("message") != null %}
+        <div class="info">{{ flash.get("message") }}</div>
+    {% endif %}
+{% endraw %}
+
+As soon as a value is retrieved from a flash object (using `get()`), it is removed from this object.
 
 ## Helpers
 
