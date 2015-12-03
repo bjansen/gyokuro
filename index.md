@@ -63,7 +63,7 @@ and returns a `String` containing `"Hello world"`. This string will be the respo
 
 ## Documentation
 
-The full documentation for the latest version (0.1.0-dev) is available here:
+The full documentation for the latest version (0.1.0) is available here:
 
 <a href="{{ "/doc/0.1" | prepend: site.baseurl }}" class="button" id="doc-link"><span>Full documentation</span></a>
 

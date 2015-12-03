@@ -1,0 +1,300 @@
+//colors
+$color_dove_gray_approx: #6d6d6d;
+$white_80: rgba(255, 255, 255, 0.8);
+$color_mercury_approx: #e7e7e7;
+$color_monza_approx: #d5000d;
+$color_guardsman_red_approx: #c5000c;
+$color_mine_shaft_approx: #303030;
+$color_silver_chalice_approx: #aaa;
+$color_romance_approx: #fdfdfd;
+$concrete: #f2f2f2;
+$color_celeste_approx: #cbcbcb;
+$color_pink_swan_approx: #b7b7b7;
+$color_nobel_approx: #b3b3b3;
+$color_gray_nurse_approx: #e8e8e8;
+$alabaster: #fafafa;
+$color_black_haze_approx: #f6f6f6;
+$color_log_cabin_approx: #222;
+$color_alto_approx: #ddd;
+$color_suva_gray_approx: #888;
+$color_cararra_approx: #ebebeb;
+$color_woodsmoke_approx: #111;
+$color_storm_dust_approx: #666;
+$color_tundora_approx: #444;
+$code_background: #2f1e2e;
+$color_cornflower_lilac_21_approx: rgba(255, 173, 176, 0.21);
+$white_30: rgba(255, 255, 255, 0.3);
+$color_oyster_pink_approx: #f2c8cf;
+
+//fonts
+$font_0: Helvetica Neue;
+$font_1: Helvetica;
+$font_2: Arial;
+$font_3: serif;
+$font_4: Chivo;
+$font_5: Monaco;
+$font_6: Bitstream Vera Sans Mono;
+$font_7: Lucida Console;
+$font_8: Terminal;
+
+//urls
+$url_0: url(../images/body-bg.png);
+$url_1: url(../images/logo.png);
+$url_2: url(../images/highlight-bg.jpg);
+$url_3: url(../images/doc.svg);
+$url_4: url(../images/hr.png);
+
+//@extend-elements
+//original selectors
+//code, pre, code span
+%extend_1 {
+    margin-bottom: 15px;
+    font-family: $font_5, $font_6, $font_7, $font_8;
+    font-size: 14px;
+    color: $color_log_cabin_approx;
+}
+
+
+body {
+    font-family: $font_0, $font_1, $font_2, $font_3;
+    font-size: 1em;
+    line-height: 1.5;
+    color: $color_dove_gray_approx;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 0 1px 0 $white_80;
+    background: $color_mercury_approx $url_0 0 0 repeat;
+    counter-reset: h2counter;
+}
+a {
+    color: $color_monza_approx;
+    text-decoration: none;
+    &:hover {
+        color: $color_guardsman_red_approx;
+    }
+    &.button {
+        display: block;
+        float: left;
+        width: 199px;
+        padding: 12px 8px;
+        margin-right: 14px;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 25px;
+        color: $color_mine_shaft_approx;
+        background: $color_romance_approx;
+        background: linear-gradient(top, $color_romance_approx 0,$concrete 100%);
+        filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$color_romance_approx', endcolorstr='$concrete',gradienttype=0 );
+        border-top: solid 1px $color_celeste_approx;
+        border-right: solid 1px $color_pink_swan_approx;
+        border-bottom: solid 1px $color_nobel_approx;
+        border-left: solid 1px $color_pink_swan_approx;
+        //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+        border-radius: 30px;
+        //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+        box-shadow: 0 1px 5px $color_gray_nurse_approx;
+        &:hover {
+            background: $alabaster;
+            background: linear-gradient(top, $color_romance_approx 0,$color_black_haze_approx, 100%);
+            filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$color_romance_approx', endcolorstr='$color_black_haze_approx',gradienttype=0 );
+            border-top: solid 1px $color_pink_swan_approx;
+            border-right: solid 1px $color_nobel_approx;
+            border-bottom: solid 1px $color_nobel_approx;
+            border-left: solid 1px $color_nobel_approx;
+        }
+        span {
+            display: block;
+            height: 23px;
+            padding-left: 50px;
+        }
+    }
+}
+header {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background: $url_1 no-repeat left center;
+    background-size: 64px 64px;
+    padding-left: 75px;
+    h1 {
+        font-family: $font_4, $font_0, $font_1, $font_2, $font_3;
+        font-size: 48px;
+        font-weight: 900;
+        line-height: 1.2;
+        color: $color_mine_shaft_approx;
+        letter-spacing: -1px;
+    }
+    h2 {
+        font-size: 24px;
+        font-weight: normal;
+        line-height: 1.3;
+        color: $color_silver_chalice_approx;
+        letter-spacing: -1px;
+    }
+}
+#container {
+    min-height: 595px;
+    background: transparent $url_2 50% 0 no-repeat;
+    .inner img {
+        max-width: 100%;
+    }
+}
+.inner {
+    width: 620px;
+    margin: 0 auto;
+}
+#downloads {
+    margin-bottom: 40px;
+}
+code {
+    @extend %extend_1;
+    padding: 0 3px;
+    background-color: $concrete;
+    border: solid 1px $color_alto_approx;
+    span {
+        @extend %extend_1;
+    }
+}
+pre {
+    @extend %extend_1;
+    padding: 10px;
+    overflow: auto;
+    color: $concrete;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: none;
+    background: $color_mine_shaft_approx;
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 5px;
+    code {
+        padding: 0;
+        color: $color_suva_gray_approx;
+        background-color: transparent;
+        border: none;
+    }
+}
+ul {
+    margin-bottom: 20px;
+    li {
+        list-style-type: none;
+        padding-left: 10px;
+        &:before {
+            content: "»";
+            color: $color_woodsmoke_approx;
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+    }
+}
+ol {
+    margin-bottom: 20px;
+    li {
+        list-style-position: inside;
+        list-style: decimal;
+        padding-left: 3px;
+    }
+}
+dl {
+    margin-bottom: 20px;
+    dt {
+        color: $color_mine_shaft_approx;
+    }
+}
+hr {
+    height: 1px;
+    padding-bottom: 1em;
+    margin-top: 1em;
+    line-height: 1px;
+    background: transparent $url_4 50% 0 no-repeat;
+    border: none;
+}
+strong {
+    font-weight: bold;
+}
+em {
+    font-style: italic;
+}
+table {
+    width: 100%;
+    border: 1px solid $color_cararra_approx;
+}
+th {
+    font-weight: 500;
+}
+td {
+    font-weight: 300;
+    text-align: center;
+    border: 1px solid $color_cararra_approx;
+}
+form {
+    padding: 20px;
+    background: $concrete;
+}
+h1 {
+    font-size: 32px;
+    counter-reset: h2counter;
+}
+h2 {
+    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: bold;
+    color: $color_mine_shaft_approx;
+}
+h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: $color_monza_approx;
+}
+h4 {
+    font-size: 16px;
+    font-weight: bold;
+    color: $color_mine_shaft_approx;
+}
+h5 {
+    font-size: 1em;
+    color: $color_mine_shaft_approx;
+}
+h6 {
+    font-size: .8em;
+    color: $color_mine_shaft_approx;
+}
+p {
+    margin-bottom: 15px;
+    font-weight: 300;
+    a {
+        font-weight: 400;
+    }
+}
+blockquote {
+    padding: 0 0 0 30px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-left: 10px solid $color_gray_nurse_approx;
+}
+footer {
+    padding-top: 20px;
+    padding-bottom: 30px;
+    margin-top: 40px;
+    font-size: 13px;
+    color: $color_silver_chalice_approx;
+    background: transparent $url_4 0 0 no-repeat;
+    a {
+        color: $color_storm_dust_approx;
+        &:hover {
+            color: $color_tundora_approx;
+        }
+    }
+}
+.clearfix {
+    display: inline-block;
+    display: block;
+    &:after {
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+        content: '.';
+    }
+}
+
+* html .clearfix {
+    height: 1%;
+}

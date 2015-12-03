@@ -1,0 +1,81 @@
+---
+---
+
+@import "base";
+@import "layout";
+@import "mediaQueries";
+
+.hero-code {
+    width: 100vw;
+    margin-left: calc(-1 *((100vw - 100%) / 2));
+    background-color: $code_background;
+    + hr {
+        margin-top: 24px;
+    }
+    pre {
+        margin: auto;
+        width: 620px;
+    }
+}
+
+.gotcha {
+    background-color: $color_cornflower_lilac_21_approx;
+    padding: 10px;
+    text-shadow: 0 1px 0 $white_30;
+    margin-bottom: 10px;
+    &:before {
+        content: "Gotcha!";
+        display: block;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    code {
+        background-color: $color_oyster_pink_approx;
+    }
+}
+
+#markdown-toc {
+    position: fixed;
+    top: 190px;
+    left: 50%;
+    margin-left: 320px;
+    counter-reset: h2counter2;
+    ul {
+        margin-bottom: 0;
+    }
+    > li {
+        > a {
+            counter-reset: h3counter2;
+            &:before {
+                content: counter(h2counter2) ".\0000a0\0000a0";
+                counter-increment: h2counter2;
+            }
+        }
+        > ul > li > a:before {
+            content: counter(h2counter2) "." counter(h3counter2) ".\0000a0\0000a0";
+            counter-increment: h3counter2;
+        }
+    }
+}
+
+.with-toc {
+    h2 {
+        counter-reset: h3counter;
+        &:before {
+            content: counter(h2counter) ".\0000a0\0000a0";
+            counter-increment: h2counter;
+        }
+    }
+    h3:before {
+        content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0";
+        counter-increment: h3counter;
+    }
+}
+
+#doc-link {
+    float: none;
+    margin: auto;
+    span {
+        background: transparent $url_3 12px 50% no-repeat;
+    }
+}

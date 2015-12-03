@@ -10,7 +10,7 @@
 
         {% include header.html %}
 
-        <section id="main_content">
+        <section id="main_content" {% if page.useToc%}class="with-toc"{% endif %}>
           {{ content }}
         </section>
 
