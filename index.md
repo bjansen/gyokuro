@@ -21,7 +21,7 @@ Template showUser(String username)
 ## About gyokuro
 
 gyokuro is a framework written in Ceylon, inspired by [Sinatra](http://www.sinatrarb.com/)
-and [Spark](http://sparkjava.com/) for creating web applications with very few boilerplate.
+and [Spark](http://sparkjava.com/) for creating web applications with very little boilerplate.
 It is based on the [Ceylon SDK](https://github.com/ceylon/ceylon-sdk) and uses `ceylon.net`.
 
 With gyokuro, you can:
