@@ -14,7 +14,7 @@ Create a new Ceylon module:
 
 ```ceylon
 module gyokuro.demo.rest "1.0.0" {
-	import com.github.bjansen.gyokuro "0.1";
+	import com.github.bjansen.gyokuro "0.1.0";
 	import ceylon.net "1.2.0-3";
 }
 ```
@@ -122,3 +122,6 @@ Will be mapped to `http://localhost:8080/rest/duck/talk`.
 ## Want to learn more?
 
 See the [complete documentation](http://bjansen.github.io/gyokuro/doc/0.1/) for more info.
+
+You can find examples in the [demos directory](https://github.com/bjansen/gyokuro/tree/master/demos/).
+
