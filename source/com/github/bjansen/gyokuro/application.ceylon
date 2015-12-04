@@ -30,7 +30,8 @@ import ceylon.collection {
 	ArrayList
 }
 
-"A web server application that can serve static assets and dynamic requests."
+"A web server application that can route requests to handler functions
+ or annotated controllers, and serve static assets."
 shared class Application(
 	"The address or hostname on which the HTTP server will be bound."
 	String address = "0.0.0.0",
@@ -47,6 +48,10 @@ shared class Application(
     "A template renderer"
     TemplateRenderer? renderer = null) {
     
+    "A filter applied to each incoming request before it is dispatched to
+     its matching handler. Multiple filters can be chained, and returning
+     [[false]] will stop the chain. In this case, the filter returning `false`
+     should modify the [[Response]] such as it can be returned to the client."
     shared alias Filter => Boolean(Request, Response);
     
     "Starts the web application."

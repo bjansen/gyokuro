@@ -121,6 +121,7 @@ shared void render(
 	response.writeString(result);
 }
 
+"Clears every registered route."
 shared void clearRoutes() {
 	router.clear();
 }

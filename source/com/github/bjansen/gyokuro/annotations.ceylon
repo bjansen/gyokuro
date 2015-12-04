@@ -23,6 +23,7 @@ import ceylon.net.http {
 shared annotation RouteAnnotation route(String path,
 	{AbstractMethod+} methods = {get, post}) => RouteAnnotation(path, methods);
 
+"The annotation class for the [[route]] annotation."
 shared final annotation class RouteAnnotation(path, methods) 
 		satisfies OptionalAnnotation<RouteAnnotation, FunctionDeclaration|ClassDeclaration> {
 	
@@ -34,6 +35,7 @@ shared final annotation class RouteAnnotation(path, methods)
 see(`function route`)
 shared annotation ControllerAnnotation controller() => ControllerAnnotation();
 
+"The annotation class for the [[controller]] annotation."
 shared final annotation class ControllerAnnotation()
 		satisfies OptionalAnnotation<ControllerAnnotation, ClassDeclaration> {
 	
@@ -44,6 +46,7 @@ shared final annotation class ControllerAnnotation()
  the session, a 400 response will be sent back to the client."
 shared annotation SessionAnnotation session() => SessionAnnotation();
 
+"The annotation class for the [[session]] annotation."
 shared final annotation class SessionAnnotation()
         satisfies OptionalAnnotation<SessionAnnotation, ValueDeclaration> {
     

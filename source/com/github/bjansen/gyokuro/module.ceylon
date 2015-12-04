@@ -1,5 +1,6 @@
-"A web framework that allows rapid development
- of annotations-based web applications."
+"gyokuro is a framework written in Ceylon, inspired by Sinatra
+ and Spark, for creating web applications with very few boilerplate.
+ It is based on the Ceylon SDK and uses ceylon.net."
 native("jvm")
 module com.github.bjansen.gyokuro "0.1" {
 	shared import ceylon.net "1.2.0-3";
