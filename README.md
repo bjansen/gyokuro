@@ -1,4 +1,5 @@
-# gyokuro
+# gyokuro <img src="https://travis-ci.org/bjansen/gyokuro.svg?branch=master"/>
+
 A web framework written in Ceylon, which allows:
 
 * routing GET/POST requests to simple `(Request, Response)` handlers
