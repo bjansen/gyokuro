@@ -43,7 +43,7 @@ With gyokuro, you can:
   
 * write your first application:
 ^
-    shared void run {
+    shared void run() {
         get("/hello", (req, resp) => "Hello, world!");
     
         Application().run();
