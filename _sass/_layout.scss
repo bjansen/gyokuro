@@ -17,7 +17,7 @@ $color_black_haze_approx: #f6f6f6;
 $color_log_cabin_approx: #222;
 $color_alto_approx: #ddd;
 $color_suva_gray_approx: #888;
-$color_cararra_approx: #ebebeb;
+$table_border: #bbb;
 $color_woodsmoke_approx: #111;
 $color_storm_dust_approx: #666;
 $color_tundora_approx: #444;
@@ -213,7 +213,7 @@ em {
 }
 table {
     width: 100%;
-    border: 1px solid $color_cararra_approx;
+    border: 1px solid $table_border;
 }
 th {
     font-weight: 500;
@@ -221,7 +221,7 @@ th {
 td {
     font-weight: 300;
     text-align: center;
-    border: 1px solid $color_cararra_approx;
+    border: 1px solid $table_border;
 }
 form {
     padding: 20px;

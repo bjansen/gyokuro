@@ -31,18 +31,10 @@ With gyokuro, you can:
 * bind GET/POST parameters to function parameters instead of querying a `Request`
 * serve *static assets* from a given directory
 
-**Current version**: gyokuro has not been released yet, you can build it from sources.
-Once the first version is released, gyokuro will be available on [Herd](https://herd.ceylon-lang.org).
+**Current version**: [0.1.0](https://herd.ceylon-lang.org/modules/com.github.bjansen.gyokuro/0.1.0)
 
 ## Getting started
 
-gyokuro is still in development, so you have to build it from sources before using it:
-
-* clone the project: `git clone https://github.com/bjansen/gyokuro.git`
-* go to the cloned project: `cd gyokuro`
-* build the project: `ceylon compile`
-* copy the generated module to your local Ceylon repository to use it in other projects:
- `ceylon copy -o ~/.ceylon/repo com.github.bjansen.gyokuro` 
 * create a new Ceylon project and import gyokuro:
 ^
     module com.example.mymodule "1.0.0" {
@@ -61,10 +53,24 @@ The above example will bootstrap a web server that runs by default on `0.0.0.0:8
 path `/hello` will be bound to a handler that takes two parameters, a `Request` and a `Response`,
 and returns a `String` containing `"Hello world"`. This string will be the response body.
 
+### Livin' on the edge
+
+gyokuro is still in development, so if you want to test the very latest bleeding edge version,
+you can build it from sources:
+
+* clone the project: `git clone https://github.com/bjansen/gyokuro.git`
+* go to the cloned project: `cd gyokuro`
+* build the project: `ceylon compile`
+* copy the generated module to your local Ceylon repository to use it in other projects:
+ `ceylon copy -o ~/.ceylon/repo com.github.bjansen.gyokuro` 
+* enjoy
+
 ## Documentation
 
 The full documentation for the latest version (0.1.0) is available here:
 
 <a href="{{ "/doc/0.1" | prepend: site.baseurl }}" class="button" id="doc-link"><span>Full documentation</span></a>
 
-<br/>
+## Performance
+
+See the [performance tests](perfs/) page.
