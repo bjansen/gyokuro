@@ -1,29 +1,29 @@
-import com.github.bjansen.gyokuro {
-	Application,
-	get,
-	post,
-    Template,
-    render,
-    TemplateRenderer,
-	serve,
-	bind
-}
 import ceylon.logging {
 	addLogWriter,
-	Priority,
-	info,
-	Category,
 	defaultPriority,
-	trace
+	trace,
+	writeSimpleLog
 }
 import ceylon.net.http.server {
 	Request,
 	Response
 }
 
+import com.github.bjansen.gyokuro {
+	Application,
+	get,
+	post,
+	Template,
+	render,
+	TemplateRenderer,
+	serve,
+	bind
+}
+
 shared void run() {
-	
-	configureLogger();
+
+	addLogWriter(writeSimpleLog);
+	defaultPriority = trace;
 	
 	// React to GET/POST requests using a basic handler
 	get("/hello", void (Request request, Response response) {
@@ -78,19 +78,3 @@ String postHandler(String who = "world") {
 Template renderingHandler() {
 	return render("foobar", map({"bar" -> "baz"}));
 }
-
-void configureLogger() {
-	defaultPriority = trace;
-	addLogWriter {
-		void log(Priority p, Category c, String m, Throwable? e) {
-			value print = p<=info
-			then process.writeLine
-			else process.writeError;
-			print("[``system.milliseconds``] ``p.string`` ``m``");
-			if (exists e) {
-				printStackTrace(e, print);
-			}
-		}		
-	};
-}
-
