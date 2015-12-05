@@ -1,5 +1,6 @@
 native("jvm")
-module gyokuro.demo.rest "1.0.0" {
+module test.com.github.bjansen.gyokuro.core "0.2-dev" {
 	import com.github.bjansen.gyokuro.core "0.2-dev";
+	import ceylon.test "1.2.0";
 	import ceylon.logging "1.2.0";
 }

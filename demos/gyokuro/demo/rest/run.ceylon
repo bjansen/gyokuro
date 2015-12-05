@@ -9,15 +9,17 @@ import ceylon.net.http.server {
 	Response
 }
 
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	Application,
 	get,
 	post,
 	Template,
 	render,
-	TemplateRenderer,
 	serve,
 	bind
+}
+import com.github.bjansen.gyokuro.view.api {
+	TemplateRenderer
 }
 
 shared void run() {

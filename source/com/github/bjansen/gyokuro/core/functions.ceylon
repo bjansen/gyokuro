@@ -10,7 +10,7 @@ import ceylon.net.http {
 	sdkContentType=contentType
 }
 
-import com.github.bjansen.gyokuro.internal {
+import com.github.bjansen.gyokuro.core.internal {
 	router,
 	HaltException,
 	RedirectException
@@ -25,6 +25,9 @@ import ceylon.net.http.server {
 import ceylon.io.charset {
 	Charset,
 	utf8
+}
+import com.github.bjansen.gyokuro.view.api {
+	TemplateRenderer
 }
 
 "A function capable of handling a request."

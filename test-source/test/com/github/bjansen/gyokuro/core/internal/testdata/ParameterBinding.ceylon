@@ -1,4 +1,4 @@
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	controller,
 	route
 }

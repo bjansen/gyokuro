@@ -1,0 +1,5 @@
+<overrides xmlns="http://www.ceylon-lang.org/xsd/overrides">
+    <module module="com.mitchellbosecke:pebble">
+        <add module="com.google.guava:guava" shared="true" version="16.0.1" />
+    </module>
+</overrides>

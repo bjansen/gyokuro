@@ -1,7 +1,7 @@
 import ceylon.net.http.server {
 	Session
 }
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	Flash
 }
 

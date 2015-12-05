@@ -1,7 +1,7 @@
 import ceylon.net.http.server {
 	Session
 }
-import com.github.bjansen.gyokuro.internal {
+import com.github.bjansen.gyokuro.core.internal {
 	DefaultFlash
 }
 
@@ -23,8 +23,9 @@ shared interface Flash {
 
 "Creates a new instance of a [[Flash]]. You shouldn't have
  to use this function directly unless you are creating a custom
- [[TemplateRenderer]]. If you want to access a `Flash` instance
- from a handler, use parameters injection instead:
+ [[com.github.bjansen.gyokuro.view.api::TemplateRenderer]].
+ If you want to access a `Flash` instance from a handler,
+ use parameters injection instead:
  
  	route(\"/login\")
  	shared void login(Flash flash) {

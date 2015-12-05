@@ -11,14 +11,14 @@ import ceylon.logging {
 	logger
 }
 
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	ControllerAnnotation,
 	RouteAnnotation
 }
 
 shared object annotationScanner {
 	
-	Logger log = logger(`module com.github.bjansen.gyokuro`);
+	Logger log = logger(`module com.github.bjansen.gyokuro.core`);
 	
 	"Looks for controller definitions in the given [[package|pkg]].
 	 Scanned controllers and routes will be registered in the [[router]]

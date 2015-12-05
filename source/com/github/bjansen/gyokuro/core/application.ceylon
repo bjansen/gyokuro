@@ -23,11 +23,14 @@ import ceylon.net.http.server.endpoints {
 	serveStaticFile
 }
 
-import com.github.bjansen.gyokuro.internal {
+import com.github.bjansen.gyokuro.core.internal {
 	RequestDispatcher
 }
 import ceylon.collection {
 	ArrayList
+}
+import com.github.bjansen.gyokuro.view.api {
+	TemplateRenderer
 }
 
 "A web server application that can route requests to handler functions

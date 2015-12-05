@@ -3,18 +3,18 @@ import ceylon.test {
 	assertTrue
 }
 
-import com.github.bjansen.gyokuro.internal {
+import com.github.bjansen.gyokuro.core.internal {
 	annotationScanner,
 	router
 }
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	clearRoutes
 }
 
 shared test void scanClass() {
 	clearRoutes();
 	annotationScanner.scanControllersInPackage("/",
-		`package test.com.github.bjansen.gyokuro.internal.testdata`);
+		`package test.com.github.bjansen.gyokuro.core.internal.testdata`);
 	
 	assertTrue(router.canHandlePath("/cls/func"));	
 	//value func = rou.get("/cls/func");
@@ -28,7 +28,7 @@ shared test void scanClass() {
 shared test void scanPathWithSlashes() {
 	clearRoutes();
 	annotationScanner.scanControllersInPackage("/",
-		`package test.com.github.bjansen.gyokuro.internal.testdata`);
+		`package test.com.github.bjansen.gyokuro.core.internal.testdata`);
 	
 	assertTrue(router.canHandlePath("/path/function"));	
 }
@@ -36,7 +36,7 @@ shared test void scanPathWithSlashes() {
 shared test void scanControllerWithoutRoute() {
 	clearRoutes();
 	annotationScanner.scanControllersInPackage("/",
-		`package test.com.github.bjansen.gyokuro.internal.testdata`);
+		`package test.com.github.bjansen.gyokuro.core.internal.testdata`);
 	
 	assertTrue(router.canHandlePath("/func3"));	
 }

@@ -39,20 +39,22 @@ import ceylon.net.http.server {
 	UploadedFile
 }
 
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	SessionAnnotation,
-    Template,
-    TemplateRenderer,
+	Template,
 	Flash
 }
-import com.github.bjansen.gyokuro.json {
+import com.github.bjansen.gyokuro.core.json {
 	jsonSerializer
+}
+import com.github.bjansen.gyokuro.view.api {
+	TemplateRenderer
 }
 
 shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter,
 		TemplateRenderer? renderer = null) {
 	
-	value log = logger(`module com.github.bjansen.gyokuro`);
+	value log = logger(`module com.github.bjansen.gyokuro.core`);
 	
 	Converter<out Object>[] converters = [primitiveTypesConverter, listsConverter];
 

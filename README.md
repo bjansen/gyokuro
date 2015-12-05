@@ -15,7 +15,7 @@ Create a new Ceylon module:
 
 ```ceylon
 module gyokuro.demo.rest "1.0.0" {
-	import com.github.bjansen.gyokuro "0.1.0";
+	import com.github.bjansen.gyokuro.core "0.1.0";
 	import ceylon.net "1.2.0-3";
 }
 ```
@@ -23,7 +23,7 @@ module gyokuro.demo.rest "1.0.0" {
 Add a runnable top level function that bootstraps a gyokuro application:
 
 ```ceylon
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	Application,
 	get,
 	post,
@@ -103,7 +103,7 @@ Each function annotated with `route` will be mapped to the corresponding path. F
 import ceylon.net.http.server {
 	Response
 }
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	controller,
 	route
 }

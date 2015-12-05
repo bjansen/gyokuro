@@ -2,7 +2,7 @@ import ceylon.net.http.server {
 	Response,
 	Request
 }
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	controller,
 	route,
 	halt

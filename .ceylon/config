@@ -4,8 +4,12 @@ encoding=UTF-8
 offline=false
 flatclasspath=false
 autoexportmavendependencies=false
+overrides=overrides.xml
 
 [compiler]
 source=source
 source=demos
 source=test-source
+
+[formattool]
+profile=default

@@ -28,12 +28,12 @@ import ceylon.test {
 	assertTrue
 }
 
-import com.github.bjansen.gyokuro {
+import com.github.bjansen.gyokuro.core {
 	get,
 	halt,
 	clearRoutes
 }
-import com.github.bjansen.gyokuro.internal {
+import com.github.bjansen.gyokuro.core.internal {
 	RequestDispatcher
 }
 import ceylon.net.http {
@@ -48,7 +48,7 @@ void testDispatcher() {
 	
 	value dispatcher =
 			RequestDispatcher(
-		["/", `package test.com.github.bjansen.gyokuro.internal.testdata`],
+		["/", `package test.com.github.bjansen.gyokuro.core.internal.testdata`],
 		(req, resp) => true)
 		.endpoint();
 	
