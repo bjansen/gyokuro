@@ -1,45 +1,51 @@
-import ceylon.net.http.server {
-    Request,
-    Response
-}
-
-
-
-import java.lang {
-    JString=String
-}
-import java.util {
-    JMap=Map,
-    HashMap
-}
-import com.mitchellbosecke.pebble.loader {
-    FileLoader
-}
-import com.mitchellbosecke.pebble {
-    PebbleEngine
-}
-import java.io {
-    StringWriter
-}
 import ceylon.interop.java {
-    JavaList,
-    JavaIterable,
-    javaString
+	JavaList,
+	JavaIterable,
+	javaString
 }
+import ceylon.net.http.server {
+	Request,
+	Response
+}
+
 import com.github.bjansen.gyokuro.view.api {
 	TemplateRenderer
 }
+import com.mitchellbosecke.pebble {
+	PebbleEngine
+}
+import com.mitchellbosecke.pebble.loader {
+	FileLoader
+}
 
-shared class PebbleRenderer(prefix, suffix, contextEnhancer = noop)
+import java.io {
+	StringWriter
+}
+import java.lang {
+	JString=String
+}
+import java.util {
+	JMap=Map,
+	HashMap
+}
+
+"A [[TemplateRenderer]] based on the [Pebble](http://www.mitchellbosecke.com/pebble)
+ templating engine."
+shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop)
         satisfies TemplateRenderer {
     
-    String prefix;
+    "The optional prefix passed to the [[FileLoader]], for example `views/`."
+    String? prefix;
     
-    String suffix;
+    "The optional suffix passed to the [[FileLoader]], for example `.pebble`."
+    String? suffix;
     
+    "A callback that can add custom entries to the context before passing it to Pebble."
     void contextEnhancer(Request req, Response resp, JMap<JString, Object> context);
     
     value loader = FileLoader();
+    
+    "The Pebble engine."
     shared PebbleEngine engine = PebbleEngine(loader);
     
     loader.prefix = prefix;

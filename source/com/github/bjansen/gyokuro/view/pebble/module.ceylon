@@ -1,3 +1,5 @@
+"An extension of gyokuro that adds support for 
+ [Pebble](http://www.mitchellbosecke.com/pebble)."
 native("jvm")
 module com.github.bjansen.gyokuro.view.pebble "0.2-dev" {
 	shared import com.github.bjansen.gyokuro.core "0.2-dev";
