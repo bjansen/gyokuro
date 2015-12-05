@@ -29,6 +29,9 @@
         font-size: 1.1em;
         font-weight: bold;
     }
+    pre code {
+        background-color: $code_background;
+    }
     code {
         background-color: $color_oyster_pink_approx;
     }

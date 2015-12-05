@@ -120,6 +120,30 @@ Finally, you can group handlers together in [**annotated controllers**](#annotat
 You can clear all the registered routes using `clearRoutes()`. This can come in handy during debug
 sessions, or in unit tests.
 
+## Logging
+
+Before starting your application, it is a good idea to set up a logger, because gyokuro
+logs useful information during startup (especially when it scans packages for annotations).
+The preferred way do to this is to use
+[ceylon.logging](https://modules.ceylon-lang.org/repo/1/ceylon/logging/1.2.0/module-doc/api/index.html):
+
+    import ceylon.logging { ... }
+    
+    shared void run() {
+        addLogWriter(writeSimpleLog);
+        defaultPriority = trace;
+        
+        ...
+    }
+
+This will result in the following logs:
+
+<pre><code data-language="shell">$ ceylon run gyokuro.demo.rest
+    [1449317571409] TRACE Scanning members in package gyokuro.demo.rest
+    [1449317571414] TRACE Scanning member SimpleRestController in package gyokuro.demo.rest
+    [1449317571429] TRACE Binding function makeDuckTalk to path /rest/duck/talk
+    ...</code></pre>
+
 ## Application
 
 Once routes are defined, you can start an application, which will run an embedded HTTP server
@@ -176,6 +200,18 @@ passed to the `Application`.
 
 
 ## Annotated controllers
+
+<div class="gotcha" markdown="1">
+As of 05/12/2015, there is [a bug in Ceylon IDE for Eclipse](https://github.com/ceylon/ceylon-ide-eclipse/issues/1627)
+which can cause unexpected and silent errors, like annotated controllers not being scanned correctly.
+
+If you clean-build your project and see errors like this:
+
+<pre><code data-lang="none">the 'ExpressionVisitor' caused an exception visiting a 'Annotation'
+node: '"java.lang.NullPointerException"'</code></pre>
+
+then the recommended workaround is to compile your project from the CLI.
+</div>
 
 In addition to the routes we saw before, gyokuro allows you to define **annotated controllers**:
 
