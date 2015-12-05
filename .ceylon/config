@@ -12,4 +12,4 @@ source=demos
 source=test-source
 
 [formattool]
-profile=default
+profile=gyokuro

@@ -1,33 +1,33 @@
+import ceylon.io.charset {
+    Charset,
+    utf8
+}
+import ceylon.language.meta.model {
+    Function
+}
 import ceylon.net.http {
-	getMethod=get,
-	postMethod=post,
-	optionsMethod=options,
-	deleteMethod=delete,
-	connectMethod=connect,
-	traceMethod=trace,
-	putMethod=put,
-	headMethod=head,
-	sdkContentType=contentType
+    getMethod=get,
+    postMethod=post,
+    optionsMethod=options,
+    deleteMethod=delete,
+    connectMethod=connect,
+    traceMethod=trace,
+    putMethod=put,
+    headMethod=head,
+    sdkContentType=contentType
+}
+import ceylon.net.http.server {
+    Request,
+    Response
 }
 
 import com.github.bjansen.gyokuro.core.internal {
-	router,
-	HaltException,
-	RedirectException
-}
-import ceylon.language.meta.model {
-	Function
-}
-import ceylon.net.http.server {
-	Request,
-	Response
-}
-import ceylon.io.charset {
-	Charset,
-	utf8
+    router,
+    HaltException,
+    RedirectException
 }
 import com.github.bjansen.gyokuro.view.api {
-	TemplateRenderer
+    TemplateRenderer
 }
 
 "A function capable of handling a request."
@@ -35,43 +35,43 @@ shared alias Handler<Params> => Function<Anything,Params>|Callable<Anything,[Req
 
 "Declares a new GET route for the given [[path]] and [[handler]]."
 shared void get<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { getMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { getMethod }, handler);
 
 "Declares a new POST route for the given [[path]] and [[handler]]."
 shared void post<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { postMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { postMethod }, handler);
 
 "Declares a new OPTIONS route for the given [[path]] and [[handler]]."
 shared void options<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { optionsMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { optionsMethod }, handler);
 
 "Declares a new DELET route for the given [[path]] and [[handler]]."
 shared void delete<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { deleteMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { deleteMethod }, handler);
 
 "Declares a new CONNECT route for the given [[path]] and [[handler]]."
 shared void connect<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { connectMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { connectMethod }, handler);
 
 "Declares a new TRACE route for the given [[path]] and [[handler]]."
 shared void trace<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { traceMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { traceMethod }, handler);
 
 "Declares a new PUT route for the given [[path]] and [[handler]]."
 shared void put<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { putMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { putMethod }, handler);
 
 "Declares a new HEAD route for the given [[path]] and [[handler]]."
 shared void head<Params>(String path, Handler<Params> handler)
-		given Params satisfies Anything[]
-		=> router.registerRoute(path, { headMethod }, handler);
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { headMethod }, handler);
 
 "Interrupts the current handler immediately, resulting in an HTTP
  response with code [[errorCode]] and a body equal to [[message]].
@@ -85,7 +85,7 @@ shared void head<Params>(String path, Handler<Params> handler)
      }
  "
 shared Nothing halt(Integer errorCode, String? message = null) {
-	throw HaltException(errorCode, message);
+    throw HaltException(errorCode, message);
 }
 
 "Interrupts the current handler immediately, and asks the client
@@ -100,31 +100,31 @@ shared Nothing halt(Integer errorCode, String? message = null) {
  	}
  "
 shared Nothing redirect(String url, Integer redirectCode = 303) {
-	throw RedirectException(url, redirectCode);
+    throw RedirectException(url, redirectCode);
 }
 
 "A template that can be called by a [[TemplateRenderer]]."
-shared alias Template => Callable<Anything, [TemplateRenderer, Request, Response]>;
+shared alias Template => Callable<Anything,[TemplateRenderer, Request, Response]>;
 
 "Renders a template that will be returned as the response body."
 shared void render(
-	"The template name"
-	String templateName,
-	"A map of things to pass to the template."
-	Map<String, Anything> context = emptyMap,
-	"The content type to be used in the response."
-	String contentType = "text/html",
-	"The charset to be used in the response."
-	Charset charset = utf8)
-(TemplateRenderer renderer, Request request, Response response) {
-	
-	value result = renderer.render(templateName, context, request, response);
-	
-	response.addHeader(sdkContentType(contentType, charset));
-	response.writeString(result);
+    "The template name"
+    String templateName,
+    "A map of things to pass to the template."
+    Map<String,Anything> context = emptyMap,
+    "The content type to be used in the response."
+    String contentType = "text/html",
+    "The charset to be used in the response."
+    Charset charset = utf8)
+        (TemplateRenderer renderer, Request request, Response response) {
+    
+    value result = renderer.render(templateName, context, request, response);
+    
+    response.addHeader(sdkContentType(contentType, charset));
+    response.writeString(result);
 }
 
 "Clears every registered route."
 shared void clearRoutes() {
-	router.clear();
+    router.clear();
 }

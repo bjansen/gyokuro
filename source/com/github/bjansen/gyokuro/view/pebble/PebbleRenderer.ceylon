@@ -1,32 +1,32 @@
 import ceylon.interop.java {
-	JavaList,
-	JavaIterable,
-	javaString
+    JavaList,
+    JavaIterable,
+    javaString
 }
 import ceylon.net.http.server {
-	Request,
-	Response
+    Request,
+    Response
 }
 
 import com.github.bjansen.gyokuro.view.api {
-	TemplateRenderer
+    TemplateRenderer
 }
 import com.mitchellbosecke.pebble {
-	PebbleEngine
+    PebbleEngine
 }
 import com.mitchellbosecke.pebble.loader {
-	FileLoader
+    FileLoader
 }
 
 import java.io {
-	StringWriter
+    StringWriter
 }
 import java.lang {
-	JString=String
+    JString=String
 }
 import java.util {
-	JMap=Map,
-	HashMap
+    JMap=Map,
+    HashMap
 }
 
 "A [[TemplateRenderer]] based on the [Pebble](http://www.mitchellbosecke.com/pebble)
@@ -41,7 +41,7 @@ shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop
     String? suffix;
     
     "A callback that can add custom entries to the context before passing it to Pebble."
-    void contextEnhancer(Request req, Response resp, JMap<JString, Object> context);
+    void contextEnhancer(Request req, Response resp, JMap<JString,Object> context);
     
     value loader = FileLoader();
     
@@ -49,8 +49,8 @@ shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop
     shared PebbleEngine engine = PebbleEngine(loader);
     
     loader.prefix = prefix;
-    loader.suffix = suffix; 
-
+    loader.suffix = suffix;
+    
     shared actual String render(String templateName, Map<String,Anything> context,
         Request req, Response resp) {
         
@@ -66,20 +66,19 @@ shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop
     JMap<JString,Object> wrapMap(Map<String,Anything> context,
         Request request, Response response) {
         
-        value result = HashMap<JString, Object>();
+        value result = HashMap<JString,Object>();
         
         contextEnhancer(request, response, result);
         
-        for (key -> val in context) {
-            value javaVal = switch(val)
-            case (is List<Nothing>) JavaList(val)
-            else if (is Iterable<> val) then JavaIterable(val)
-            else val;
+        for (key->val in context) {
+            value javaVal = switch (val)
+                case (is List<Nothing>) JavaList(val)
+                else if (is Iterable<> val) then JavaIterable(val)
+                    else val;
             
             result.put(javaString(key), javaVal else null);
         }
         
         return result;
     }
-
 }

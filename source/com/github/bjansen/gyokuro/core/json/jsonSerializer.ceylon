@@ -1,69 +1,69 @@
 import ceylon.json {
-	Builder
+    Builder
 }
 import ceylon.language.meta {
-	type
+    type
 }
 import ceylon.language.meta.declaration {
-	ValueDeclaration
+    ValueDeclaration
 }
 
 "A serializer that transforms anything to a valid JSON string"
 shared object jsonSerializer {
-	
-	value maxDepth = 10;
-	shared variable CustomSerializer[] customSerializers = [];
-	
-	"Transforms anything to a valid JSON string"
+    
+    value maxDepth = 10;
+    shared variable CustomSerializer[] customSerializers = [];
+    
+    "Transforms anything to a valid JSON string"
     shared String serialize(Anything obj) {
         value builder = Builder();
-
-		visit(obj, builder, 1);
-		
+        
+        visit(obj, builder, 1);
+        
         return builder.result?.string else "";
     }
-
-	void visit(Anything obj, Builder builder, Integer depth) {
-		if (depth > maxDepth) {
-			return;
-		}
-		
-		if (exists obj) {
-			for (serializer in customSerializers) {
-				if (serializer.supports(obj)) {
-					serializer.serialize(obj, builder);
-					return;
-				}
-			}
-		}
-				
-		switch (obj)
-		case (is String) {
-			visitString(obj, builder);
-		}
-		case (is Float) {
-			visitNumber(obj, builder);
-		}
-		case (is Integer) {
-			visitNumber(obj, builder);
-		}
-		case (is Sequential<Anything>) {
-			visitSequence(obj, builder, depth + 1);
-		}
-		case (is Boolean) {
-			visitBoolean(obj, builder);
-		}
-		case (is Null) {
-			visitNull(builder);
-		}
-		case (is Map<>) {
-			visitMap(obj, builder, depth + 1);
-		}
-		else {
-			visitObject(obj, builder, depth + 1);
-		}
-	}
-	
+    
+    void visit(Anything obj, Builder builder, Integer depth) {
+        if (depth > maxDepth) {
+            return;
+        }
+        
+        if (exists obj) {
+            for (serializer in customSerializers) {
+                if (serializer.supports(obj)) {
+                    serializer.serialize(obj, builder);
+                    return;
+                }
+            }
+        }
+        
+        switch (obj)
+        case (is String) {
+            visitString(obj, builder);
+        }
+        case (is Float) {
+            visitNumber(obj, builder);
+        }
+        case (is Integer) {
+            visitNumber(obj, builder);
+        }
+        case (is Sequential<Anything>) {
+            visitSequence(obj, builder, depth + 1);
+        }
+        case (is Boolean) {
+            visitBoolean(obj, builder);
+        }
+        case (is Null) {
+            visitNull(builder);
+        }
+        case (is Map<>) {
+            visitMap(obj, builder, depth + 1);
+        }
+        else {
+            visitObject(obj, builder, depth + 1);
+        }
+    }
+    
     void visitSequence(Anything[] obj, Builder builder, Integer depth) {
         builder.onStartArray();
         
@@ -73,21 +73,21 @@ shared object jsonSerializer {
         
         builder.onEndArray();
     }
-
+    
     void visitObject(Object obj, Builder builder, Integer depth) {
         value model = type(obj);
-
-		builder.onStartObject();
-
-		for (ValueDeclaration decl in model.declaration.memberDeclarations<ValueDeclaration>()) {
+        
+        builder.onStartObject();
+        
+        for (ValueDeclaration decl in model.declaration.memberDeclarations<ValueDeclaration>()) {
             value name = decl.name;
             
             if (name.equals("hash") || name.equals("string")) {
                 continue;
             }
-			
+            
             builder.onKey(name);
-			
+            
             visit(decl.memberGet(obj), builder, depth + 1);
         }
         
@@ -112,22 +112,22 @@ shared object jsonSerializer {
     
     void visitMap(Map<> map, Builder builder, Integer depth) {
         builder.onStartObject();
-
-        for (key -> val in map) {
+        
+        for (key->val in map) {
             builder.onKey(key.string);
             visit(val, builder, depth + 1);
         }
-
+        
         builder.onEndObject();
     }
 }
 
 "Handles the serialization of a custom type"
 shared interface CustomSerializer {
-	
-	"Adds the object's serialized representation to a Builder"
-	shared formal void serialize(Object obj, Builder builder);
-	
-	"Checks if this serializer can serialize a given object"
-	shared formal Boolean supports(Object obj);
+    
+    "Adds the object's serialized representation to a Builder"
+    shared formal void serialize(Object obj, Builder builder);
+    
+    "Checks if this serializer can serialize a given object"
+    shared formal Boolean supports(Object obj);
 }

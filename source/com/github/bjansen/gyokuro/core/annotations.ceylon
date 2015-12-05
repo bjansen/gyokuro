@@ -1,12 +1,12 @@
 import ceylon.language.meta.declaration {
-	FunctionDeclaration,
-	ClassDeclaration,
-	ValueDeclaration
+    FunctionDeclaration,
+    ClassDeclaration,
+    ValueDeclaration
 }
 import ceylon.net.http {
-	AbstractMethod,
-	get,
-	post
+    AbstractMethod,
+    get,
+    post
 }
 
 "Declares a partial path associated to a class or a function.
@@ -21,14 +21,14 @@ import ceylon.net.http {
      }
  "
 shared annotation RouteAnnotation route(String path,
-	{AbstractMethod+} methods = {get, post}) => RouteAnnotation(path, methods);
+    {AbstractMethod+} methods = { get, post }) => RouteAnnotation(path, methods);
 
 "The annotation class for the [[route]] annotation."
-shared final annotation class RouteAnnotation(path, methods) 
-		satisfies OptionalAnnotation<RouteAnnotation, FunctionDeclaration|ClassDeclaration> {
-	
-	shared String path;
-	shared {AbstractMethod+} methods;
+shared final annotation class RouteAnnotation(path, methods)
+        satisfies OptionalAnnotation<RouteAnnotation,FunctionDeclaration|ClassDeclaration> {
+    
+    shared String path;
+    shared {AbstractMethod+} methods;
 }
 
 "Declares a class as a controller, allowing routes to be scanned."
@@ -37,8 +37,7 @@ shared annotation ControllerAnnotation controller() => ControllerAnnotation();
 
 "The annotation class for the [[controller]] annotation."
 shared final annotation class ControllerAnnotation()
-		satisfies OptionalAnnotation<ControllerAnnotation, ClassDeclaration> {
-	
+        satisfies OptionalAnnotation<ControllerAnnotation,ClassDeclaration> {
 }
 
 "Declares that a handler parameter should be retrieved from the current
@@ -48,6 +47,5 @@ shared annotation SessionAnnotation session() => SessionAnnotation();
 
 "The annotation class for the [[session]] annotation."
 shared final annotation class SessionAnnotation()
-        satisfies OptionalAnnotation<SessionAnnotation, ValueDeclaration> {
-    
+        satisfies OptionalAnnotation<SessionAnnotation,ValueDeclaration> {
 }

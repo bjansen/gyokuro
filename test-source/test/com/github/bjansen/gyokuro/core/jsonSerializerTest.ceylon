@@ -1,6 +1,11 @@
-import ceylon.test { test,
-	assertEquals }
-import com.github.bjansen.gyokuro.core.json { jsonSerializer }
+import ceylon.test {
+    test,
+    assertEquals
+}
+
+import com.github.bjansen.gyokuro.core.json {
+    jsonSerializer
+}
 
 class MyClass() {
 	shared variable Integer anInt = 1;

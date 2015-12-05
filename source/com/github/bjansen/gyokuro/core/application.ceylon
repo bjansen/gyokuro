@@ -1,53 +1,53 @@
+import ceylon.collection {
+    ArrayList
+}
 import ceylon.io {
-	SocketAddress
+    SocketAddress
 }
 import ceylon.language.meta.declaration {
-	Package
+    Package
 }
 import ceylon.net.http {
-	post,
-	get,
-	Method
+    post,
+    get,
+    Method
 }
 import ceylon.net.http.server {
-	Options,
-	Request,
-	newServer,
-	Response,
-	Server,
-	startsWith,
-	AsynchronousEndpoint,
-	HttpEndpoint
+    Options,
+    Request,
+    newServer,
+    Response,
+    Server,
+    startsWith,
+    AsynchronousEndpoint,
+    HttpEndpoint
 }
 import ceylon.net.http.server.endpoints {
-	serveStaticFile
+    serveStaticFile
 }
 
 import com.github.bjansen.gyokuro.core.internal {
-	RequestDispatcher
-}
-import ceylon.collection {
-	ArrayList
+    RequestDispatcher
 }
 import com.github.bjansen.gyokuro.view.api {
-	TemplateRenderer
+    TemplateRenderer
 }
 
 "A web server application that can route requests to handler functions
  or annotated controllers, and serve static assets."
 shared class Application(
-	"The address or hostname on which the HTTP server will be bound."
-	String address = "0.0.0.0",
-	"The port on which the server will listen."
-	Integer port = 8080,
-	"A tuple [context root, package] used to scan [[controllers|controller]]
-	 that will be associated to the given context root. See the [[bind]] function."
-	[String, Package]? controllers = null,
-	"A tuple [filesystem folder, context root] used to serve static assets.
- 	 See the [[serve]] function."
-	[String, String]? assets = null,
-	"Additional (chained) filters run before each request."
-	Filter[] filters = [],
+    "The address or hostname on which the HTTP server will be bound."
+    String address = "0.0.0.0",
+    "The port on which the server will listen."
+    Integer port = 8080,
+    "A tuple [context root, package] used to scan [[controllers|controller]]
+        that will be associated to the given context root. See the [[bind]] function."
+    [String, Package]? controllers = null,
+    "A tuple [filesystem folder, context root] used to serve static assets.
+    	 See the [[serve]] function."
+    [String, String]? assets = null,
+    "Additional (chained) filters run before each request."
+    Filter[] filters = [],
     "A template renderer"
     TemplateRenderer? renderer = null) {
     
@@ -60,12 +60,12 @@ shared class Application(
     "Starts the web application."
     shared void run() {
         value endpoints = ArrayList<HttpEndpoint>();
-
-		endpoints.add(RequestDispatcher(controllers, filter, renderer).endpoint());
-		
+        
+        endpoints.add(RequestDispatcher(controllers, filter, renderer).endpoint());
+        
         if (exists assets) {
             value assetsEndpoint = AsynchronousEndpoint(startsWith(assets[1]),
-                serveRoot(assets), 
+                serveRoot(assets),
                 { get, post, special });
             
             endpoints.add(assetsEndpoint);
@@ -123,7 +123,7 @@ shared class Application(
  
  "
 shared [String, Package] bind(Package pkgToScan, String context = "/") {
-	return [context, pkgToScan];
+    return [context, pkgToScan];
 }
 
 "Tells gyokuro to serve static assets located in the filesystem folder [[path]] under the
@@ -135,5 +135,5 @@ shared [String, Package] bind(Package pkgToScan, String context = "/") {
      };
  "
 shared [String, String] serve(String path, String context = "") {
-	return [path, context]; 
+    return [path, context];
 }

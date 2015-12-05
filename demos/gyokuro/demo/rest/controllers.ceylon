@@ -1,21 +1,22 @@
 import ceylon.net.http.server {
-	Response,
-	Request
+    Response,
+    Request
 }
+
 import com.github.bjansen.gyokuro.core {
-	controller,
-	route,
-	halt
+    controller,
+    route,
+    halt
 }
 
 route("duck")
 controller class SimpleRestController() {
-	
-	route("talk")
-	shared void makeDuckTalk(Response resp, Request req) {
-		resp.writeString("Quack world!");
-	}
-
+    
+    route("talk")
+    shared void makeDuckTalk(Response resp, Request req) {
+        resp.writeString("Quack world!");
+    }
+    
     route("actions")
     shared String[] listThingsDucksCanDo() {
         return ["fly", "quack", "eat", "dive"];

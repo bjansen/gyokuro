@@ -1,24 +1,25 @@
 import ceylon.net.http.server {
-	Session
+    Session
 }
+
 import com.github.bjansen.gyokuro.core.internal {
-	DefaultFlash
+    DefaultFlash
 }
 
 "A holder for special messages stored in the session,
  meant to be used exactly once. Flash messages are removed
  from the session as soon as they are accessed."
 shared interface Flash {
-	"Adds a flash object to the session."
-	shared formal void add(String key, Object val);
-	
-	"Gets a flash object if it exists, and removes it
-	 immediately from the session."
-	shared formal Object? get(String key);
-	
-	"Gets a flash object if it exists, without removing
-	 it from the session."
-	shared formal Object? peek(String key);
+    "Adds a flash object to the session."
+    shared formal void add(String key, Object val);
+    
+    "Gets a flash object if it exists, and removes it
+     immediately from the session."
+    shared formal Object? get(String key);
+    
+    "Gets a flash object if it exists, without removing
+     it from the session."
+    shared formal Object? peek(String key);
 }
 
 "Creates a new instance of a [[Flash]]. You shouldn't have
@@ -36,4 +37,4 @@ shared interface Flash {
  	}
  "
 shared Flash newFlash(Session session)
-	=> DefaultFlash(session);
+        => DefaultFlash(session);
