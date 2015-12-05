@@ -173,9 +173,11 @@ pre {
 ul {
     margin-bottom: 20px;
     li {
+        font-weight: 300;
         list-style-type: none;
         padding-left: 10px;
         &:before {
+            font-weight: 600;
             content: "»";
             color: $color_woodsmoke_approx;
             font-size: 1.1em;
