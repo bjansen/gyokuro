@@ -38,7 +38,7 @@ With gyokuro, you can:
 * create a new Ceylon project and import gyokuro:
 ^
     module com.example.mymodule "1.0.0" {
-        import com.github.bjansen.gyokuro "0.1";
+        import com.github.bjansen.gyokuro "0.1.0";
     }
   
 * write your first application:
