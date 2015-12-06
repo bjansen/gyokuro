@@ -34,7 +34,8 @@ shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop
     "The optional suffix passed to the [[FileLoader]], for example `.pebble`."
     String? suffix;
     
-    "A callback that can add custom entries to the context before passing it to Pebble."
+    "A callback that can add custom entries to the context before passing it to Pebble.
+     Custom entries can be overriden by handlers using the `render()` function."
     void contextEnhancer(Request req, Response resp, JMap<JString,Object> context);
     
     value loader = FileLoader();
