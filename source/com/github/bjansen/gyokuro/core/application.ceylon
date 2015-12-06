@@ -50,6 +50,9 @@ shared class Application(
     Filter[] filters = [],
     "A template renderer"
     TemplateRenderer? renderer = null) {
+
+    variable Server? server = null;
+    variable Boolean stopped = false;
     
     "A filter applied to each incoming request before it is dispatched to
      its matching handler. Multiple filters can be chained, and returning
@@ -59,6 +62,9 @@ shared class Application(
     
     "Starts the web application."
     shared void run() {
+        if (stopped) {
+            return;
+        }
         value endpoints = ArrayList<HttpEndpoint>();
         
         endpoints.add(RequestDispatcher(controllers, filter, renderer).endpoint());
@@ -71,8 +77,17 @@ shared class Application(
             endpoints.add(assetsEndpoint);
         }
         
-        Server server = newServer(endpoints);
-        server.start(SocketAddress(address, port), Options());
+        value s = server = newServer(endpoints);
+        s.start(SocketAddress(address, port), Options());
+        server = null;
+    }
+
+    "Stops the web application, if started, and inhibits any further attempts to start it."
+    shared void stop() {
+        stopped = true;
+        if (exists s = server) {
+            s.stop();
+        }
     }
     
     object special satisfies Method {
