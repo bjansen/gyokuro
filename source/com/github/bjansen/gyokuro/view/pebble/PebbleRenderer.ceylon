@@ -1,15 +1,10 @@
-import ceylon.interop.java {
-    JavaList,
-    JavaIterable,
-    javaString
-}
 import ceylon.net.http.server {
     Request,
     Response
 }
 
 import com.github.bjansen.gyokuro.view.api {
-    TemplateRenderer
+    JavaTemplateRenderer
 }
 import com.mitchellbosecke.pebble {
     PebbleEngine
@@ -25,14 +20,13 @@ import java.lang {
     JString=String
 }
 import java.util {
-    JMap=Map,
-    HashMap
+    JMap=Map
 }
 
-"A [[TemplateRenderer]] based on the [Pebble](http://www.mitchellbosecke.com/pebble)
- templating engine."
+"A [[com.github.bjansen.gyokuro.view.api::TemplateRenderer]] based on the 
+ [Pebble](http://www.mitchellbosecke.com/pebble) templating engine."
 shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop)
-        satisfies TemplateRenderer {
+        extends JavaTemplateRenderer(contextEnhancer) {
     
     "The optional prefix passed to the [[FileLoader]], for example `views/`."
     String? prefix;
@@ -61,24 +55,5 @@ shared class PebbleRenderer(prefix = null, suffix = null, contextEnhancer = noop
         tpl.evaluate(writer, jMap);
         
         return writer.string;
-    }
-    
-    JMap<JString,Object> wrapMap(Map<String,Anything> context,
-        Request request, Response response) {
-        
-        value result = HashMap<JString,Object>();
-        
-        contextEnhancer(request, response, result);
-        
-        for (key->val in context) {
-            value javaVal = switch (val)
-                case (is List<Nothing>) JavaList(val)
-                else if (is Iterable<> val) then JavaIterable(val)
-                    else val;
-            
-            result.put(javaString(key), javaVal else null);
-        }
-        
-        return result;
     }
 }

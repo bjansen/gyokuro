@@ -44,7 +44,7 @@ shared void run() {
         controllers = bind(`package gyokuro.demo.rest`, "/rest");
         
         // And serve static assets
-        assets = serve("assets");
+        assets = serve("demos-assets");
         
         // You can use any template engine you want
         renderer = object satisfies TemplateRenderer {
