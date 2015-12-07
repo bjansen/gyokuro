@@ -37,9 +37,9 @@ import com.github.bjansen.gyokuro.view.api {
  or annotated controllers, and serve static assets."
 shared class Application(
     "The address or hostname on which the HTTP server will be bound."
-    String address = "0.0.0.0",
+    shared String address = "0.0.0.0",
     "The port on which the server will listen."
-    Integer port = 8080,
+    shared Integer port = 8080,
     "A tuple [context root, package] used to scan [[controllers|controller]]
         that will be associated to the given context root. See the [[bind]] function."
     [String, Package]? controllers = null,
