@@ -15,6 +15,9 @@ import com.github.bjansen.gyokuro.core {
     ControllerAnnotation,
     RouteAnnotation
 }
+import ceylon.net.http {
+    AbstractMethod
+}
 
 shared object annotationScanner {
     
@@ -23,7 +26,10 @@ shared object annotationScanner {
     "Looks for controller definitions in the given [[package|pkg]].
      Scanned controllers and routes will be registered in the [[router]]
      for GET and POST methods."
-    shared void scanControllersInPackage(String contextRoot, Package pkg) {
+    shared void scanControllersInPackage(String contextRoot, Package pkg,
+        Anything consumer(String path, [Object, FunctionDeclaration] controllerHandler,
+            {AbstractMethod+} methods) => router.registerControllerRoute) {
+        
         value members = pkg.members<ClassDeclaration>();
         
         log.trace("Scanning members in package ``pkg.name``");
@@ -49,7 +55,7 @@ shared object annotationScanner {
                         value functionRoute = buildPath(controllerRoute, route.path);
                         
                         log.trace("Binding function ``func.name`` to path ``functionRoute``");
-                        router.registerControllerRoute(functionRoute, [instance, func], route.methods);
+                        consumer(functionRoute, [instance, func], route.methods);
                     }
                 }
             }

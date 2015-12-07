@@ -21,7 +21,7 @@ shared alias Handler => [Object?, FunctionDeclaration]|Callable<Anything,[Reques
 
 shared object router {
     
-    value root = Node("");
+    shared Node root = Node("");
     
     shared void registerRoute<Param>(String path, {Method+} methods,
         Function<Anything,Param>|Callable<Anything,[Request, Response]> handler)
@@ -110,7 +110,7 @@ shared object router {
     }
 }
 
-class Node(shared String subPath) {
+shared class Node(shared String subPath) {
     
     shared Boolean isNamedParameter =
             if (exists first = subPath.first, first == ':')

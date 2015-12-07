@@ -1,0 +1,98 @@
+body {
+    background-color: #EEE;
+    width: 1024px;
+    margin: auto;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.9em;
+}
+
+.route-header {
+    display: flex;
+    cursor: pointer;
+}
+
+.route-header > :first-child {
+    border-radius: 2px;
+    padding: 5px;
+    color: #EEE;
+    min-width: 45px;
+    text-align: center;
+}
+
+.route-header > :nth-child(2) {
+    padding: 5px 15px;
+}
+
+.route-header > :nth-child(3) {
+    padding: 5px 10px;
+    text-align: right;
+    flex: 1;
+}
+
+div[class^="method-"] {
+    margin-bottom: 20px;
+}
+
+/* GET */
+.method-get {
+    background-color: #e7f6ec;
+    border: 1px solid #c3e8d1;
+}
+.method-get .route-params {
+    border-top: 1px solid #c3e8d1;
+}
+
+.method-get .route-header > :first-child {
+    background-color: #10a54a;
+}
+
+.method-get .route-header > :nth-child(3) {
+    color: #10a54a;
+}
+
+/* POST */
+.method-post {
+    background-color: #e7f0f7;
+    border: 1px solid #c3d9ec;
+}
+
+.method-post .route-params {
+    border-top: 1px solid #c3d9ec;
+}
+
+.method-post .route-header > :first-child {
+    background-color: #0f6ab4;
+}
+
+.method-post .route-header > :nth-child(3) {
+    color: #0f6ab4;
+}
+
+.collapsed {
+    display: none;
+}
+
+/* Parameters */
+.route-params {
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+.route-params h2 {
+    font-size: 1.1em;
+}
+
+.route-params table {
+    width: 100%;
+    border-collapse:collapse;
+    text-align: left;
+ }
+
+.route-params table th {
+    color: #666;
+    font-weight: normal;
+    border-bottom: 1px solid #CCC;
+}
+
+.route-params table td {
+    padding: 2px 5px;
+}

@@ -11,17 +11,20 @@ import com.github.bjansen.gyokuro.core {
 
 route("duck")
 controller class SimpleRestController() {
-    
+
+    "Make the duck talk!"
     route("talk")
     shared void makeDuckTalk(Response resp, Request req) {
         resp.writeString("Quack world!");
     }
     
+    "Lists all the things a duck can do."
     route("actions")
     shared String[] listThingsDucksCanDo() {
         return ["fly", "quack", "eat", "dive"];
     }
     
+    "Tries to find a duck."
     suppressWarnings("expressionTypeNothing")
     route("find")
     shared String findDuck(Integer id) {
