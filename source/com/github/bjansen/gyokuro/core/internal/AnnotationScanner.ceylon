@@ -23,12 +23,13 @@ shared object annotationScanner {
     
     Logger log = logger(`module com.github.bjansen.gyokuro.core`);
     
+    shared alias Consumer => Anything(String, [Object, FunctionDeclaration], {AbstractMethod+});
+    
     "Looks for controller definitions in the given [[package|pkg]].
      Scanned controllers and routes will be registered in the [[router]]
      for GET and POST methods."
     shared void scanControllersInPackage(String contextRoot, Package pkg,
-        Anything consumer(String path, [Object, FunctionDeclaration] controllerHandler,
-            {AbstractMethod+} methods) => router.registerControllerRoute) {
+        Consumer consumer = router.registerControllerRoute) {
         
         value members = pkg.members<ClassDeclaration>();
         
