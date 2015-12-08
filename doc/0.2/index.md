@@ -10,6 +10,12 @@ This is the complete documentation for gyokuro 0.2-dev.
 * TOC
 {:toc}
 
+## What's new
+
+### Backward incompatible changes
+
+* the package has been renamed from `com.github.bjansen.gyokuro` to `com.github.bjansen.gyokuro.core`
+
 ## Routes
 
 The entry points for any gyokuro application are **routes**. A route consists of the
