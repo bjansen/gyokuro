@@ -10,11 +10,26 @@ This is the complete documentation for gyokuro 0.2-dev.
 * TOC
 {:toc}
 
-## What's new
+## What's new in 0.2?
 
 ### Backward incompatible changes
 
 * the package has been renamed from `com.github.bjansen.gyokuro` to `com.github.bjansen.gyokuro.core`
+
+### API for templating engines
+
+gyokuro now provides a new module `com.github.bjansen.gyokuro.view.api` that defines an API
+for pluggable templating engines. It provides out-of-the-box support for a few Java templating engines:
+
+* Mustache.java 
+* Pebble
+* Rythm
+* Thymeleaf
+
+You can provide your own templating engine by importing `com.github.bjansen.gyokuro.view.api` and
+creating a new instance of ``com.github.bjansen.gyokuro.view.api::TemplateRenderer`.
+
+See the templating engines section (TODO).
 
 ## Routes
 
