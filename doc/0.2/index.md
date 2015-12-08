@@ -3,9 +3,9 @@ layout: default
 useToc: true
 ---
 
-# gyokuro 0.1
+# gyokuro 0.2-dev
 {:.no_toc}
-This is the complete documentation for gyokuro 0.1.
+This is the complete documentation for gyokuro 0.2-dev.
 
 * TOC
 {:toc}
