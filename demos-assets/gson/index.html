@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+    <body>
+        <h1>Gson demo</h1>
+        
+        <h2>Serialization</h2>
+        <script type="text/javascript">
+            function getBob(mimeType) {
+                var req = new XMLHttpRequest();
+                req.open('GET', '/bob', false);
+                req.setRequestHeader("Accept", mimeType);
+                req.send(null);
+
+                document.getElementById("bob-result").innerText = req.responseText;
+            }
+        </script>
+        <button onclick="getBob('application/json')">Get Bob in JSON!</button>
+        <button onclick="getBob('application/xml')">Get Bob in XML!</button>
+        <code id="bob-result">
+        </code>
+        
+        <h2>Deserialization</h2>
+        
+        Name: <input id="emp-name"/><br/>
+        Salary: <input id="emp-salary"/><br/>
+        <button onclick="saveEmployee()">Save employee</button>
+
+        <script type="text/javascript">
+            function saveEmployee() {
+                var req = new XMLHttpRequest();
+                req.open('POST', '/save', false);
+                req.setRequestHeader("Content-type", "application/json");
+                
+                var data = {
+                    name: document.getElementById("emp-name").value,
+                    salary: document.getElementById("emp-salary").value
+                };
+                req.send(JSON.stringify(data));
+
+                document.getElementById("emp-result").innerText = req.responseText;
+            }
+        </script>
+
+        <code id="emp-result">
+        </code>
+        
+    </body>
+</html>
