@@ -27,9 +27,14 @@ for pluggable templating engines. It provides out-of-the-box support for a few J
 * Thymeleaf
 
 You can provide your own templating engine by importing `com.github.bjansen.gyokuro.view.api` and
-creating a new instance of ``com.github.bjansen.gyokuro.view.api::TemplateRenderer`.
+creating a new instance of `com.github.bjansen.gyokuro.view.api::TemplateRenderer`.
 
 See the templating engines section (TODO).
+
+### Other changes
+
+* Handlers can now return `ceylon.html` nodes that will automatically be serialized to a String and
+sent in the response.
 
 ## Routes
 
@@ -136,6 +141,23 @@ You can use any name you want for these:
 
 Finally, you can group handlers together in [**annotated controllers**](#annotated-controllers).
 
+### Handler return types
+
+In addition to `String`s, handlers can return instances of 
+[ceylon.html](https://modules.ceylon-lang.org/repo/1/ceylon/html/1.2.0/module-doc/api/index.html) nodes
+that will automatically be converted to Strings:
+
+    get("/html", (req, resp) =>
+        Html {
+            body = Body {
+                H1("hello")
+            };
+        }
+    );
+
+You can also use external templating engines by returning a `Template`, see the 
+[Templating](#templating) section.
+ 
 ### Clearing routes
 
 You can clear all the registered routes using `clearRoutes()`. This can come in handy during debug
@@ -223,15 +245,12 @@ passed to the `Application`.
 ## Annotated controllers
 
 <div class="gotcha" markdown="1">
-As of 05/12/2015, there is [a bug in Ceylon IDE for Eclipse](https://github.com/ceylon/ceylon-ide-eclipse/issues/1627)
-which can cause unexpected and silent errors, like annotated controllers not being scanned correctly.
+Previous versions of Ceylon IDE for Eclipse contained [a bug](https://github.com/ceylon/ceylon-ide-eclipse/issues/1627)
+which would cause unexpected and silent errors, like annotated controllers not being scanned correctly.
 
-If you clean-build your project and see errors like this:
+This has been fixed in Ceylon IDE 1.2.0.v20151214-1608-Final, so make sure you're using a recent version
+if you want to stay out of trouble 😉.
 
-<pre><code data-lang="none">the 'ExpressionVisitor' caused an exception visiting a 'Annotation'
-node: '"java.lang.NullPointerException"'</code></pre>
-
-then the recommended workaround is to compile your project from the CLI.
 </div>
 
 In addition to the routes we saw before, gyokuro allows you to define **annotated controllers**:
