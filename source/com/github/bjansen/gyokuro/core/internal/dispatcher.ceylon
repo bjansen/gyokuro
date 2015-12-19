@@ -16,6 +16,9 @@ import ceylon.language.meta.declaration {
     OpenUnion,
     OpenType
 }
+import ceylon.language.meta.model {
+    InterfaceModel
+}
 import ceylon.logging {
     logger
 }
@@ -42,20 +45,18 @@ import ceylon.net.http.server {
 import com.github.bjansen.gyokuro.core {
     SessionAnnotation,
     Template,
-    Flash
+    Flash,
+    mimeParse
 }
-import com.github.bjansen.gyokuro.core.json {
-    jsonSerializer
+import com.github.bjansen.gyokuro.transform.api {
+    Transformer
 }
 import com.github.bjansen.gyokuro.view.api {
     TemplateRenderer
 }
-import ceylon.language.meta.model {
-    InterfaceModel
-}
 
 shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter,
-    TemplateRenderer? renderer = null) {
+    TemplateRenderer? renderer = null, Transformer[] transformers = []) {
     
     value log = logger(`module com.github.bjansen.gyokuro.core`);
     
@@ -215,7 +216,6 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
         then getNonOptionalType(decl)
         else decl.openType;
         
-        // file uploads are broken because of https://github.com/ceylon/ceylon-sdk/issues/412
         if (targetType == `UploadedFile`.declaration.openType) {
             return req.file(decl.name);
         } else if (listsConverter.supports(targetType)) {
@@ -255,13 +255,34 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
                 respond(500, "No template renderer is configured.", resp);
             }
         } else if (is String result) {
+            resp.addHeader(contentType("text/plain", utf8));
             resp.writeString(result);
         } else if (exists result, satisfiesHtmlNode(result)) {
+            resp.addHeader(contentType("text/html", utf8));
             resp.writeString(result.string);
+        } else if (is Object result, exists tr = findTransformerFor(req)) {
+            // TODO if the transformer accepts text/*, we can't set the content type to text/*
+            log.trace("Matched content type ``req.header("Accept") else "*"`` to \
+                       response transformer ``className(tr[0])``");
+            resp.addHeader(contentType(tr[1], utf8));
+            resp.writeString(tr[0].serialize(result));
         } else if (is Object result) {
-            resp.addHeader(contentType("application/json", utf8));
-            resp.writeString(jsonSerializer.serialize(result));
+            respond(500, "Don't know how to write ``className(result)`` to response", resp);
+        } else {
+            resp.writeString("");
         }
+    }
+
+    [Transformer, String]? findTransformerFor(Request req) {
+        value accept = req.header("Accept") else "*";
+        
+        for (tr in transformers) {
+            if (exists match = mimeParse.bestMatch(tr.contentTypes, accept)) {
+                return [tr, match];
+            }
+        }
+        
+        return null;
     }
     
     void respond(Integer code, String? message, Response resp) {

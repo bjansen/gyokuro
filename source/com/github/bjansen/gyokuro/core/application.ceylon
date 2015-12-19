@@ -32,6 +32,9 @@ import com.github.bjansen.gyokuro.core.internal {
 import com.github.bjansen.gyokuro.view.api {
     TemplateRenderer
 }
+import com.github.bjansen.gyokuro.transform.api {
+    Transformer
+}
 
 "A web server application that can route requests to handler functions
  or annotated controllers, and serve static assets."
@@ -49,7 +52,9 @@ shared class Application(
     "Additional (chained) filters run before each request."
     Filter[] filters = [],
     "A template renderer"
-    TemplateRenderer? renderer = null) {
+    TemplateRenderer? renderer = null,
+    "Transformers that can serialize to responses and deserialize from request bodies."
+    Transformer[] transformers = []) {
     
     "A filter applied to each incoming request before it is dispatched to
      its matching handler. Multiple filters can be chained, and returning
@@ -61,7 +66,7 @@ shared class Application(
     shared void run() {
         value endpoints = ArrayList<HttpEndpoint>();
         
-        endpoints.add(RequestDispatcher(controllers, filter, renderer).endpoint());
+        endpoints.add(RequestDispatcher(controllers, filter, renderer, transformers).endpoint());
         
         if (exists assets) {
             value assetsEndpoint = AsynchronousEndpoint(startsWith(assets[1]),
