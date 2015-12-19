@@ -14,7 +14,8 @@ import ceylon.language.meta.declaration {
     ValueDeclaration,
     FunctionOrValueDeclaration,
     OpenUnion,
-    OpenType
+    OpenType,
+    OpenClassType
 }
 import ceylon.language.meta.model {
     InterfaceModel
@@ -206,6 +207,20 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
         // missing values can still be mapped to List or Sequential
         if (listsConverter.supports(param.openType)) {
             return listsConverter.convert(param.openType, []);
+        }
+        
+        // Try to deserialize using a Transformer
+        if (exists contentType = req.contentType,
+            is OpenClassType ot = param.openType,
+            exists tr = transformers.find((t) => t.contentTypes.contains(contentType)),
+            exists meth = `Transformer`.getMethod<>("deserialize", ot.declaration.apply<>())) {
+        
+            try {
+                return meth.bind(tr).apply(req.read());
+            } catch (Exception e) {
+                throw BindingException("Could not deserialize request body to \
+                                        ``param.qualifiedName``", e);
+            }
         }
         
         return null;
