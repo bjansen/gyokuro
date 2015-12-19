@@ -50,6 +50,9 @@ import com.github.bjansen.gyokuro.core.json {
 import com.github.bjansen.gyokuro.view.api {
     TemplateRenderer
 }
+import ceylon.language.meta.model {
+    InterfaceModel
+}
 
 shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter,
     TemplateRenderer? renderer = null) {
@@ -253,6 +256,8 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
             }
         } else if (is String result) {
             resp.writeString(result);
+        } else if (exists result, satisfiesHtmlNode(result)) {
+            resp.writeString(result.string);
         } else if (is Object result) {
             resp.addHeader(contentType("application/json", utf8));
             resp.writeString(jsonSerializer.serialize(result));
@@ -263,6 +268,18 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
         resp.responseStatus = code;
         resp.writeString("<html><head><title>Error</title></head><body>"
                     + code.string + " - " + (message else "") + "</body></html>");
+    }
+    
+    // Checks for HTML nodes without having a hardcoded dependency on `ceylon.html`
+    Boolean satisfiesHtmlNode(Object result)
+            => modelSatisfiesHtmlNode(type(result).satisfiedTypes);
+    
+    Boolean modelSatisfiesHtmlNode(InterfaceModel<Anything>[] satisfied) {
+        value node = "ceylon.html::Node";
+        
+        return satisfied.find((st) => 
+            st.declaration.qualifiedName == node || modelSatisfiesHtmlNode(st.satisfiedTypes)
+        ) exists;
     }
 }
 

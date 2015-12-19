@@ -41,6 +41,11 @@ import ceylon.net.http {
 	getMethod=get,
 	postMethod=post
 }
+import ceylon.html {
+    Html,
+    Body,
+    H1
+}
 
 shared test
 void testDispatcher() {
@@ -170,6 +175,15 @@ void runTests() {
 	assertEquals(request("/param/hello/world", {}), "Hello, world!");
 	assertEquals(request("/param/hello/234", {}), "Hello, 234!");
 	
+    get("/ceylon.html", (req, resp) => 
+        Html {
+            body = Body {
+                H1("hello")
+            };
+        }
+    );
+    assertTrue(request("/ceylon.html", {}).contains("<h1>hello</h1>"));
+
 }
 
 void myHandler(String s1, Integer i1, Response resp) {
