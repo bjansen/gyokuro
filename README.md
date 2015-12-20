@@ -1,4 +1,4 @@
-# gyokuro <img src="https://travis-ci.org/bjansen/gyokuro.svg?branch=master"/>
+# gyokuro [![Travis](https://travis-ci.org/bjansen/gyokuro.svg?branch=master)](https://travis-ci.org/bjansen/gyokuro) [![Gitter](https://badges.gitter.im/bjansen/gyokuro.svg)](https://gitter.im/bjansen/gyokuro)
 
 A web framework written in Ceylon, which allows:
 
