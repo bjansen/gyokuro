@@ -23,7 +23,8 @@ import ceylon.net.http.server {
     HttpEndpoint
 }
 import ceylon.net.http.server.endpoints {
-    serveStaticFile
+    serveStaticFile,
+    RepositoryEndpoint
 }
 
 import com.github.bjansen.gyokuro.core.internal {
@@ -49,6 +50,8 @@ shared class Application(
     "A tuple [filesystem folder, context root] used to serve static assets.
     	 See the [[serve]] function."
     [String, String]? assets = null,
+    "A context root used to serve modules."
+    String? modulesPath = null,
     "Additional (chained) filters run before each request."
     Filter[] filters = [],
     "A template renderer"
@@ -67,7 +70,10 @@ shared class Application(
         value endpoints = ArrayList<HttpEndpoint>();
         
         endpoints.add(RequestDispatcher(controllers, filter, renderer, transformers).endpoint());
-        
+        if (exists modulesPath) {
+            endpoints.add(RepositoryEndpoint(modulesPath));
+        }
+
         if (exists assets) {
             value assetsEndpoint = AsynchronousEndpoint(startsWith(assets[1]),
                 serveRoot(assets),
