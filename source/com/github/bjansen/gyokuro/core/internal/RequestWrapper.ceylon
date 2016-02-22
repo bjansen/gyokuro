@@ -32,7 +32,7 @@ class RequestWrapper(Request req, Map<String,String> namedParams)
     }
     
     // DELEGATION
-    
+
     shared actual String? contentType => req.contentType;
     
     shared actual SocketAddress destinationAddress => req.destinationAddress;
@@ -62,4 +62,15 @@ class RequestWrapper(Request req, Map<String,String> namedParams)
     shared actual SocketAddress sourceAddress => req.sourceAddress;
     
     shared actual String uri => req.uri;
+    
+    shared actual String? formParameter(String name) => req.formParameter(name);
+    
+    shared actual String[] formParameters(String name) => req.formParameters(name);
+    
+    shared actual String? queryParameter(String name) => req.queryParameter(name);
+    
+    shared actual String[] queryParameters(String name) => req.queryParameters(name);
+    
+    shared actual Byte[] readBinary() => req.readBinary();
+    
 }
