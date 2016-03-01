@@ -45,9 +45,9 @@ import ceylon.net.http.server {
 
 import com.github.bjansen.gyokuro.core {
     SessionAnnotation,
-    Template,
     Flash,
-    mimeParse
+    mimeParse,
+    AnyTemplate
 }
 import com.github.bjansen.gyokuro.transform.api {
     Transformer
@@ -56,8 +56,8 @@ import com.github.bjansen.gyokuro.view.api {
     TemplateRenderer
 }
 
-shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request, Response) filter,
-    TemplateRenderer? renderer = null, Transformer[] transformers = []) {
+shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Request, Response) filter,
+    TemplateRenderer<T>? renderer = null, Transformer[] transformers = []) {
     
     value log = logger(`module com.github.bjansen.gyokuro.core`);
     
@@ -263,8 +263,8 @@ shared class RequestDispatcher([String, Package]? packageToScan, Boolean(Request
     }
     
     void writeResult(Anything result, Request req, Response resp) {
-        if (is Template result) {
-            if (exists renderer) {
+        if (is AnyTemplate<T> result) {
+            if (is TemplateRenderer<T> renderer) {
                 result(renderer, req, resp);
             } else {
                 respond(500, "No template renderer is configured.", resp);

@@ -39,7 +39,7 @@ import com.github.bjansen.gyokuro.transform.api {
 
 "A web server application that can route requests to handler functions
  or annotated controllers, and serve static assets."
-shared class Application(
+shared class Application<T>(
     "The address or hostname on which the HTTP server will be bound."
     shared String address = "0.0.0.0",
     "The port on which the server will listen."
@@ -55,7 +55,7 @@ shared class Application(
     "Additional (chained) filters run before each request."
     Filter[] filters = [],
     "A template renderer"
-    TemplateRenderer? renderer = null,
+    TemplateRenderer<T>? renderer = null,
     "Transformers that can serialize to responses and deserialize from request bodies."
     Transformer[] transformers = []) {
     

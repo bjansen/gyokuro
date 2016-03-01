@@ -47,7 +47,7 @@ shared void run() {
         assets = serve("demos-assets");
         
         // You can use any template engine you want
-        renderer = object satisfies TemplateRenderer {
+        renderer = object satisfies TemplateRenderer<> {
             
             // this is a dummy template renderer
             shared actual String render(String templateName, Map<String,Anything> context,

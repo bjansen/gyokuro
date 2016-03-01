@@ -104,21 +104,22 @@ shared Nothing redirect(String url, Integer redirectCode = 303) {
 }
 
 "A template that can be called by a [[TemplateRenderer]]."
-shared alias Template => Callable<Anything,[TemplateRenderer, Request, Response]>;
+shared alias AnyTemplate<T> => Anything(TemplateRenderer<T>, Request, Response);
+shared alias Template => AnyTemplate<String>;
 
 "Renders a template that will be returned as the response body."
-shared void render(
+shared void render<T>(
     "The template name"
-    String templateName,
+    T template,
     "A map of things to pass to the template."
     Map<String,Anything> context = emptyMap,
     "The content type to be used in the response."
     String contentType = "text/html",
     "The charset to be used in the response."
     Charset charset = utf8)
-        (TemplateRenderer renderer, Request request, Response response) {
+        (TemplateRenderer<T> renderer, Request request, Response response) {
     
-    value result = renderer.render(templateName, context, request, response);
+    value result = renderer.render(template, context, request, response);
     
     response.addHeader(sdkContentType(contentType, charset));
     response.writeString(result);

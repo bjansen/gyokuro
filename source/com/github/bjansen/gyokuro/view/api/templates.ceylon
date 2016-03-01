@@ -17,10 +17,10 @@ import ceylon.interop.java {
 
 "A wrapper for a template engine capable of rendering
  a template to a [[String]]."
-shared interface TemplateRenderer {
+shared interface TemplateRenderer<in Template=String> {
     shared formal String render(
         "The template to be rendered."
-        String templateName,
+        Template template,
         "A map of named values that can be used in the template."
         Map<String,Anything> context,
         "The HTTP request."
@@ -32,7 +32,7 @@ shared interface TemplateRenderer {
 "An abstract [[TemplateRenderer]] based on a Java templating engine, that automatically
  converts Ceylon collections to Java collections."
 shared abstract class JavaTemplateRenderer(contextEnhancer = noop)
-        satisfies TemplateRenderer {
+        satisfies TemplateRenderer<> {
     
     "A callback that can add custom entries to the context before
      passing it to the templating engine."
