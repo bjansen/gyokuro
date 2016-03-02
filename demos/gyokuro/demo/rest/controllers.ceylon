@@ -33,5 +33,5 @@ controller class SimpleRestController() {
         return daoFind(id) else halt(404, "Duck not found");
     }
     
-    String? daoFind(Integer id) => null;
+    String? daoFind(Integer id) => if (id == 1) then "Donald" else null;
 }

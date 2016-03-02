@@ -1,5 +1,5 @@
 
 [project]
 compile-jvm=true
-compile-js=false
+compile-js=true
 system-repository=

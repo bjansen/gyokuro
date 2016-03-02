@@ -46,6 +46,8 @@ shared void run() {
         // And serve static assets
         assets = serve("demos-assets");
         
+        modulesPath = "/modules";
+        
         // You can use any template engine you want
         renderer = object satisfies TemplateRenderer<> {
             

@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>Coin</title>
+		<link rel="stylesheet" href="/css/main.css">
+		<script type="text/javascript" src="/js/require.js"></script>
+	</head>
+	
+	<body>
+		<script type="text/javascript">
+			require.config({
+				baseUrl : 'modules'
+			});
+			require(
+                [ 'gyokuro/demo/restclient/0.1.0/gyokuro.demo.restclient-0.1.0' ],
+                function(app) {
+                    app.run();
+                }
+			);
+		</script>
+	</body>
+</html>
