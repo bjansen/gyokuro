@@ -1,4 +1,4 @@
-import ceylon.io.charset {
+import ceylon.buffer.charset {
     Charset,
     utf8
 }

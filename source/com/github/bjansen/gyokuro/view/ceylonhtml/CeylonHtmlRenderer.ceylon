@@ -1,4 +1,4 @@
-import ceylon.html5 {
+import ceylon.html {
     Element
 }
 import ceylon.net.http.server {

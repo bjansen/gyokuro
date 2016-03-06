@@ -1,4 +1,4 @@
-import ceylon.html5 {
+import ceylon.html {
     Html,
     Head,
     Title,
@@ -18,14 +18,14 @@ import com.github.bjansen.gyokuro.view.ceylonhtml {
 
 "Run the module `gyokuro.demo.ceylonhtml`."
 shared void run() {
-     get("/hello", `hello`);
-     
-     Application {
-         renderer = CeylonHtmlRenderer();
-     }.run();
+    get("/hello", `hello`);
+    
+    Application {
+        renderer = CeylonHtmlRenderer();
+    }.run();
 }
 
-HtmlTemplate hello() { 
+HtmlTemplate hello() {
     value html = Html {
         Head {
             Title { "Hello world" }
@@ -39,6 +39,6 @@ HtmlTemplate hello() {
             }
         }
     };
-
+    
     return render(html);
- }
+}
