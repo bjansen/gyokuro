@@ -29,12 +29,21 @@ for pluggable templating engines. It provides out-of-the-box support for a few J
 You can provide your own templating engine by importing `com.github.bjansen.gyokuro.view.api` and
 creating a new instance of `com.github.bjansen.gyokuro.view.api::TemplateRenderer`.
 
-See the templating engines section (TODO).
+See the [Templating](#templating) section.
+
+### API for transformers
+
+Transformers are objects that can transform values returned by handlers into content that can be
+written to the response. They are also responsible for transforming GET/POST data into values that
+can be passed as arguments to handlers. The API for transformers is defined in the new module
+`com.github.bjansen.gyokuro.transform.api`.
 
 ### Other changes
 
 * Handlers can now return `ceylon.html` nodes that will automatically be serialized to a String and
 sent in the response.
+* An `Application` is now able to serve Ceylon modules from local repositories.
+* gyokuro is now using Ceylon and Ceylon SDK 1.2.2
 
 ## Routes
 
@@ -84,8 +93,8 @@ because they use a different verb:
 ### Handlers
  
 In their simplest forms, handlers are functions that take two parameters, 
-a [Request](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.2.0-3/module-doc/api/http/server/Request.type.html)
-and a [Response](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.2.0-3/module-doc/api/http/server/Response.type.html)
+a [Request](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.2.2/module-doc/api/http/server/Request.type.html)
+and a [Response](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.2.2/module-doc/api/http/server/Response.type.html)
  
     String myHandler(Request req, Response resp) {
         return "Hello";
@@ -102,7 +111,7 @@ number of parameters to inject GET/POST data by name:
 
 In this case, gyokuro will try to find two parameters named `username` and `password` in the `Request`,
 and automatically pass them to the handler. Note that the route is expecting a 
-[function model](https://modules.ceylon-lang.org/repo/1/ceylon/language/1.2.0/module-doc/api/meta/model/Function.type.html)
+[function model](https://modules.ceylon-lang.org/repo/1/ceylon/language/1.2.2/module-doc/api/meta/model/Function.type.html)
 instead of a simple reference to a function. This is because we need to inspect its signature in order
 to bind parameters correctly.
 
@@ -144,13 +153,13 @@ Finally, you can group handlers together in [**annotated controllers**](#annotat
 ### Handler return types
 
 In addition to `String`s, handlers can return instances of 
-[ceylon.html](https://modules.ceylon-lang.org/repo/1/ceylon/html/1.2.0/module-doc/api/index.html) nodes
+[ceylon.html](https://modules.ceylon-lang.org/repo/1/ceylon/html/1.2.2/module-doc/api/index.html) nodes
 that will automatically be converted to Strings:
 
     get("/html", (req, resp) =>
         Html {
-            body = Body {
-                H1("hello")
+            Body {
+                H1 { "hello" }
             };
         }
     );
@@ -168,7 +177,7 @@ sessions, or in unit tests.
 Before starting your application, it is a good idea to set up a logger, because gyokuro
 logs useful information during startup (especially when it scans packages for annotations).
 The preferred way do to this is to use
-[ceylon.logging](https://modules.ceylon-lang.org/repo/1/ceylon/logging/1.2.0/module-doc/api/index.html):
+[ceylon.logging](https://modules.ceylon-lang.org/repo/1/ceylon/logging/1.2.2/module-doc/api/index.html):
 
     import ceylon.logging { ... }
     
@@ -218,6 +227,16 @@ have a route that starts with the same path as static assets:
     Application {
         // ERROR, duplicates route "/public/hello"
         assets = serve("assets", "/public"); 
+    }.run();
+
+### Modules
+
+In addition to static assets, gyokuro can also 
+[serve Ceylon modules](http://ceylon-lang.org/blog/2016/02/15/ceylon-browser-again/) to the browser,
+using a [RepositoryEndPoint](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.2.2/module-doc/api/http/server/endpoints/RepositoryEndpoint.type.html).
+
+    Application {
+        modulesPath = "/modules"; 
     }.run();
 
 ### Filters
@@ -377,18 +396,27 @@ Optionally, you can specify an HTTP code for the response. By default, it is `30
 
 ## Templating
 
-While gyokuro does not embed any templating engine, it provides an extension point that allows
-you to plug your favorite engine. Extensions have to satisfy an interface named `TemplateRenderer`:
+While gyokuro does not embed its own templating engine, it provides an extension point that allows
+you to plug your favorite engine. Extensions have to satisfy an interface named `TemplateRenderer`,
+defined in the module `com.github.bjansen.gyokuro.view.api`:
 
-    shared interface TemplateRenderer {
-        shared formal String render(String templateName,
-                Map<String, Anything> context,
-                Request req, Response resp);
+    "A wrapper for a template engine capable of rendering
+    a template to a [[String]]."
+    shared interface TemplateRenderer<in Template=String> {
+        shared formal String render(
+            "The template to be rendered."
+            Template template,
+            "A map of named values that can be used in the template."
+            Map<String,Anything> context,
+            "The HTTP request."
+            Request req,
+            "The HTTP response."
+            Response resp);
     }
 
 For example:
 
-    shared object pebbleRenderer satisfies TemplateRenderer {
+    shared object pebbleRenderer satisfies TemplateRenderer<> {
 	
         value loader = FileLoader();
         value engine = PebbleEngine(loader);
@@ -419,3 +447,16 @@ of a `Template`:
 
 `render()` takes two parameters, a template name and an optional map of things (sometimes
 called "model" or "context") that can be used to render the template.
+
+### Existing Java renderers
+
+gyokuro already supports a few popular Java template renderers:
+
+* Mustache.java in module `com.github.bjansen.gyokuro.view.mustache` 
+* Pebble in module `com.github.bjansen.gyokuro.view.pebble`
+* Rythm in module `com.github.bjansen.gyokuro.view.rythm`
+* Thymeleaf in module `com.github.bjansen.gyokuro.view.thymeleaf`
+
+If you want to add support for another Java engine, you can directly extend 
+`JavaTemplateRenderer`, which automatically converts Ceylon collections to
+Java collections compatible with most Java engines.
