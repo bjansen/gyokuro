@@ -14,16 +14,16 @@ import ceylon.html {
     Body,
     H1,
     P,
-    InlineElement,
     Em,
     Span,
     Link,
-    stylesheet,
     H2,
     Table,
     Th,
     Td,
-    Tr
+    Tr,
+    THead,
+    TBody
 }
 import ceylon.language.meta.declaration {
     Package,
@@ -98,13 +98,13 @@ shared class GyokuroApiGenerator(Package controllersPkg, Directory output) {
     
     void generateReport() {
         value html = Html {
-            head = Head {
+            Head {
                 title = "gyokuro app API";
-                headChildren = {
-                    Link(stylesheet, "style.css")
+                children = {
+                    Link {rel="stylesheet"; href = "style.css";}
                 };
-            };
-            body = Body {
+            },
+            Body {
                 H1 {
                     "API for package \```controllersPkg.qualifiedName``\`"
                 },
@@ -114,7 +114,7 @@ shared class GyokuroApiGenerator(Package controllersPkg, Directory output) {
                 for (path->[func, methods] in routes)
                     for (method in methods)
                         generateRoute(path, method.string, func)
-            };
+            }
         };
         
         writeReport(html);
@@ -122,12 +122,12 @@ shared class GyokuroApiGenerator(Package controllersPkg, Directory output) {
     
     function generateRouteHeader(String method, String path, FunctionDeclaration func) {
         return Div {
-            classNames = "route-header";
-            nonstandardAttributes =
+            clazz = "route-header";
+            attributes =
                     ["onclick"->"this.nextElementSibling.classList.toggle('collapsed')"];
             children = {
                 Span {
-                    method.string;
+                    method
                 },
                 Span {
                     path
@@ -144,41 +144,49 @@ shared class GyokuroApiGenerator(Package controllersPkg, Directory output) {
             for (p in func.parameterDeclarations)
                 if (is ValueDeclaration p, !exludedTypes.contains(p.openType))
                     Tr {
-                        Td(p.name),
+                        Td { p.name },
                         Td { getDocumentation(p) },
-                        Td(prettifyType(p.openType))
+                        Td { prettifyType(p.openType) }
                     }
         };
         
         return Div {
-            classNames = "collapsed route-params";
+            clazz = "collapsed route-params";
             children = {
-                H2("Parameters"),
+                H2 {"Parameters"},
                 if (parameters.empty)
-                then Em("No parameters")
+                then Em {"No parameters"}
                 else Table {
-                        header = { Th("Parameter"), Th("Description"), Th("Parameter type") };
-                        rows = parameters;
+                        THead { 
+                            Tr {
+                                Th {"Parameter"}, Th {"Description"}, Th {"Parameter type"}
+                            }
+                        },
+                        TBody {parameters}
                     },
-                H2("Returns"),
-                Div(prettifyType(func.openType)),
+                H2{"Returns" },
+                Div {prettifyType(func.openType)},
                 if (!parameters.empty)
                 then {
-                    H2("Response messages"),
+                    H2 {"Response messages"},
                     Table {
-                        header = { Th("HTTP status code"), Th("Reason") };
-                        rows = {
+                        THead { 
+                            Tr {
+                                Th {"HTTP status code"}, Th {"Reason"} 
+                            }
+                        },
+                        TBody {
                             if (hasRequiredParameters(func))
                             then Tr {
-                                    Td("400"),
-                                    Td("Missing required parameter")
+                                    Td {"400"},
+                                    Td {"Missing required parameter"}
                                 }
                             else null,
                             Tr {
-                                Td("400"),
-                                Td("Invalid parameter value")
+                                Td {"400"},
+                                Td {"Invalid parameter value"}
                             }
-                        };
+                        }
                     }
                 }
                 else {}
@@ -191,18 +199,18 @@ shared class GyokuroApiGenerator(Package controllersPkg, Directory output) {
     
     Div generateRoute(String path, String method, FunctionDeclaration func) {
         return Div {
-            classNames = "method-" + method.lowercased;
+            clazz = "method-" + method.lowercased;
             generateRouteHeader(method, path, func),
             generateRouteBody(method, path, func)
         };
     }
     
-    String|InlineElement getDocumentation(AnnotatedDeclaration decl) {
+    String|Em getDocumentation(AnnotatedDeclaration decl) {
         if (exists ann = decl.annotations<DocAnnotation>().first) {
             return ann.description;
         }
         
-        return Em("No description");
+        return Em {"No description"};
     }
     
     Boolean hasRequiredParameters(FunctionDeclaration func) {

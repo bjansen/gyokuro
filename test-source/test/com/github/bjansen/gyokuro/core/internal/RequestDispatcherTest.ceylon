@@ -177,12 +177,13 @@ void runTests() {
 	
     get("/ceylon.html", (req, resp) => 
         Html {
-            body = Body {
-                H1("hello")
-            };
+            Body {
+                H1 {"hello"}
+            }
         }
     );
-    assertTrue(request("/ceylon.html", {}).contains("<h1>hello</h1>"));
+    print(request("/ceylon.html"));
+    assertTrue(request("/ceylon.html").contains("<h1>hello</h1>"));
 
 }
 
@@ -195,7 +196,7 @@ void testHalt() {
 	halt(500, "I can haz an error");
 }
 
-String request(String path, {Parameter*} params, Method method = getMethod) {
+String request(String path, {Parameter*} params = {}, Method method = getMethod) {
 	value segments = path.split('/'.equals, true, false)
 		.filter((_) => !_.empty)
 		.map((el) => PathSegment(el));

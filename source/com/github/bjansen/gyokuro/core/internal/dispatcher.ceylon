@@ -1,8 +1,8 @@
+import ceylon.buffer.charset {
+    utf8
+}
 import ceylon.collection {
     HashMap
-}
-import ceylon.io.charset {
-    utf8
 }
 import ceylon.language.meta {
     classDeclaration,
@@ -18,7 +18,7 @@ import ceylon.language.meta.declaration {
     OpenClassType
 }
 import ceylon.language.meta.model {
-    InterfaceModel
+    ClassModel
 }
 import ceylon.logging {
     logger
@@ -272,7 +272,8 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Requ
         } else if (is String result) {
             resp.addHeader(contentType("text/plain", utf8));
             resp.writeString(result);
-        } else if (exists result, satisfiesHtmlNode(result)) {
+        } else if (exists result, extendsHtmlNode(result)) {
+            // TODO do we need this if we have com.github.bjansen.gyokuro.view.ceylonhtml??
             resp.addHeader(contentType("text/html", utf8));
             resp.writeString(result.string);
         } else if (is Object result, exists tr = findTransformerFor(req)) {
@@ -307,15 +308,17 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Requ
     }
     
     // Checks for HTML nodes without having a hardcoded dependency on `ceylon.html`
-    Boolean satisfiesHtmlNode(Object result)
-            => modelSatisfiesHtmlNode(type(result).satisfiedTypes);
+    Boolean extendsHtmlNode(Object result)
+            => modelExtendsHtmlNode(type(result).extendedType);
     
-    Boolean modelSatisfiesHtmlNode(InterfaceModel<Anything>[] satisfied) {
+    Boolean modelExtendsHtmlNode(ClassModel<Anything,Nothing>? extended) {
         value node = "ceylon.html::Node";
         
-        return satisfied.find((st) => 
-            st.declaration.qualifiedName == node || modelSatisfiesHtmlNode(st.satisfiedTypes)
-        ) exists;
+        if (exists extended) {
+            return extended.declaration.qualifiedName == node
+                    || modelExtendsHtmlNode(extended.extendedType);
+        }
+        return false;
     }
 }
 
