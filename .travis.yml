@@ -5,7 +5,7 @@ jdk:
 install: 
   - wget --quiet --output-document=/tmp/ceylon.zip $CEYLON
   - unzip /tmp/ceylon.zip
-  - export PATH=$PATH:$PWD/ceylon-1.2.1/bin/
+  - export PATH=$PATH:$PWD/ceylon-1.2.2/bin/
 before_script: 
   - ceylon compile
 script: 

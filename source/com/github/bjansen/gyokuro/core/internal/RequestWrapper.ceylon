@@ -1,13 +1,5 @@
-import ceylon.io {
-    SocketAddress
-}
-import ceylon.net.http {
-    Method
-}
 import ceylon.net.http.server {
-    Request,
-    Session,
-    UploadedFile
+    Request
 }
 
 "Allows adding things to a request, like values for `:named` parts of the URL."
@@ -33,44 +25,47 @@ class RequestWrapper(Request req, Map<String,String> namedParams)
     
     // DELEGATION
 
-    shared actual String? contentType => req.contentType;
+    contentType => req.contentType;
     
-    shared actual SocketAddress destinationAddress => req.destinationAddress;
+    destinationAddress => req.destinationAddress;
     
-    shared actual UploadedFile? file(String name) => req.file(name);
+    file(String name) => req.file(name);
     
-    shared actual UploadedFile[] files(String name) => req.files(name);
+    files(String name) => req.files(name);
     
-    shared actual String? header(String name) => req.header(name);
+    header(String name) => req.header(name);
     
-    shared actual String[] headers(String name) => req.headers(name);
+    headers(String name) => req.headers(name);
     
-    shared actual Method method => req.method;
+    method => req.method;
     
-    shared actual String path => req.path;
+    path => req.path;
     
-    shared actual String queryString => req.queryString;
+    queryString => req.queryString;
     
-    shared actual String read() => req.read();
+    read() => req.read();
     
-    shared actual String relativePath => req.relativePath;
+    relativePath => req.relativePath;
     
-    shared actual String scheme => req.scheme;
+    scheme => req.scheme;
     
-    shared actual Session session => req.session;
+    session => req.session;
     
-    shared actual SocketAddress sourceAddress => req.sourceAddress;
+    sourceAddress => req.sourceAddress;
     
-    shared actual String uri => req.uri;
+    uri => req.uri;
     
-    shared actual String? formParameter(String name) => req.formParameter(name);
+    formParameter(String name) => req.formParameter(name);
     
-    shared actual String[] formParameters(String name) => req.formParameters(name);
+    formParameters(String name) => req.formParameters(name);
     
-    shared actual String? queryParameter(String name) => req.queryParameter(name);
+    queryParameter(String name) => req.queryParameter(name);
     
-    shared actual String[] queryParameters(String name) => req.queryParameters(name);
+    queryParameters(String name) => req.queryParameters(name);
     
-    shared actual Byte[] readBinary() => req.readBinary();
+    readBinary() => req.readBinary();
     
+    matchedTemplate => req.matchedTemplate;
+    
+    pathParameter(String name) => req.pathParameter(name);
 }
