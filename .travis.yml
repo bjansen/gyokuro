@@ -12,5 +12,5 @@ script:
   - ceylon test $TEST_MODULE
 env:
   global:
-    - CEYLON="http://ceylon-lang.org/download/dist/1_2_1"
+    - CEYLON="http://ceylon-lang.org/download/dist/1_2_2"
     - TEST_MODULE="test.com.github.bjansen.gyokuro.core"
