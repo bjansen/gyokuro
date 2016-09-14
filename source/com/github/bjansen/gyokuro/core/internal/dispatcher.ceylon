@@ -23,7 +23,7 @@ import ceylon.language.meta.model {
 import ceylon.logging {
     logger
 }
-import ceylon.net.http {
+import ceylon.http.common {
     post,
     get,
     contentType,
@@ -35,7 +35,7 @@ import ceylon.net.http {
     trace,
     connect
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Response,
     Request,
     Endpoint,

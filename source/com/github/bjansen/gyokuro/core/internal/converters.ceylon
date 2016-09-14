@@ -11,7 +11,7 @@ import ceylon.language.meta.declaration {
 import ceylon.language.meta.model {
     ClassOrInterface
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     UploadedFile
 }
 

@@ -6,16 +6,16 @@ import ceylon.logging {
 	Priority,
 	Category
 }
-import ceylon.net.http.client {
+import ceylon.http.client {
 	Request
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
 	newServer,
 	Status,
 	started,
 	Response
 }
-import ceylon.net.uri {
+import ceylon.uri {
 	Uri,
 	Authority,
 	Path,
@@ -36,7 +36,7 @@ import com.github.bjansen.gyokuro.core {
 import com.github.bjansen.gyokuro.core.internal {
 	RequestDispatcher
 }
-import ceylon.net.http {
+import ceylon.http.common {
 	Method,
 	getMethod=get,
 	postMethod=post

@@ -6,5 +6,5 @@ module com.github.bjansen.gyokuro.view.thymeleaf "0.2-dev" {
     shared import "org.thymeleaf:thymeleaf" "3.0.0.BETA01";
     
     import java.base "7";
-    import ceylon.interop.java "1.2.2";
+    import ceylon.interop.java "1.3.0";
 }
