@@ -1,7 +1,7 @@
 import ceylon.html {
     Element
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Request,
     Response
 }

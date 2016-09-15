@@ -5,7 +5,7 @@ import ceylon.buffer.charset {
 import ceylon.language.meta.model {
     Function
 }
-import ceylon.net.http {
+import ceylon.http.common {
     getMethod=get,
     postMethod=post,
     optionsMethod=options,
@@ -16,7 +16,7 @@ import ceylon.net.http {
     headMethod=head,
     sdkContentType=contentType
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Request,
     Response
 }

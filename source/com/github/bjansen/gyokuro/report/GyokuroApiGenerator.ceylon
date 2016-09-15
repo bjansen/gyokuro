@@ -35,10 +35,10 @@ import ceylon.language.meta.declaration {
     OpenUnion,
     FunctionOrValueDeclaration
 }
-import ceylon.net.http {
+import ceylon.http.common {
     AbstractMethod
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Request,
     Response
 }

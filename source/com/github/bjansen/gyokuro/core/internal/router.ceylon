@@ -8,11 +8,11 @@ import ceylon.language.meta.declaration {
 import ceylon.language.meta.model {
     Function
 }
-import ceylon.net.http {
+import ceylon.http.common {
     Method,
     AbstractMethod
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Request,
     Response
 }

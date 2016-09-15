@@ -1,4 +1,4 @@
-import ceylon.net.http.server {
+import ceylon.http.server {
     Request
 }
 

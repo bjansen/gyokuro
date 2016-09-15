@@ -7,12 +7,12 @@ import ceylon.io {
 import ceylon.language.meta.declaration {
     Package
 }
-import ceylon.net.http {
+import ceylon.http.common {
     post,
     get,
     Method
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Options,
     Request,
     newServer,
@@ -22,7 +22,7 @@ import ceylon.net.http.server {
     AsynchronousEndpoint,
     HttpEndpoint
 }
-import ceylon.net.http.server.endpoints {
+import ceylon.http.server.endpoints {
     serveStaticFile,
     RepositoryEndpoint
 }

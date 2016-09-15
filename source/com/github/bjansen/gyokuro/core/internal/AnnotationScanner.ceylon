@@ -15,7 +15,7 @@ import com.github.bjansen.gyokuro.core {
     ControllerAnnotation,
     RouteAnnotation
 }
-import ceylon.net.http {
+import ceylon.http.common {
     AbstractMethod
 }
 

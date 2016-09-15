@@ -4,7 +4,7 @@ import ceylon.logging {
     trace,
     writeSimpleLog
 }
-import ceylon.net.http.server {
+import ceylon.http.server {
     Request,
     Response
 }

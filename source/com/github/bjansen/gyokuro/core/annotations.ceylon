@@ -3,7 +3,7 @@ import ceylon.language.meta.declaration {
     ClassDeclaration,
     ValueDeclaration
 }
-import ceylon.net.http {
+import ceylon.http.common {
     AbstractMethod,
     get,
     post
