@@ -239,10 +239,13 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Requ
                 
                 return req.files(decl.name);
             }
-            return req.parameters(decl.name);
+
+            return req.queryParameters(decl.name)
+                .append(req.formParameters(decl.name));
         }
-        
-        return req.parameter(decl.name);
+
+        return req.queryParameter(decl.name)
+        else req.formParameter(decl.name);
     }
     
     Anything convertParameter(ValueDeclaration param, Object val) {
@@ -302,7 +305,7 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Requ
     }
     
     void respond(Integer code, String? message, Response resp) {
-        resp.responseStatus = code;
+        resp.status = code;
         resp.writeString("<html><head><title>Error</title></head><body>"
                     + code.string + " - " + (message else "") + "</body></html>");
     }

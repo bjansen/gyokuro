@@ -114,7 +114,7 @@ shared class Application<T>(
         }
         
         if (req.method == special) {
-            resp.responseStatus = 418;
+            resp.status = 418;
             resp.writeString("418 - I'm a teapot");
         } else {
             value root = conf[1];
