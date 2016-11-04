@@ -4,7 +4,7 @@ import com.github.bjansen.gyokuro.core {
 }
 
 route("lists")
-controller class ListBinding() {
+controller object listBinding {
 	
 	route("list")
 	shared String list(List<String> strings) {

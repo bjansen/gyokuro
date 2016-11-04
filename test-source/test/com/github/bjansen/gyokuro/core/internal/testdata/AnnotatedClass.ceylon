@@ -2,6 +2,7 @@ import com.github.bjansen.gyokuro.core {
 	route,
 	controller
 }
+
 route("cls")
 controller class AnnotatedClass() {
 	
@@ -23,4 +24,11 @@ controller class AnnotatedClass3() {
 	
 	route("/func3")
 	shared String func3() => "";
+}
+
+route("obj")
+controller object myController {
+
+	route("/func4")
+	shared String func4() => "";
 }

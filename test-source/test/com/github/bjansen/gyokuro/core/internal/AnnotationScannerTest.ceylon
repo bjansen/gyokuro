@@ -40,3 +40,11 @@ shared test void scanControllerWithoutRoute() {
 	
 	assertTrue(router.canHandlePath("/func3"));	
 }
+
+shared test void scanObjectController() {
+	clearRoutes();
+	annotationScanner.scanControllersInPackage("/",
+		`package test.com.github.bjansen.gyokuro.core.internal.testdata`);
+
+	assertTrue(router.canHandlePath("/obj/func4"));
+}

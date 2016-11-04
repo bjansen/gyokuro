@@ -25,19 +25,19 @@ shared annotation RouteAnnotation route(String path,
 
 "The annotation class for the [[route]] annotation."
 shared final annotation class RouteAnnotation(path, methods)
-        satisfies OptionalAnnotation<RouteAnnotation,FunctionDeclaration|ClassDeclaration> {
+        satisfies OptionalAnnotation<RouteAnnotation,FunctionDeclaration|ClassDeclaration|ValueDeclaration> {
     
     shared String path;
     shared {AbstractMethod+} methods;
 }
 
-"Declares a class as a controller, allowing routes to be scanned."
+"Declares a class or an object as a controller, allowing routes to be scanned."
 see(`function route`)
 shared annotation ControllerAnnotation controller() => ControllerAnnotation();
 
 "The annotation class for the [[controller]] annotation."
 shared final annotation class ControllerAnnotation()
-        satisfies OptionalAnnotation<ControllerAnnotation,ClassDeclaration> {
+        satisfies OptionalAnnotation<ControllerAnnotation,ClassDeclaration|ValueDeclaration> {
 }
 
 "Declares that a handler parameter should be retrieved from the current
