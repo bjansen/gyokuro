@@ -29,16 +29,16 @@ object primitiveTypesConverter satisfies Converter<> {
     
     shared actual Anything convert(OpenType type, String str) {
         if (type == `class Integer`.openType) {
-            return parseInteger(str);
+            return Integer.parse(str);
         } else if (type == `class String`.openType) {
             return str;
         } else if (type == `class Float`.openType) {
-            return parseFloat(str);
+            return Float.parse(str);
         } else if (type == `class Boolean`.openType) {
             if (str == "0") { return false; }
             if (str == "1") { return true; }
             
-            return parseBoolean(str);
+            return Boolean.parse(str);
         }
         
         return null;

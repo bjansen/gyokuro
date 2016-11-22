@@ -56,7 +56,9 @@ shared object mimeParse {
 
                     if (fitness > bestFitness) {
                         bestFitness = fitness;
-                        bestFitQ = parseFloat(range[2].get("q") else "0") else 0.0;
+                        bestFitQ = if (is Float f = Float.parse(range[2].get("q") else "0"))
+                        then f
+                        else 0.0;
                     }
                 }
             }
@@ -82,8 +84,11 @@ shared object mimeParse {
     ParseResults parseMediaRange(String header) {
         value results = parseMimeType(header);
         value q = results[2].get("q") else "1.0";
-        value f = let(_f = parseFloat(q) else 1.0)
-            if (_f < 0.0 || _f > 1.0) then 1.0 else _f;
+        value f = if (is Float _f = Float.parse(q))
+                  then if (_f < 0.0 || _f > 1.0)
+                    then 1.0
+                    else _f
+                  else 1.0;
         
         assert(is MutableMap<String, String> m = results[2]);
         m.put("q", f.string);
