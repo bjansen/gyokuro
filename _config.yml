@@ -2,7 +2,6 @@
 title: gyokuro
 #email: your-email@domain.com
 description: A web framework written in Ceylon.
-baseurl: "/gyokuro" # the subpath of your site, e.g. /blog/
 url: "http://bjansen.github.io" # the base hostname & protocol for your site
 
 # Build settings
