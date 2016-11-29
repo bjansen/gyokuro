@@ -4,7 +4,7 @@ import ceylon.file {
     Nil
 }
 
-import com.github.bjansen.gyokuro.report {
+import net.gyokuro.report {
     GyokuroApiGenerator
 }
 "Run the module `gyokuro.demo.report`."

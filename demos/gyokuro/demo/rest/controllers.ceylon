@@ -3,7 +3,7 @@ import ceylon.http.server {
     Request
 }
 
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     controller,
     route,
     halt

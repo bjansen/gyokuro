@@ -1,10 +1,10 @@
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     get,
     Application,
     Template,
     render
 }
-import com.github.bjansen.gyokuro.view.mustache {
+import net.gyokuro.view.mustache {
     MustacheRenderer
 }
 

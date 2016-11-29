@@ -1,10 +1,10 @@
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     render,
     Application,
     Template,
     get
 }
-import com.github.bjansen.gyokuro.view.thymeleaf {
+import net.gyokuro.view.thymeleaf {
     ThymeleafRenderer
 }
 import ceylon.logging {

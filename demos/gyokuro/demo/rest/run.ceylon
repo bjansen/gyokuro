@@ -9,7 +9,7 @@ import ceylon.http.server {
     Response
 }
 
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     Application,
     get,
     post,
@@ -18,7 +18,7 @@ import com.github.bjansen.gyokuro.core {
     serve,
     bind
 }
-import com.github.bjansen.gyokuro.view.api {
+import net.gyokuro.view.api {
     TemplateRenderer
 }
 

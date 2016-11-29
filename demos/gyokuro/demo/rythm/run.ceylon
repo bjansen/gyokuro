@@ -1,10 +1,10 @@
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     render,
     Application,
     Template,
     get
 }
-import com.github.bjansen.gyokuro.view.rythm {
+import net.gyokuro.view.rythm {
     RythmRenderer
 }
 

@@ -6,12 +6,12 @@ import ceylon.html {
     Div
 }
 
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     render,
     Application,
     get
 }
-import com.github.bjansen.gyokuro.view.ceylonhtml {
+import net.gyokuro.view.ceylonhtml {
     CeylonHtmlRenderer,
     HtmlTemplate
 }

@@ -1,10 +1,10 @@
-import com.github.bjansen.gyokuro.core {
+import net.gyokuro.core {
     get,
     Application,
     serve,
     post
 }
-import com.github.bjansen.gyokuro.transform.gson {
+import net.gyokuro.transform.gson {
     GsonTransformer
 }
 import ceylon.logging {
