@@ -1,8 +1,8 @@
 "An extension of gyokuro that adds support for 
  [Rythm](http://rythmengine.org/)."
 native("jvm")
-module com.github.bjansen.gyokuro.view.rythm "0.2-dev" {
-    shared import com.github.bjansen.gyokuro.view.api "0.2-dev";
+module com.github.bjansen.gyokuro.view.rythm "0.2" {
+    shared import com.github.bjansen.gyokuro.view.api "0.2";
     shared import maven:"org.rythmengine:rythm-engine" "1.0.1";
     
     import java.base "7";
