@@ -3,9 +3,9 @@ layout: default
 useToc: true
 ---
 
-# gyokuro 0.2-dev
+# gyokuro 0.2
 {:.no_toc}
-This is the complete documentation for gyokuro 0.2-dev.
+This is the complete documentation for gyokuro 0.2.
 
 * TOC
 {:toc}
@@ -14,11 +14,11 @@ This is the complete documentation for gyokuro 0.2-dev.
 
 ### Backward incompatible changes
 
-* the package has been renamed from `com.github.bjansen.gyokuro` to `com.github.bjansen.gyokuro.core`
+* the package has been renamed from `com.github.bjansen.gyokuro` to `net.gyokuro.core`
 
 ### API for templating engines
 
-gyokuro now provides a new module `com.github.bjansen.gyokuro.view.api` that defines an API
+gyokuro now provides a new module `net.gyokuro.view.api` that defines an API
 for pluggable templating engines. It provides out-of-the-box support for a few Java templating engines:
 
 * Mustache.java 
@@ -26,8 +26,8 @@ for pluggable templating engines. It provides out-of-the-box support for a few J
 * Rythm
 * Thymeleaf
 
-You can provide your own templating engine by importing `com.github.bjansen.gyokuro.view.api` and
-creating a new instance of `com.github.bjansen.gyokuro.view.api::TemplateRenderer`.
+You can provide your own templating engine by importing `net.gyokuro.view.api` and
+creating a new instance of `net.gyokuro.view.api::TemplateRenderer`.
 
 See the [Templating](#templating) section.
 
@@ -36,7 +36,7 @@ See the [Templating](#templating) section.
 Transformers are objects that can transform values returned by handlers into content that can be
 written to the response. They are also responsible for transforming GET/POST data into values that
 can be passed as arguments to handlers. The API for transformers is defined in the new module
-`com.github.bjansen.gyokuro.transform.api`.
+`net.gyokuro.transform.api`.
 
 ### Other changes
 
@@ -141,7 +141,7 @@ In addition to binding request parameters by name, gyokuro can also inject "spec
 
 * a `ceylon.net.http.server::Request`
 * a `ceylon.net.http.server::Response`
-* a [`com.github.bjansen.gyokuro::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/com/github/bjansen/gyokuro/Flash.ceylon)
+* a [`net.gyokuro.core::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/net/gyokuro/core/Flash.ceylon)
 
 You can use any name you want for these:
 
@@ -404,7 +404,7 @@ Optionally, you can specify an HTTP code for the response. By default, it is `30
 
 While gyokuro does not embed its own templating engine, it provides an extension point that allows
 you to plug your favorite engine. Extensions have to satisfy an interface named `TemplateRenderer`,
-defined in the module `com.github.bjansen.gyokuro.view.api`:
+defined in the module `net.gyokuro.view.api`:
 
     "A wrapper for a template engine capable of rendering
     a template to a [[String]]."
@@ -458,10 +458,14 @@ called "model" or "context") that can be used to render the template.
 
 gyokuro already supports a few popular Java template renderers:
 
-* Mustache.java in module `com.github.bjansen.gyokuro.view.mustache` 
-* Pebble in module `com.github.bjansen.gyokuro.view.pebble`
-* Rythm in module `com.github.bjansen.gyokuro.view.rythm`
-* Thymeleaf in module `com.github.bjansen.gyokuro.view.thymeleaf`
+* Mustache.java in module `net.gyokuro.view.mustache` 
+* Pebble in module `net.gyokuro.view.pebble`
+* Rythm in module `net.gyokuro.view.rythm`
+* Thymeleaf in module `net.gyokuro.view.thymeleaf`
+
+These modules can be found as [examples on GitHub](https://github.com/bjansen/gyokuro/tree/master/source/net/gyokuro/view),
+but won't be published on Herd because they tie you to a specific version of the
+actual templating engine.
 
 If you want to add support for another Java engine, you can directly extend 
 `JavaTemplateRenderer`, which automatically converts Ceylon collections to

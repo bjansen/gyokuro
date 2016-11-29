@@ -31,14 +31,14 @@ With gyokuro, you can:
 * bind GET/POST parameters to function parameters instead of querying a `Request`
 * serve *static assets* from a given directory
 
-**Current version**: [0.1.0](https://herd.ceylon-lang.org/modules/com.github.bjansen.gyokuro/0.1.0)
+**Current version**: [0.2.0](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.2.0)
 
 ## Getting started
 
 * create a new Ceylon project and import gyokuro:
 ^
     module com.example.mymodule "1.0.0" {
-        import com.github.bjansen.gyokuro "0.1.0";
+        import net.gyokuro.core "0.2.0";
     }
   
 * write your first application:
@@ -62,7 +62,7 @@ you can build it from sources:
 * go to the cloned project: `cd gyokuro`
 * build the project: `ceylon compile`
 * copy the generated module to your local Ceylon repository to use it in other projects:
- `ceylon copy -o ~/.ceylon/repo com.github.bjansen.gyokuro` 
+ `ceylon copy -o ~/.ceylon/repo net.gyokuro.core` 
 * enjoy
 
 ## Documentation
