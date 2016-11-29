@@ -286,11 +286,17 @@ In addition to the routes we saw before, gyokuro allows you to define **annotate
         shared void listUsers() {}
     }
 
+    route("/admin")
+    controller object adminController {
+        route("/")
+        shared void showAdminHomepage() {}
+    }
+
 Controllers allow you to group related handlers together, and define a "hierarchy" of routes, 
 because functions will inherit the path of their parent controller. In the above example, the full
 paths will be `/users/:id` or `/users/`.
 
-To declare a controller, create a class and annotate it with `controller`. Controllers don't have
+To declare a controller, create a class or an object and annotate it with `controller`. Controllers don't have
 to inherit a special class or interface. Controllers can be annotated with `route`, to define
 a partial path. If no route is present, gyokuro will treat as `route("")` or `route("/")`.
 Leading and trailing slashes are optional, and consecutive slashes will be merged:
@@ -322,7 +328,7 @@ Annotated controllers need to be scanned during the `Application` instantiation:
 		controllers = bind(`package my.application.pkg`, "/rest");
     }.run();
 
-gyokuro will scan the package `my.application.pkg` for annotated controller classes, and expose them
+gyokuro will scan the package `my.application.pkg` for annotated controller classes and objects, and expose them
 under the root context `/rest`. For the controller `UserController` defined above, this means
 that the complete paths will be `/rest/users/:id` and `/rest/users/`.
 
