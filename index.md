@@ -71,6 +71,9 @@ The full documentation for the latest version (0.2) is available here:
 
 <a href="{{ "/doc/0.2" | prepend: site.baseurl }}" class="button" id="doc-link"><span>Full documentation</span></a>
 
+The full documentation for the development version (0.3-SNAPSHOT) is 
+<a href="{{ "/doc/0.2" | prepend: site.baseurl }}">also available</a>.
+
 ## Performance
 
 See the [performance tests](perfs/) page.

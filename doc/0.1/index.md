@@ -186,13 +186,13 @@ becomes valid and can be returned to the client. Filters are called in the order
 passed to the `Application`.
 
     Boolean authenticationFilter(Request req, Response resp) {
-	    if (needsAuthentication(req)) {	
+        if (needsAuthentication(req)) {    
             resp.responseStatus = 401;
             resp.writeString("401 - Unauthorized. Please log in.");
             return false;
-	    }
+        }
         return true;
-	}
+    }
     
     Application {
         filters = [authenticationFilter];
@@ -260,7 +260,7 @@ as [regular handlers](#handlers).
 Annotated controllers need to be scanned during the `Application` instantiation:
 
     Application {
-		controllers = bind(`package my.application.pkg`, "/rest");
+        controllers = bind(`package my.application.pkg`, "/rest");
     }.run();
 
 gyokuro will scan the package `my.application.pkg` for annotated controller classes, and expose them
@@ -349,7 +349,7 @@ you to plug your favorite engine. Extensions have to satisfy an interface named 
 For example:
 
     shared object pebbleRenderer satisfies TemplateRenderer {
-	
+    
         value loader = FileLoader();
         value engine = PebbleEngine(loader);
         

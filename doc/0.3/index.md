@@ -3,47 +3,23 @@ layout: default
 useToc: true
 ---
 
-# gyokuro 0.2
+# gyokuro 0.3-SNAPSHOT
 {:.no_toc}
-This is the complete documentation for gyokuro 0.2.
+This is the complete documentation for gyokuro 0.3-SNAPSHOT.
 
 * TOC
 {:toc}
 
-## What's new in 0.2?
+## What's new in 0.3?
 
 ### Backward incompatible changes
 
-* the package has been renamed from `com.github.bjansen.gyokuro` to `net.gyokuro.core`
+none
 
-### API for templating engines
+### PATCH method
 
-gyokuro now provides a new module `net.gyokuro.view.api` that defines an API
-for pluggable templating engines. It provides support for Java templating engines like:
-
-* Mustache.java 
-* Pebble
-* Rythm
-* Thymeleaf
-
-You can provide your own templating engine by importing `net.gyokuro.view.api` and
-creating a new instance of `net.gyokuro.view.api::TemplateRenderer`.
-
-See the [Templating](#templating) section.
-
-### API for transformers
-
-Transformers are objects that can transform values returned by handlers into content that can be
-written to the response. They are also responsible for transforming GET/POST data into values that
-can be passed as arguments to handlers. The API for transformers is defined in the new module
-`net.gyokuro.transform.api`.
-
-### Other changes
-
-* Handlers can now return `ceylon.html` nodes that will automatically be serialized to a String and
-sent in the response.
-* An `Application` is now able to serve Ceylon modules from local repositories.
-* gyokuro is now using Ceylon and Ceylon SDK 1.3.1
+gyokuro now supports the [HTTP PATCH](https://tools.ietf.org/html/rfc5789) method, which
+is “used to apply partial modifications to a resource”.
 
 ## Routes
 
