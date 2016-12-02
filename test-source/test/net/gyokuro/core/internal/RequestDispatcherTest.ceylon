@@ -31,7 +31,11 @@ import ceylon.test {
 import net.gyokuro.core {
 	get,
 	halt,
-	clearRoutes
+	clearRoutes,
+    patch
+}
+import net.gyokuro.core.http {
+	patchMethod=patch
 }
 import net.gyokuro.core.internal {
 	RequestDispatcher
@@ -182,9 +186,10 @@ void runTests() {
             }
         }
     );
-    print(request("/ceylon.html"));
     assertTrue(request("/ceylon.html").contains("<h1>hello</h1>"));
 
+	patch("/patchme", (req, resp) => "patched");
+	assertTrue(request("/patchme", {}, patchMethod).contains("patched"));
 }
 
 void myHandler(String s1, Integer i1, Response resp) {

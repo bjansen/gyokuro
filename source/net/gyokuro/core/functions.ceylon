@@ -2,9 +2,6 @@ import ceylon.buffer.charset {
     Charset,
     utf8
 }
-import ceylon.language.meta.model {
-    Function
-}
 import ceylon.http.common {
     getMethod=get,
     postMethod=post,
@@ -20,11 +17,17 @@ import ceylon.http.server {
     Request,
     Response
 }
+import ceylon.language.meta.model {
+    Function
+}
 
 import net.gyokuro.core.internal {
     router,
     HaltException,
     RedirectException
+}
+import net.gyokuro.core.http {
+    patchMethod=patch
 }
 import net.gyokuro.view.api {
     TemplateRenderer
@@ -72,6 +75,11 @@ shared void put<Params>(String path, Handler<Params> handler)
 shared void head<Params>(String path, Handler<Params> handler)
         given Params satisfies Anything[]
         => router.registerRoute(path, { headMethod }, handler);
+
+"Declares a new PATCH route for the given [[path]] and [[handler]]."
+shared void patch<Params>(String path, Handler<Params> handler)
+        given Params satisfies Anything[]
+        => router.registerRoute(path, { patchMethod }, handler);
 
 "Interrupts the current handler immediately, resulting in an HTTP
  response with code [[errorCode]] and a body equal to [[message]].

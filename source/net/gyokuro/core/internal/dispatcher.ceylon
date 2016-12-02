@@ -4,25 +4,6 @@ import ceylon.buffer.charset {
 import ceylon.collection {
     HashMap
 }
-import ceylon.language.meta {
-    classDeclaration,
-    type
-}
-import ceylon.language.meta.declaration {
-    FunctionDeclaration,
-    Package,
-    ValueDeclaration,
-    FunctionOrValueDeclaration,
-    OpenUnion,
-    OpenType,
-    OpenClassType
-}
-import ceylon.language.meta.model {
-    ClassModel
-}
-import ceylon.logging {
-    logger
-}
 import ceylon.http.common {
     post,
     get,
@@ -42,12 +23,34 @@ import ceylon.http.server {
     Matcher,
     UploadedFile
 }
+import ceylon.language.meta {
+    classDeclaration,
+    type
+}
+import ceylon.language.meta.declaration {
+    FunctionDeclaration,
+    Package,
+    ValueDeclaration,
+    FunctionOrValueDeclaration,
+    OpenUnion,
+    OpenType,
+    OpenClassType
+}
+import ceylon.language.meta.model {
+    ClassModel
+}
+import ceylon.logging {
+    logger
+}
 
 import net.gyokuro.core {
     SessionAnnotation,
     Flash,
     mimeParse,
     AnyTemplate
+}
+import net.gyokuro.core.http {
+    patch
 }
 import net.gyokuro.transform.api {
     Transformer
@@ -74,7 +77,7 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Requ
     
     shared Endpoint endpoint() {
         return Endpoint(routerMatcher, dispatch,
-            { options, get, head, post, put, delete, trace, connect });
+            { options, get, head, post, put, delete, trace, connect, patch });
     }
     
     "Dispatch the incoming request to the matching method."
