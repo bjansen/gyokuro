@@ -1,6 +1,6 @@
 native("jvm")
-module gyokuro.demo.gson "0.2" {
-    import net.gyokuro.core "0.2";
-    import net.gyokuro.transform.gson "0.2";
+module gyokuro.demo.gson "0.3-SNAPSHOT" {
+    import net.gyokuro.core "0.3-SNAPSHOT";
+    import net.gyokuro.transform.gson "0.3-SNAPSHOT";
     import ceylon.logging "1.3.1";
 }

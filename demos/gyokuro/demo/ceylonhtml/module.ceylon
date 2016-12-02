@@ -1,4 +1,4 @@
 native("jvm")
-module gyokuro.demo.ceylonhtml "0.2" {
-    import net.gyokuro.view.ceylonhtml "0.2";
+module gyokuro.demo.ceylonhtml "0.3-SNAPSHOT" {
+    import net.gyokuro.view.ceylonhtml "0.3-SNAPSHOT";
 }
