@@ -8,8 +8,9 @@ import ceylon.language.meta.declaration {
     ValueDeclaration
 }
 
-"A serializer that transforms anything to a valid JSON string"
-shared object jsonSerializer {
+"A serializer that transforms anything to a valid JSON string.
+ Deprecated: use an implementation of net.gyokuro.transform.api instead."
+deprecated shared object jsonSerializer {
     
     value maxDepth = 10;
     shared variable CustomSerializer[] customSerializers = [];
