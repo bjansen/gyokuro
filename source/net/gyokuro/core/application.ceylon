@@ -48,7 +48,7 @@ shared class Application<T>(
         that will be associated to the given context root. See the [[bind]] function."
     [String, Package]? controllers = null,
     "A tuple [filesystem folder, context root] used to serve static assets.
-    	 See the [[serve]] function."
+     See the [[serve]] function."
     [String, String]? assets = null,
     "A context root used to serve modules."
     String? modulesPath = null,
@@ -129,7 +129,7 @@ shared class Application<T>(
  [[context]] root. This function is meant to be used for [[Application.controllers]].
  
      value app = Application {
-     	controllers = bind(\"rest\", `package com.myapp.controllers`);
+         controllers = bind(\"rest\", `package com.myapp.controllers`);
      };
  
  "
@@ -142,7 +142,7 @@ shared [String, Package] bind(Package pkgToScan, String context = "/") {
  located in `./assets`:
  
      value app = Application {
-     	assets = serve(\"assets\", \"/public\");
+         assets = serve(\"assets\", \"/public\");
      };
  "
 shared [String, String] serve(String path, String context = "") {

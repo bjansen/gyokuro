@@ -15,8 +15,8 @@ Create a new Ceylon module:
 
 ```ceylon
 module gyokuro.demo.rest "1.0.0" {
-	import net.gyokuro.core "0.1.0";
-	import ceylon.net "1.2.0-3";
+    import net.gyokuro.core "0.1.0";
+    import ceylon.net "1.2.0-3";
 }
 ```
 
@@ -24,30 +24,30 @@ Add a runnable top level function that bootstraps a gyokuro application:
 
 ```ceylon
 import net.gyokuro.core {
-	Application,
-	get,
-	post,
-	serve
+    Application,
+    get,
+    post,
+    serve
 }
 
 "Run an HTTP server listening on port 8080, that will react to requests on /hello.
 Static assets will be served from the `assets` directory."
 shared void run() {
 
-	// React to GET/POST requests using a basic handler
-	get("/hello", void (Request request, Response response) {
-		response.writeString("Hello yourself!");
-	});
-	
-	// Shorter syntax that lets Ceylon infer types and lets gyokuro
-	// write the response
-	post("/hello", (request, response) => "You're the POST master!");
+    // React to GET/POST requests using a basic handler
+    get("/hello", void (Request request, Response response) {
+        response.writeString("Hello yourself!");
+    });
+    
+    // Shorter syntax that lets Ceylon infer types and lets gyokuro
+    // write the response
+    post("/hello", (request, response) => "You're the POST master!");
 
-	value app = Application {
-		assets = serve("assets");
-	};
-	
-	app.run();
+    value app = Application {
+        assets = serve("assets");
+    };
+    
+    app.run();
 }
 ```
 
@@ -58,9 +58,9 @@ directly to function parameters, and return an object that represents your respo
 
 ```ceylon
 shared void run() {
-	// ...
-	post("/hello", `postHandler`);
-	// ...
+    // ...
+    post("/hello", `postHandler`);
+    // ...
 }
 
 "Advanced handlers have more flexible parameters, you're
@@ -68,9 +68,9 @@ shared void run() {
  GET/POST values directly to handler parameters!
  The returned value will be written to the response."
 String postHandler(Float float, Integer? optionalInt, String who = "world") {
-	// `float` is required, `optionalInt` is optional and
-	// `who` will be defaulted to "world" if it's not in POST data.
-	return "Hello, " + who + "!\n";
+    // `float` is required, `optionalInt` is optional and
+    // `who` will be defaulted to "world" if it's not in POST data.
+    return "Hello, " + who + "!\n";
 }
 ```
 
@@ -87,12 +87,12 @@ Let's see how it works on a simple example:
 ```ceylon
 shared void run() {
 
-	value app = Application {
-		// You can use REST-style annotated controllers like this:
-		controllers = bind(`package gyokuro.demo.rest`, "/rest");
-	};
-	
-	app.run();
+    value app = Application {
+        // You can use REST-style annotated controllers like this:
+        controllers = bind(`package gyokuro.demo.rest`, "/rest");
+    };
+    
+    app.run();
 }
 ```
 
@@ -101,20 +101,20 @@ Each function annotated with `route` will be mapped to the corresponding path. F
 
 ```ceylon
 import ceylon.net.http.server {
-	Response
+    Response
 }
 import net.gyokuro.core {
-	controller,
-	route
+    controller,
+    route
 }
 
 route("duck")
 controller class SimpleRestController() {
-	
-	route("talk")
-	shared void makeDuckTalk(Response resp) {
-		resp.writeString("Quack world!");
-	}
+    
+    route("talk")
+    shared void makeDuckTalk(Response resp) {
+        resp.writeString("Quack world!");
+    }
 }
 ```
 

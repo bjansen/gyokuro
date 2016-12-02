@@ -89,7 +89,7 @@ shared void patch<Params>(String path, Handler<Params> handler)
  
      shared void findAuthor(Integer authorId) {
          value author = authorDao.findById(authorId) 
-         	else halt(404, \"Author not found\");
+             else halt(404, \"Author not found\");
      }
  "
 shared Nothing halt(Integer errorCode, String? message = null) {
@@ -99,13 +99,13 @@ shared Nothing halt(Integer errorCode, String? message = null) {
 "Interrupts the current handler immediately, and asks the client
  browser to redirect to the specified [[url]].
  
- 	shared void login(String username, String password) {
- 		if (exists user = ...) {
- 			session.put(\"user\", user);
- 			redirect(\"/\");
- 		}
- 		...
- 	}
+     shared void login(String username, String password) {
+         if (exists user = ...) {
+             session.put(\"user\", user);
+             redirect(\"/\");
+         }
+         ...
+     }
  "
 shared Nothing redirect(String url, Integer redirectCode = 303) {
     throw RedirectException(url, redirectCode);

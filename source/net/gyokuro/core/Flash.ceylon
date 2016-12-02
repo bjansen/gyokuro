@@ -28,13 +28,13 @@ shared interface Flash {
  If you want to access a `Flash` instance from a handler,
  use parameters injection instead:
  
- 	route(\"/login\")
- 	shared void login(Flash flash) {
- 		if (loginOk()) {
- 			flash.add(\"info\", \"You have been logged in\");
- 			redirect(\"/\");
- 		}
- 	}
+     route(\"/login\")
+     shared void login(Flash flash) {
+         if (loginOk()) {
+             flash.add(\"info\", \"You have been logged in\");
+             redirect(\"/\");
+         }
+     }
  "
 shared Flash newFlash(Session session)
         => DefaultFlash(session);

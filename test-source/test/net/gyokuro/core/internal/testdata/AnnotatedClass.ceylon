@@ -1,34 +1,34 @@
 import net.gyokuro.core {
-	route,
-	controller
+    route,
+    controller
 }
 
 route("cls")
 controller class AnnotatedClass() {
-	
-	route("func")
-	shared String func() => "";
-	
-	route("otherfunc")
-	shared String otherFunc() => "";
+
+    route("func")
+    shared String func() => "";
+
+    route("otherfunc")
+    shared String otherFunc() => "";
 }
 
 route("/path/")
 controller class AnnotatedClass2() {
-	
-	route("/function")
-	shared String func2() => "";
+
+    route("/function")
+    shared String func2() => "";
 }
 
 controller class AnnotatedClass3() {
-	
-	route("/func3")
-	shared String func3() => "";
+
+    route("/func3")
+    shared String func3() => "";
 }
 
 route("obj")
 controller object myController {
 
-	route("/func4")
-	shared String func4() => "";
+    route("/func4")
+    shared String func4() => "";
 }
