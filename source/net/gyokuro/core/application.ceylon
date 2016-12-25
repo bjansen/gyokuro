@@ -58,6 +58,9 @@ shared class Application<T>(
     TemplateRenderer<T>? renderer = null,
     "Transformers that can serialize to responses and deserialize from request bodies."
     Transformer[] transformers = []) {
+
+    variable Server? server = null;
+    variable Boolean stopped = false;
     
     "A filter applied to each incoming request before it is dispatched to
      its matching handler. Multiple filters can be chained, and returning
@@ -67,6 +70,9 @@ shared class Application<T>(
     
     "Starts the web application."
     shared void run() {
+        if (stopped) {
+            return;
+        }
         value endpoints = ArrayList<HttpEndpoint>();
         
         endpoints.add(RequestDispatcher(controllers, filter, renderer, transformers).endpoint());
@@ -82,8 +88,17 @@ shared class Application<T>(
             endpoints.add(assetsEndpoint);
         }
         
-        Server server = newServer(endpoints);
-        server.start(SocketAddress(address, port), Options());
+        value s = server = newServer(endpoints);
+        s.start(SocketAddress(address, port), Options());
+        server = null;
+    }
+
+    "Stops the web application, if started, and inhibits any further attempts to start it."
+    shared void stop() {
+        stopped = true;
+        if (exists s = server) {
+            s.stop();
+        }
     }
     
     object special satisfies Method {
