@@ -14,12 +14,38 @@ This is the complete documentation for gyokuro 0.3-SNAPSHOT.
 
 ### Backward incompatible changes
 
-none
+* filters have been reworked, their new signature is now:
+^
+    shared alias Filter => Anything(Request, Response, Anything(Request, Response));
+  
+The most important change is that each filter is now responsible for calling the next filter
+in the chain. It is thus possible for a filter to do things *before* and *after* handlers have
+been called:
+
+    void myFilter(Request req, Response resp, Anything(Request, Response) next) {
+        doStuffBefore();
+
+        // You could even provide other instances of Request or Response!
+        next(req, resp);
+        
+        doStuffAfter();
+    }
 
 ### PATCH method
 
 gyokuro now supports the [HTTP PATCH](https://tools.ietf.org/html/rfc5789) method, which
 is “used to apply partial modifications to a resource”.
+
+### Application.stop()
+
+You can now stop the application by calling the `stop()` method. Any further attempt to restart it
+will be blocked. Thank you [@xkr47](https://github.com/xkr47) for your contribution!
+
+### Application status listener
+
+The `run()` function now accepts a [Status](https://modules.ceylon-lang.org/repo/1/ceylon/http/server/1.3.1/module-doc/api/Status.type.html)
+listener, that allows you to run code right after the application has been started (remember, `run()` is
+a blocking operation 😀).
 
 ## Routes
 
@@ -107,7 +133,7 @@ gyokuro will respond with the HTTP status code 400.
 The following types are supported in handler signatures:
 
 * "primitive" types: `String`, `Integer`, `Float` and `Boolean`
-* uploaded files: `ceylon.net.http.server::UploadedFile`
+* uploaded files: `ceylon.http.server::UploadedFile`
 * sequences of these types, like `[String+]` or `[Boolean*]`
 * lists of these types, like `List<UploadedFile>`
  
@@ -115,8 +141,8 @@ Valid `Boolean` values are `true`, `false`, `0` and `1`.
  
 In addition to binding request parameters by name, gyokuro can also inject "special parameters" by type:
 
-* a `ceylon.net.http.server::Request`
-* a `ceylon.net.http.server::Response`
+* a `ceylon.http.server::Request`
+* a `ceylon.http.server::Response`
 * a [`net.gyokuro.core::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/net/gyokuro/core/Flash.ceylon)
 
 You can use any name you want for these:
@@ -174,14 +200,48 @@ This will result in the following logs:
 
 ## Application
 
+### Starting an application
+
 Once routes are defined, you can start an application, which will run an embedded HTTP server
-provided by `ceylon.net`. By default, the server will listen on `0.0.0.0:8080`, but you can use
+provided by `ceylon.http.server`. By default, the server will listen on `0.0.0.0:8080`, but you can use
 other settings:
 
     Application {
         address = "127.0.0.1";
         port = 1337;
     }.run();  
+
+### Listening to status changes
+
+The `run()` function is blocking, but if you want to run extra code when the application is started,
+it is possible to use a listener that will react on the `started` event:
+
+    import ceylon.http.server {
+        Status,
+        started
+    }
+
+    void listener(Status status) {
+        if (status == started) {
+            print("Application has been started");
+        }
+    }
+
+    Application()
+        .run(listener);
+
+### Stopping an application
+
+When you are done with an application, it is possible to stop it using the `stop()` method, which
+needs to be called from another thread or a status listener, since `run()` is blocking. For example,
+here is how we run unit tests in `test.net.gyokuro.core`:
+
+    app.run((status) {
+        if (status == started) {
+            // ...test assertions here...
+            app.stop();
+        }
+    });
 
 ### Static assets
 
@@ -218,35 +278,41 @@ using a [RepositoryEndPoint](https://modules.ceylon-lang.org/repo/1/ceylon/net/1
 ### Filters
 
 It is possible to declare **filters** that will be called for each new incoming request. Filters
-are chained, and each filters returns a `Boolean` indicating if the next filter should be called.
-If a filter returns `false`, it is its responsibility to modify the `Response` such as it
+are chained, and each filter is responsible for calling the next filter in the chain.
+If a filter chooses to break the chain, it is its responsibility to modify the `Response` such as it
 becomes valid and can be returned to the client. Filters are called in the order in which they are
 passed to the `Application`.
 
-    Boolean authenticationFilter(Request req, Response resp) {
-        if (needsAuthentication(req)) {    
+    void authenticationFilter(Request req, Response resp, void next(Request req, Response resp)) {
+        if (needsAuthentication(req)) {
             resp.responseStatus = 401;
             resp.writeString("401 - Unauthorized. Please log in.");
-            return false;
+            return;
         }
-        return true;
+        next(req, resp);
+    }
+
+    void loggingFilter(Request req, Response resp, void next(Request req, Response resp)) {
+        logger.info(req.path);
+        value before = system.milliseconds;
+        next(req, resp);
+        logger.info("Took ``system.milliseconds - before``ms");
     }
     
     Application {
-        filters = [authenticationFilter];
+        filters = [authenticationFilter, loggingFilter];
     }.run();
 
+In the previous example, `loggingFilter` might not be called if `authenticationFilter` decides that
+the request is not authorized. On the other hand, if we specify:
+
+    Application {
+        filters = [loggingFilter, authenticationFilter];
+    }.run();
+
+ `loggingFilter` *and* `authenticationFilter` will be called on each request.
 
 ## Annotated controllers
-
-<div class="gotcha" markdown="1">
-Previous versions of Ceylon IDE for Eclipse contained [a bug](https://github.com/ceylon/ceylon-ide-eclipse/issues/1627)
-which would cause unexpected and silent errors, like annotated controllers not being scanned correctly.
-
-This has been fixed in Ceylon IDE 1.2.0.v20151214-1608-Final, so make sure you're using a recent version
-if you want to stay out of trouble 😉.
-
-</div>
 
 In addition to the routes we saw before, gyokuro allows you to define **annotated controllers**:
 

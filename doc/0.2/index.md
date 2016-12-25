@@ -131,7 +131,7 @@ gyokuro will respond with the HTTP status code 400.
 The following types are supported in handler signatures:
 
 * "primitive" types: `String`, `Integer`, `Float` and `Boolean`
-* uploaded files: `ceylon.net.http.server::UploadedFile`
+* uploaded files: `ceylon.http.server::UploadedFile`
 * sequences of these types, like `[String+]` or `[Boolean*]`
 * lists of these types, like `List<UploadedFile>`
  
@@ -139,8 +139,8 @@ Valid `Boolean` values are `true`, `false`, `0` and `1`.
  
 In addition to binding request parameters by name, gyokuro can also inject "special parameters" by type:
 
-* a `ceylon.net.http.server::Request`
-* a `ceylon.net.http.server::Response`
+* a `ceylon.http.server::Request`
+* a `ceylon.http.server::Response`
 * a [`net.gyokuro.core::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/net/gyokuro/core/Flash.ceylon)
 
 You can use any name you want for these:
@@ -199,7 +199,7 @@ This will result in the following logs:
 ## Application
 
 Once routes are defined, you can start an application, which will run an embedded HTTP server
-provided by `ceylon.net`. By default, the server will listen on `0.0.0.0:8080`, but you can use
+provided by `ceylon.http.server`. By default, the server will listen on `0.0.0.0:8080`, but you can use
 other settings:
 
     Application {
