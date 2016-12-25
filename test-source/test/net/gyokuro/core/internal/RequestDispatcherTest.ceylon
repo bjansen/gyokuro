@@ -1,3 +1,22 @@
+import ceylon.html {
+    Html,
+    Body,
+    H1
+}
+import ceylon.http.client {
+    Request
+}
+import ceylon.http.common {
+    Method,
+    getMethod=get,
+    postMethod=post
+}
+import ceylon.http.server {
+    newServer,
+    Status,
+    started,
+    Response
+}
 import ceylon.io {
     SocketAddress
 }
@@ -6,14 +25,10 @@ import ceylon.logging {
     Priority,
     Category
 }
-import ceylon.http.client {
-    Request
-}
-import ceylon.http.server {
-    newServer,
-    Status,
-    started,
-    Response
+import ceylon.test {
+    test,
+    assertEquals,
+    assertTrue
 }
 import ceylon.uri {
     Uri,
@@ -21,11 +36,6 @@ import ceylon.uri {
     Path,
     PathSegment,
     Parameter
-}
-import ceylon.test {
-    test,
-    assertEquals,
-    assertTrue
 }
 
 import net.gyokuro.core {
@@ -40,16 +50,6 @@ import net.gyokuro.core.http {
 import net.gyokuro.core.internal {
     RequestDispatcher
 }
-import ceylon.http.common {
-    Method,
-    getMethod=get,
-    postMethod=post
-}
-import ceylon.html {
-    Html,
-    Body,
-    H1
-}
 
 shared test
 void testDispatcher() {
@@ -58,7 +58,7 @@ void testDispatcher() {
     value dispatcher =
             RequestDispatcher(
         ["/", `package test.net.gyokuro.core.internal.testdata`],
-        (req, resp) => true)
+        (req, resp, next) => next(req, resp))
         .endpoint();
 
     addLogWriter {
@@ -200,8 +200,7 @@ suppressWarnings("expressionTypeNothing")
 void testHalt() {
     halt(500, "I can haz an error");
 }
-
-String request(String path, {Parameter*} params = {}, Method method = getMethod) {
+shared String request(String path, {Parameter*} params = {}, Method method = getMethod) {
     value segments = path.split('/'.equals, true, false)
         .filter((_) => !_.empty)
         .map((el) => PathSegment(el));

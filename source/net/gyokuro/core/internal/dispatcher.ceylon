@@ -59,7 +59,8 @@ import net.gyokuro.view.api {
     TemplateRenderer
 }
 
-shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Request, Response) filter,
+shared class RequestDispatcher<T>([String, Package]? packageToScan,
+    Anything(Request, Response, Anything(Request, Response)) filter,
     TemplateRenderer<T>? renderer = null, Transformer[] transformers = []) {
     
     value log = logger(`module net.gyokuro.core`);
@@ -82,29 +83,27 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan, Boolean(Requ
     
     "Dispatch the incoming request to the matching method."
     void dispatch(Request req, Response resp) {
-        if (!filter(req, resp)) {
-            return;
-        }
-        
-        value namedParams = HashMap<String,String>();
-        
-        if (is Handler? handler = router.routeRequest(req, namedParams)) {
-            if (!exists handler) {
-                // We know this path, but not for this method
-                respond(405, "Method Not Allowed", resp);
-                return;
-            }
-            value enhancedReq = if (namedParams.empty)
-            then req else RequestWrapper(req, namedParams);
-            
-            if (is [Object?, FunctionDeclaration] handler) {
-                dispatchToController(enhancedReq, resp, handler);
+        filter(req, resp, (req, resp) {
+            value namedParams = HashMap<String,String>();
+
+            if (is Handler? handler = router.routeRequest(req, namedParams)) {
+                if (!exists handler) {
+                    // We know this path, but not for this method
+                    respond(405, "Method Not Allowed", resp);
+                    return;
+                }
+                value enhancedReq = if (namedParams.empty)
+                then req else RequestWrapper(req, namedParams);
+
+                if (is [Object?, FunctionDeclaration] handler) {
+                    dispatchToController(enhancedReq, resp, handler);
+                } else {
+                    writeResult(handler(enhancedReq, resp), req, resp);
+                }
             } else {
-                writeResult(handler(enhancedReq, resp), req, resp);
+                respond(404, "Not Found", resp);
             }
-        } else {
-            respond(404, "Not Found", resp);
-        }
+        });
     }
     
     void dispatchToController(Request req, Response resp, [Object?, FunctionDeclaration] handler) {

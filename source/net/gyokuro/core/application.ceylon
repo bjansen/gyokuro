@@ -1,12 +1,6 @@
 import ceylon.collection {
     ArrayList
 }
-import ceylon.io {
-    SocketAddress
-}
-import ceylon.language.meta.declaration {
-    Package
-}
 import ceylon.http.common {
     post,
     get,
@@ -27,15 +21,21 @@ import ceylon.http.server.endpoints {
     serveStaticFile,
     RepositoryEndpoint
 }
+import ceylon.io {
+    SocketAddress
+}
+import ceylon.language.meta.declaration {
+    Package
+}
 
 import net.gyokuro.core.internal {
     RequestDispatcher
 }
-import net.gyokuro.view.api {
-    TemplateRenderer
-}
 import net.gyokuro.transform.api {
     Transformer
+}
+import net.gyokuro.view.api {
+    TemplateRenderer
 }
 
 "A web server application that can route requests to handler functions
@@ -67,7 +67,7 @@ shared class Application<T>(
      its matching handler. Multiple filters can be chained, and returning
      [[false]] will stop the chain. In this case, the filter returning `false`
      should modify the [[Response]] such as it can be returned to the client."
-    shared alias Filter => Boolean(Request, Response);
+    shared alias Filter => Anything(Request, Response, Anything(Request, Response));
     
     "Starts the web application."
     shared void run(Anything(Status) statusListener = noop) {
@@ -114,31 +114,37 @@ shared class Application<T>(
         }
     }
     
-    "Runs each filter successively until one them returns `false` or every filter was run.
-     If each filter returned `true`, this means we can continue serving the request."
-    Boolean filter(Request req, Response resp) {
-        for (f in filters) {
-            if (!f(req, resp)) {
-                return false;
+    "Runs the first element in the filter chain. Each filter has the responsibility to
+     run the next filter in the chain."
+    void filter(Request req, Response resp, Anything(Request, Response) last) {
+        void lastFilter(Request req, Response resp, Anything(Request, Response) next) {
+            last(req, resp);
+        }
+
+        void next(Filter[] filters, Request req, Response resp) {
+            if (exists filter = filters.first) {
+                filter(req, resp, (newReq, newResp) {
+                    next(filters.rest, newReq, newResp);
+                });
             }
         }
-        return true;
+
+        value ourFilters = filters.withTrailing(lastFilter);
+        next(ourFilters, req, resp);
     }
     
     void serveRoot([String, String] conf)(Request req, Response resp, void complete()) {
-        if (!filter(req, resp)) {
-            return;
-        }
-        
-        if (req.method == special) {
-            resp.status = 418;
-            resp.writeString("418 - I'm a teapot");
-        } else {
-            value root = conf[1];
-            value assetsPath = conf[0];
-            value file = root.empty then req.path else req.path[root.size...];
-            serveStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else file)(req, resp, complete);
-        }
+        filter(req, resp, (req, resp) {
+            if (req.method == special) {
+                resp.status = 418;
+                resp.writeString("418 - I'm a teapot");
+            } else {
+                value root = conf[1];
+                value assetsPath = conf[0];
+                value file = root.empty then req.path else req.path[root.size...];
+                serveStaticFile(assetsPath, (req) => req.path.equals("/") then "/index.html" else file)(req, resp, complete);
+            }
+        });
     }
 }
 
