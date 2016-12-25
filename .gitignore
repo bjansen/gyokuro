@@ -2,3 +2,6 @@
 /classes/
 config.old
 modules
+/.idea/libraries/
+/.idea/workspace.xml
+/.idea/shelf
