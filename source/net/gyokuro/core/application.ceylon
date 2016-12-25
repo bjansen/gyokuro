@@ -20,7 +20,8 @@ import ceylon.http.server {
     Server,
     startsWith,
     AsynchronousEndpoint,
-    HttpEndpoint
+    HttpEndpoint,
+    Status
 }
 import ceylon.http.server.endpoints {
     serveStaticFile,
@@ -69,7 +70,7 @@ shared class Application<T>(
     shared alias Filter => Boolean(Request, Response);
     
     "Starts the web application."
-    shared void run() {
+    shared void run(Anything(Status) statusListener = noop) {
         if (stopped) {
             return;
         }
@@ -89,6 +90,7 @@ shared class Application<T>(
         }
         
         value s = server = newServer(endpoints);
+        s.addListener(statusListener);
         s.start(SocketAddress(address, port), Options());
         server = null;
     }
