@@ -26,4 +26,4 @@ shared void run() {
     }.run();
 }
 
-Template hello() => render("hello", map({ "who"->"World" }));
+Template hello() => render("hello", map { "who"->"World" });

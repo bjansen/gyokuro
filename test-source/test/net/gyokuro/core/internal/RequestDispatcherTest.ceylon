@@ -203,7 +203,7 @@ void testHalt() {
 shared String request(String path, {Parameter*} params = {}, Method method = getMethod) {
     value segments = path.split('/'.equals, true, false)
         .filter((_) => !_.empty)
-        .map((el) => PathSegment(el));
+        .map(PathSegment);
     value uri = Uri("http",
         Authority(null, null, "127.0.0.1", 23456, false),
         Path(true, *segments)

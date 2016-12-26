@@ -14,16 +14,16 @@ controller object listBinding {
 
     route("list2")
     shared String list2(List<Boolean> bools, List<Integer> ints) {
-        return "".join(bools.chain(ints).map((_) => _.string));
+        return "".join(bools.chain(ints).map(Object.string));
     }
 
     route("sequential")
     shared String sequential([Integer*] ints) {
-        return "".join(ints.map((_) => _.string));
+        return "".join(ints.map(Object.string));
     }
 
     route("sequence")
     shared String sequence([Integer+] ints) {
-        return "".join(ints.map((_) => _.string));
+        return "".join(ints.map(Object.string));
     }
 }

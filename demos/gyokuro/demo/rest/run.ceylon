@@ -78,5 +78,5 @@ String postHandler(String who = "world") {
 }
 
 Template renderingHandler() {
-    return render("foobar", map({ "bar"->"baz" }));
+    return render("foobar", map { "bar"->"baz" });
 }
