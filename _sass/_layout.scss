@@ -1,12 +1,12 @@
 //colors
-$color_dove_gray_approx: #6d6d6d;
-$white_80: rgba(255, 255, 255, 0.8);
-$color_mercury_approx: #e7e7e7;
-$color_monza_approx: #d5000d;
-$color_guardsman_red_approx: #c5000c;
-$color_mine_shaft_approx: #303030;
-$color_silver_chalice_approx: #aaa;
-$color_romance_approx: #fdfdfd;
+$text_color: #6d6d6d;
+$text_shadow: rgba(255, 255, 255, 0.5);
+$background_color: #e7e7e7;
+$text_highlight: #d5000d;
+$text_highlight_hover: #c5000c;
+$strong_color: #303030;
+$light_color: #aaa;
+$light_background_color: #fdfdfd;
 $concrete: #f2f2f2;
 $color_celeste_approx: #cbcbcb;
 $color_pink_swan_approx: #b7b7b7;
@@ -50,26 +50,27 @@ $url_4: url(../images/hr.png);
 %extend_1 {
     margin-bottom: 15px;
     font-family: $font_5, $font_6, $font_7, $font_8;
-    font-size: 14px;
+    font-size: 0.93em;
     color: $color_log_cabin_approx;
 }
 
 
 body {
     font-family: $font_0, $font_1, $font_2, $font_3;
-    font-size: 1em;
+    font-size: 16px;
     line-height: 1.5;
-    color: $color_dove_gray_approx;
+    color: $text_color;
     //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
-    text-shadow: 0 1px 0 $white_80;
-    background: $color_mercury_approx $url_0 0 0 repeat;
+    text-shadow: 0 1px 0 $text_shadow;
+    background: $background_color $url_0 0 0 repeat;
     counter-reset: h2counter;
 }
 a {
-    color: $color_monza_approx;
+    color: $text_highlight;
     text-decoration: none;
     &:hover {
-        color: $color_guardsman_red_approx;
+        color: $text_highlight_hover;
+        border-bottom: 1px dotted $text_highlight_hover;
     }
     &.button {
         display: block;
@@ -77,13 +78,13 @@ a {
         width: 199px;
         padding: 12px 8px;
         margin-right: 14px;
-        font-size: 15px;
+        font-size: 0.94em;
         font-weight: bold;
         line-height: 25px;
-        color: $color_mine_shaft_approx;
-        background: $color_romance_approx;
-        background: linear-gradient(top, $color_romance_approx 0,$concrete 100%);
-        filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$color_romance_approx', endcolorstr='$concrete',gradienttype=0 );
+        color: $strong_color;
+        background: $light_background_color;
+        background: linear-gradient(top, $light_background_color 0,$concrete 100%);
+        filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$light_background_color', endcolorstr='$concrete',gradienttype=0 );
         border-top: solid 1px $color_celeste_approx;
         border-right: solid 1px $color_pink_swan_approx;
         border-bottom: solid 1px $color_nobel_approx;
@@ -94,8 +95,8 @@ a {
         box-shadow: 0 1px 5px $color_gray_nurse_approx;
         &:hover {
             background: $alabaster;
-            background: linear-gradient(top, $color_romance_approx 0,$color_black_haze_approx, 100%);
-            filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$color_romance_approx', endcolorstr='$color_black_haze_approx',gradienttype=0 );
+            background: linear-gradient(top, $light_background_color 0,$color_black_haze_approx, 100%);
+            filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$light_background_color', endcolorstr='$color_black_haze_approx',gradienttype=0 );
             border-top: solid 1px $color_pink_swan_approx;
             border-right: solid 1px $color_nobel_approx;
             border-bottom: solid 1px $color_nobel_approx;
@@ -116,17 +117,17 @@ header {
     padding-left: 75px;
     h1 {
         font-family: $font_4, $font_0, $font_1, $font_2, $font_3;
-        font-size: 48px;
+        font-size: 3em;
         font-weight: 900;
         line-height: 1.2;
-        color: $color_mine_shaft_approx;
+        color: $strong_color;
         letter-spacing: -1px;
     }
     h2 {
-        font-size: 24px;
+        font-size: 1.5em;
         font-weight: normal;
         line-height: 1.3;
-        color: $color_silver_chalice_approx;
+        color: $light_color;
         letter-spacing: -1px;
     }
 }
@@ -160,7 +161,7 @@ pre {
     color: $concrete;
     //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
     text-shadow: none;
-    background: $color_mine_shaft_approx;
+    background: $strong_color;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 5px;
     code {
@@ -196,7 +197,7 @@ ol {
 dl {
     margin-bottom: 20px;
     dt {
-        color: $color_mine_shaft_approx;
+        color: $strong_color;
     }
 }
 hr {
@@ -230,33 +231,33 @@ form {
     background: $concrete;
 }
 h1 {
-    font-size: 32px;
+    font-size: 2em;
     counter-reset: h2counter;
 }
 h2 {
     margin-bottom: 8px;
-    font-size: 22px;
+    font-size: 1.375em;
     font-weight: bold;
-    color: $color_mine_shaft_approx;
+    color: $strong_color;
 }
 h3 {
     margin-bottom: 8px;
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: bold;
-    color: $color_monza_approx;
+    color: $text_highlight;
 }
 h4 {
-    font-size: 16px;
+    font-size: 1em;
     font-weight: bold;
-    color: $color_mine_shaft_approx;
+    color: $strong_color;
 }
 h5 {
     font-size: 1em;
-    color: $color_mine_shaft_approx;
+    color: $strong_color;
 }
 h6 {
     font-size: .8em;
-    color: $color_mine_shaft_approx;
+    color: $strong_color;
 }
 p {
     margin-bottom: 15px;
@@ -275,8 +276,8 @@ footer {
     padding-top: 20px;
     padding-bottom: 30px;
     margin-top: 40px;
-    font-size: 13px;
-    color: $color_silver_chalice_approx;
+    font-size: 0.8125em;
+    color: $light_color;
     background: transparent $url_4 0 0 no-repeat;
     a {
         color: $color_storm_dust_approx;

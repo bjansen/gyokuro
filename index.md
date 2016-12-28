@@ -1,8 +1,9 @@
 ---
 layout: default
+title: "gyokuro: a web framework for Ceylon"
 ---
 
-<div class="hero-code">
+<div class="hero-code dark">
 
 <pre><code>shared void run() {
     get("/hello", (req, resp) => "Hello, World!");
@@ -12,26 +13,91 @@ layout: default
 }
 
 Template showUser(String username)
-    => render("templates/user", map({"user" -> username}));</code></pre>
+    => render("templates/user", map {"user" -> username});</code></pre>
 
 </div>
 
 <hr>
 
-## About gyokuro
+<div class="intro" markdown="1">
+## Introducing gyokuro
 
-gyokuro is a framework written in Ceylon, inspired by [Sinatra](http://www.sinatrarb.com/)
+gyokuro is a framework written in Ceylon, similar to [Sinatra](http://www.sinatrarb.com/)
 and [Spark](http://sparkjava.com/) for creating web applications with very little boilerplate.
 It is based on the [Ceylon SDK](https://github.com/ceylon/ceylon-sdk) and uses `ceylon.http.server`.
+</div>
 
-With gyokuro, you can:
+<div class="buttons">
+    <a href="#getting-started" class="button getting-started"><span>Getting started</span></a>
+    <a href="{{ "/doc/0.2" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>
+</div>
 
-* declare *routes* that bind *paths* to simple `(Request, Response)` function *handlers*
-* use *annotated classes* to group handlers together
-* bind GET/POST parameters to function parameters instead of querying a `Request`
-* serve *static assets* from a given directory
+<div class="current-version" markdown="1">
+**Current version**: [0.2 (Nov. 29, 2016)](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.2)
+</div>
 
-**Current version**: [0.2](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.2)
+<hr>
+
+<div class="hero-code with-text light" markdown="1">
+<div markdown="1">
+### Easy and type-safe bindings
+Routes can be declared to bind paths to simple `(Request, Response)` function handlers.
+You can also use references to functions with more complex signatures, and gyokuro will
+automatically bind GET/POST/path parameters by name.
+
+</div>
+    get("/hello", (req, resp) => "Hello, World!");
+    post("/user/edit/:id", `editUser`);
+
+    void editUser(Integer id, String name, String password) {}
+</div>
+
+<div class="hero-code with-text" markdown="1">
+    route("user")
+    shared controller class UserController() {
+        route("edit")
+        shared void edit(Integer userId, String username) {}
+
+        route("list")
+        shared User[] listUsers() => ...
+    }
+<div markdown="1">
+### Annotated controllers
+In addition to the `get()` and `post()` functions, you can annotate classes or
+objects with `controller`, allowing you to group multiple `route`s in the same 
+declaration.
+
+</div>
+</div>
+
+<div class="hero-code with-text light" markdown="1">
+<div markdown="1">
+### Templating
+gyokuro does not ship with any particular templating engine, but it's very easy
+to plug any existing engine via the [View API](https://modules.ceylon-lang.org/repo/1/net/gyokuro/view/api/0.2/module-doc/api/index.html).
+Handlers don't need to be aware of which templating engine is used, they simply call the `render`
+function with a template name and a context map.
+
+</div>
+    Template greet(String who) 
+            => render("greetingTpl", map {"name" -> who});
+    
+    // Sample template renderer
+    object helloRenderer satisfies TemplateRenderer {
+        render(Template template, Map<String,Anything> context, 
+                Request req, Response resp)
+                => resp.write("Hello, ``context.get("name") else "world"``!");
+    }
+</div>
+
+<p></p>
+
+### Wait, there's more!
+
+For a complete description of gyokuro's features, head off to the [docs](/docs/0.2), or keep
+reading to get you started on a new project!
+
+<hr>
 
 ## Getting started
 
@@ -69,7 +135,9 @@ you can build it from sources:
 
 The full documentation for the latest version (0.2) is available here:
 
-<a href="{{ "/doc/0.2" | prepend: site.baseurl }}" class="button" id="doc-link"><span>Full documentation</span></a>
+<div class="buttons">
+    <a href="{{ "/doc/0.2" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>
+</div>
 
 The full documentation for the development version (0.3-SNAPSHOT) is 
 <a href="{{ "/doc/0.3" | prepend: site.baseurl }}">also available</a>.

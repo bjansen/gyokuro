@@ -5,10 +5,42 @@
 @import "layout";
 @import "mediaQueries";
 
+nav {
+    ul {
+        position: absolute;
+        right: 100px;
+        margin: 0;
+        padding: 0;
+
+        li {
+            &:before {
+                content: "";
+            }
+            float: left;
+            margin-right: 20px;
+            padding: 0;
+            font-weight: bold;
+        }
+    }
+}
+
+.intro {
+    font-size: 1.3em;
+    h2 {
+        text-align: center;
+        font-size: 40px;
+    }
+}
+
+.current-version {
+    clear: both; 
+    text-align: center;
+    margin: 30px 0;
+}
+
 .hero-code {
     width: 100vw;
     margin-left: calc(-1 *((100vw - 100%) / 2));
-    background-color: $code_background;
     + hr {
         margin-top: 24px;
     }
@@ -16,6 +48,52 @@
         margin: auto;
         width: 620px;
     }
+    div {
+        width: 35%;
+        padding: 0 10px;
+        overflow-x: scroll;
+    }
+}
+
+@media all and (max-width: 800px) {
+    .hero-code {
+        div {
+            width: 95%;
+        }
+    }
+    .with-text {
+        flex-direction: column;
+        div:first-child {
+            margin-left: 0 !important;
+        }
+    }
+}
+
+.with-text {
+    display: inline-flex;
+    align-items: center;
+    padding: 50px 0;
+    div:first-child {
+        margin-left: 15%;
+    }
+    p {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    pre {
+        width: auto !important;
+    }
+
+}
+
+.light {
+    background: $light_background_color;
+    background: linear-gradient(top, $light_background_color 0,$concrete 100%);
+    filter: progid:dximagetransform.microsoft.gradient(startcolorstr='$light_background_color', endcolorstr='$concrete',gradienttype=0 );
+}
+.dark {
+    background-color: $code_background;    
 }
 
 .gotcha {
@@ -75,10 +153,29 @@
     }
 }
 
-#doc-link {
-    float: none;
+.buttons {
+    text-align: center;
+    margin: 30px;
+}
+
+.button {
+    text-align: left;
+}
+
+.doc-link {
+    display: inline-block !important;
+    float: none !important;
     margin: auto;
     span {
         background: transparent $url_3 12px 50% no-repeat;
+    }
+}
+
+.getting-started {
+    display: inline-block !important;
+    float: none !important;
+    span {
+        background: transparent url(../images/abc.svg) 12px 50% no-repeat;
+        background-size: 23px 23px;
     }
 }
