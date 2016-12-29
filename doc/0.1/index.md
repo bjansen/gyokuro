@@ -281,9 +281,11 @@ them. They are one-time messages that can for example survive a redirect:
 You can then access a flash object from a template:
 
 {% raw %}
-    {% if flash.peek("message") != null %}
-        <div class="info">{{ flash.get("message") }}</div>
-    {% endif %}
+    <body>
+        {% if flash.peek("message") != null %}
+            <div class="info">{{ flash.get("message") }}</div>
+        {% endif %}
+    </body>
 {% endraw %}
 
 As soon as a value is retrieved from a flash object (using `get()`), it is removed from this object.
