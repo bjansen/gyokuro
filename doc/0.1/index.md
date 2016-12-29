@@ -1,14 +1,14 @@
 ---
 layout: default
 useToc: true
+toc-start: 1
 ---
 
 # gyokuro 0.1
 {:.no_toc}
 This is the complete documentation for gyokuro 0.1.
 
-* TOC
-{:toc}
+{% include toc.md %}
 
 ## Routes
 

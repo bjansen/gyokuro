@@ -115,15 +115,17 @@ nav {
     }
 }
 
-#markdown-toc {
+#toc {
     position: fixed;
     top: 190px;
     left: 50%;
     margin-left: 320px;
-    counter-reset: h2counter2;
     ul {
         margin-bottom: 0;
     }
+}
+
+#markdown-toc {
     > li {
         > a {
             counter-reset: h3counter2;

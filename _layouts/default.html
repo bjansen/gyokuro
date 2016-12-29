@@ -10,7 +10,8 @@
 
         {% include header.html %}
 
-        <section id="main_content" {% if page.useToc%}class="with-toc"{% endif %}>
+        <section id="main_content" {% if page.useToc%}class="with-toc" 
+            style="counter-reset: h2counter2 {{page.toc-start | minus: 1}} h2counter {{page.toc-start | minus: 1}};"{% endif %}>
           {{ content }}
         </section>
 

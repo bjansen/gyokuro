@@ -1,14 +1,14 @@
 ---
 layout: default
 useToc: true
+toc-start: 1
 ---
 
 # gyokuro 0.2
 {:.no_toc}
 This is the complete documentation for gyokuro 0.2.
 
-* TOC
-{:toc}
+{% include toc.md %}
 
 ## What's new in 0.2?
 
