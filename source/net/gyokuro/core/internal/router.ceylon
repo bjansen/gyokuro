@@ -10,9 +10,6 @@ import ceylon.http.server {
     Request,
     Response
 }
-import ceylon.http.server.websocket {
-    WebSocketChannel
-}
 import ceylon.language.meta.declaration {
     FunctionDeclaration
 }
@@ -21,17 +18,17 @@ import ceylon.language.meta.model {
 }
 
 import net.gyokuro.core {
-    WebSocketHandler
+    WSHandler
 }
 
 shared alias Handler => [Object?, FunctionDeclaration]|Callable<Anything,[Request, Response]>;
 
 shared object router {
 
-    value wsHandlers = HashMap<String, WebSocketHandler|Anything(WebSocketChannel, String)>();
+    value wsHandlers = HashMap<String, WSHandler>();
 
     shared Node root = Node("");
-    shared Map<String, WebSocketHandler|Anything(WebSocketChannel, String)> webSocketHandlers
+    shared Map<String, WSHandler> webSocketHandlers
         => wsHandlers;
 
     shared void registerRoute<Param>(String path, {Method+} methods,
@@ -73,8 +70,7 @@ shared object router {
         }
     }
 
-    shared void registerWebSocketHandler(String path,
-        WebSocketHandler|Anything(WebSocketChannel, String) handler) {
+    shared void registerWebSocketHandler(String path, WSHandler handler) {
 
         if (webSocketHandlers.defines(path)) {
             throw Exception("Trying to override WebSocket handler for path ``path``.");
