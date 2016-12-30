@@ -13,3 +13,6 @@ source=test-source
 
 [formattool]
 profile=gyokuro
+
+[runtool]
+module=gyokuro.demo.rest

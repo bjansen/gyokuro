@@ -21,6 +21,9 @@ import ceylon.http.server.endpoints {
     serveStaticFile,
     RepositoryEndpoint
 }
+import ceylon.http.server.websocket {
+    WebSocketEndpoint
+}
 import ceylon.io {
     SocketAddress
 }
@@ -29,7 +32,8 @@ import ceylon.language.meta.declaration {
 }
 
 import net.gyokuro.core.internal {
-    RequestDispatcher
+    RequestDispatcher,
+    router
 }
 import net.gyokuro.transform.api {
     Transformer
@@ -74,7 +78,7 @@ shared class Application<T>(
         if (stopped) {
             return;
         }
-        value endpoints = ArrayList<HttpEndpoint>();
+        value endpoints = ArrayList<HttpEndpoint|WebSocketEndpoint>();
         
         endpoints.add(RequestDispatcher(controllers, filter, renderer, transformers).endpoint());
         if (exists modulesPath) {
@@ -87,6 +91,27 @@ shared class Application<T>(
                 { get, post, special });
             
             endpoints.add(assetsEndpoint);
+        }
+
+        for (path -> handler in router.webSocketHandlers) {
+            WebSocketHandler wsHandler;
+
+            if (is WebSocketHandler handler) {
+                wsHandler = handler;
+            } else {
+                wsHandler = object extends WebSocketHandler() {
+                    onText = handler;
+                };
+            }
+
+            endpoints.add(WebSocketEndpoint {
+                path = startsWith(path);
+                onOpen = wsHandler.onOpen;
+                onClose = wsHandler.onClose;
+                onError = wsHandler.onError;
+                onText = wsHandler.onText;
+                onBinary = wsHandler.onBinary;
+            });
         }
         
         value s = server = newServer(endpoints);

@@ -2,12 +2,6 @@ import ceylon.collection {
     HashMap,
     ArrayList
 }
-import ceylon.language.meta.declaration {
-    FunctionDeclaration
-}
-import ceylon.language.meta.model {
-    Function
-}
 import ceylon.http.common {
     Method,
     AbstractMethod
@@ -16,13 +10,30 @@ import ceylon.http.server {
     Request,
     Response
 }
+import ceylon.http.server.websocket {
+    WebSocketChannel
+}
+import ceylon.language.meta.declaration {
+    FunctionDeclaration
+}
+import ceylon.language.meta.model {
+    Function
+}
+
+import net.gyokuro.core {
+    WebSocketHandler
+}
 
 shared alias Handler => [Object?, FunctionDeclaration]|Callable<Anything,[Request, Response]>;
 
 shared object router {
-    
+
+    value wsHandlers = HashMap<String, WebSocketHandler|Anything(WebSocketChannel, String)>();
+
     shared Node root = Node("");
-    
+    shared Map<String, WebSocketHandler|Anything(WebSocketChannel, String)> webSocketHandlers
+        => wsHandlers;
+
     shared void registerRoute<Param>(String path, {Method+} methods,
         Function<Anything,Param>|Callable<Anything,[Request, Response]> handler)
             given Param satisfies Anything[] {
@@ -61,7 +72,17 @@ shared object router {
             node.addHandler(method, controllerHandler);
         }
     }
-    
+
+    shared void registerWebSocketHandler(String path,
+        WebSocketHandler|Anything(WebSocketChannel, String) handler) {
+
+        if (webSocketHandlers.defines(path)) {
+            throw Exception("Trying to override WebSocket handler for path ``path``.");
+        } else {
+            wsHandlers.put(path, handler);
+        }
+    }
+
     shared Boolean canHandlePath(String path) {
         return findNodeByPath(path) exists;
     }
@@ -131,7 +152,7 @@ shared class Node(shared String subPath) {
     
     value kids = ArrayList<Node>();
     variable Map<Method,Handler> handlers = emptyMap;
-    
+
     shared void addChild(Node node) {
         kids.add(node);
     }

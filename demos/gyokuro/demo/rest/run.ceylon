@@ -16,7 +16,8 @@ import net.gyokuro.core {
     Template,
     render,
     serve,
-    bind
+    bind,
+    websocket
 }
 import net.gyokuro.view.api {
     TemplateRenderer
@@ -37,7 +38,17 @@ shared void run() {
     
     // And render templates
     get("/render", `renderingHandler`);
-    
+
+    // WebSockets are also supported
+    websocket("/ws", (channel, text) => channel.sendText("Hello, ``text``!"));
+
+    // TODO uncomment this when ceylon.http.server/1.3.2 is released
+//    websocket("/chat", (channel, text) {
+//        for (peer in channel.peerConnections) {
+//            peer.sendText(text);
+//        }
+//    });
+
     value app = Application {
         // You can also use annotated controllers, if you're
         // a nostalgic Java developer ;-)
