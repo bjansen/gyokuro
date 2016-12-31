@@ -48,4 +48,9 @@ The `run()` function now accepts a [Status](https://modules.ceylon-lang.org/repo
 listener, that allows you to run code right after the application has been started (remember, `run()` is
 a blocking operation 😀).
 
+### Support for WebSockets
+
+It is now possible to configure [WebSockets](https://tools.ietf.org/html/rfc6455) using the `websocket` function.
+See the [WebSockets](websockets) section for more information.
+
 Next: [routes](routes).
