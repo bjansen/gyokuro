@@ -1,3 +1,6 @@
+import ceylon.http.common {
+    AbstractMethod
+}
 import ceylon.language.meta {
     annotations
 }
@@ -8,7 +11,6 @@ import ceylon.language.meta.declaration {
     ValueDeclaration
 }
 import ceylon.logging {
-    Logger,
     logger
 }
 
@@ -16,14 +18,11 @@ import net.gyokuro.core {
     ControllerAnnotation,
     RouteAnnotation
 }
-import ceylon.http.common {
-    AbstractMethod
-}
 
 shared object annotationScanner {
     
-    Logger log = logger(`module net.gyokuro.core`);
-    
+    value log = logger(`module`);
+
     shared alias Consumer => Anything(String, [Object, FunctionDeclaration], {AbstractMethod+});
     
     "Looks for controller definitions in the given [[package|pkg]].
@@ -31,10 +30,10 @@ shared object annotationScanner {
      for GET and POST methods."
     shared void scanControllersInPackage(String contextRoot, Package pkg,
         Consumer consumer = router.registerControllerRoute) {
-        
+
         value members = pkg.members<ClassDeclaration|ValueDeclaration>();
         log.trace("Scanning members in package ``pkg.name``");
-        
+
         for (member in members) {
             if (exists controller = annotations(`ControllerAnnotation`, member)) {
                 log.trace("Scanning member ``member.name`` in package ``pkg.name``");

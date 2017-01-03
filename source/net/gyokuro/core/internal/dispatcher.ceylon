@@ -63,7 +63,7 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan,
     Anything(Request, Response, Anything(Request, Response)) filter,
     TemplateRenderer<T>? renderer = null, Transformer[] transformers = []) {
     
-    value log = logger(`module net.gyokuro.core`);
+    value log = logger(`module`);
     
     Converter<out Object>[] converters = [primitiveTypesConverter, listsConverter];
     
