@@ -104,6 +104,7 @@ In addition to binding request parameters by name, gyokuro can also inject "spec
 * a `ceylon.http.server::Request`
 * a `ceylon.http.server::Response`
 * a [`net.gyokuro.core::Flash`](https://github.com/bjansen/gyokuro/blob/master/source/net/gyokuro/core/Flash.ceylon)
+* values stored in the session (see next section)
 
 You can use any name you want for these:
 
@@ -111,6 +112,26 @@ You can use any name you want for these:
     get("/special", `myHandler`);
 
 Finally, you can group handlers together in [**annotated controllers**](#annotated-controllers).
+
+### Session parameters
+
+It is possible to inject data stored in the HTTP session into parameters of a handler, using the `session` annotation:
+
+    void editProfile(session String username) {}
+
+If a parameter annotated `session` cannot be injected (the value is `null` or of the wrong type),
+gyokuro will throw a "400" error.
+
+Session parameters are equivalent to the following code:
+
+    void editProfile(Request req) {
+        value username = req.session.get("username");
+        if (is String username) {
+            // ...
+        } else {
+            halt(400);
+        }
+    }
 
 ### Handler return types
 
