@@ -16,6 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/demos" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test-source" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/modules" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -41,7 +42,11 @@
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.langtools.classfile/1.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.model/1.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: com.redhat.ceylon.module-resolver/1.3.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: commons-logging:commons-logging/1.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.rythmengine:rythm-engine/1.0.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework:spring-beans/4.3.5.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework:spring-context/4.3.5.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.springframework:spring-core/4.3.5.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Ceylon: org.thymeleaf:thymeleaf/3.0.0.BETA01" level="project" />
   </component>
 </module>

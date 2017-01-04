@@ -13,7 +13,7 @@ import net.gyokuro.core {
 
 shared test void scanClass() {
     clearRoutes();
-    annotationScanner.scanControllersInPackage("/",
+    annotationScanner.scanControllers("/",
         `package test.net.gyokuro.core.internal.testdata`);
 
     assertTrue(router.canHandlePath("/cls/func"));
@@ -27,7 +27,7 @@ shared test void scanClass() {
 
 shared test void scanPathWithSlashes() {
     clearRoutes();
-    annotationScanner.scanControllersInPackage("/",
+    annotationScanner.scanControllers("/",
         `package test.net.gyokuro.core.internal.testdata`);
 
     assertTrue(router.canHandlePath("/path/function"));
@@ -35,7 +35,7 @@ shared test void scanPathWithSlashes() {
 
 shared test void scanControllerWithoutRoute() {
     clearRoutes();
-    annotationScanner.scanControllersInPackage("/",
+    annotationScanner.scanControllers("/",
         `package test.net.gyokuro.core.internal.testdata`);
 
     assertTrue(router.canHandlePath("/func3"));
@@ -43,7 +43,7 @@ shared test void scanControllerWithoutRoute() {
 
 shared test void scanObjectController() {
     clearRoutes();
-    annotationScanner.scanControllersInPackage("/",
+    annotationScanner.scanControllers("/",
         `package test.net.gyokuro.core.internal.testdata`);
 
     assertTrue(router.canHandlePath("/obj/func4"));

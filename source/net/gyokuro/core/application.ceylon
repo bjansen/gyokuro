@@ -49,9 +49,17 @@ shared class Application<T>(
     shared String address = "0.0.0.0",
     "The port on which the server will listen."
     shared Integer port = 8080,
-    "A tuple [context root, package] used to scan [[controllers|controller]]
-        that will be associated to the given context root. See the [[bind]] function."
-    [String, Package]? controllers = null,
+    "Additional controllers in which [[route]]s will be scanned, that will be
+     associated to the given context root.
+
+     If a package is provided, gyokuro will look for classes and objects annotated
+     with the [[controller]] annotation and instantiate them automatically.
+
+     If a stream of [[Object]]s is provided, gyokuro will look for existing instances
+     annotated with [[controller]].
+
+     See also the [[bind]] function."
+    [String, Package|{Object*}]? controllers = null,
     "A tuple [filesystem folder, context root] used to serve static assets.
      See the [[serve]] function."
     [String, String]? assets = null,
@@ -181,7 +189,7 @@ shared class Application<T>(
      };
  
  "
-shared [String, Package] bind(Package pkgToScan, String context = "/") {
+shared [String, Package|{Object*}] bind(Package|{Object*} pkgToScan, String context = "/") {
     return [context, pkgToScan];
 }
 

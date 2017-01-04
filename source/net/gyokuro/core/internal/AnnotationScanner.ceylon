@@ -2,7 +2,8 @@ import ceylon.http.common {
     AbstractMethod
 }
 import ceylon.language.meta {
-    annotations
+    annotations,
+    classDeclaration
 }
 import ceylon.language.meta.declaration {
     FunctionDeclaration,
@@ -25,18 +26,27 @@ shared object annotationScanner {
 
     shared alias Consumer => Anything(String, [Object, FunctionDeclaration], {AbstractMethod+});
     
-    "Looks for controller definitions in the given [[package|pkg]].
+    "Looks for controller definitions in the given [[controllers]].
      Scanned controllers and routes will be registered in the [[router]]
      for GET and POST methods."
-    shared void scanControllersInPackage(String contextRoot, Package pkg,
+    shared void scanControllers(String contextRoot, Package|{Object*} controllers,
         Consumer consumer = router.registerControllerRoute) {
 
-        value members = pkg.members<ClassDeclaration|ValueDeclaration>();
-        log.trace("Scanning members in package ``pkg.name``");
+        <ClassDeclaration|ValueDeclaration -> Anything>[] members;
 
-        for (member in members) {
+        if (is Package controllers) {
+            members = [ for (member in controllers.members<ClassDeclaration|ValueDeclaration>())
+                        member -> null];
+            log.trace("Scanning members in package ``controllers.name``");
+        } else {
+            members = [ for (o in controllers)
+                        classDeclaration(o) -> o ];
+            log.trace("Scanning members in existing instances");
+        }
+
+        for (member -> possibleInstance in members) {
             if (exists controller = annotations(`ControllerAnnotation`, member)) {
-                log.trace("Scanning member ``member.name`` in package ``pkg.name``");
+                log.trace("Scanning member ``member.name``");
                 
                 String controllerRoute;
                 
@@ -56,7 +66,9 @@ shared object annotationScanner {
                 }
 
                 Object instance;
-                if (is ClassDeclaration member) {
+                if (exists possibleInstance) {
+                    instance = possibleInstance;
+                } else if (is ClassDeclaration member) {
                     instance = member.classApply<Object,[]>()();
                 }
                 else {

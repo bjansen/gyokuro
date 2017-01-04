@@ -59,7 +59,7 @@ import net.gyokuro.view.api {
     TemplateRenderer
 }
 
-shared class RequestDispatcher<T>([String, Package]? packageToScan,
+shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
     Anything(Request, Response, Anything(Request, Response)) filter,
     TemplateRenderer<T>? renderer = null, Transformer[] transformers = []) {
     
@@ -67,8 +67,8 @@ shared class RequestDispatcher<T>([String, Package]? packageToScan,
     
     Converter<out Object>[] converters = [primitiveTypesConverter, listsConverter];
     
-    if (exists [contextRoot, declaration] = packageToScan) {
-        annotationScanner.scanControllersInPackage(contextRoot, declaration);
+    if (exists [contextRoot, controllers] = packageToScan) {
+        annotationScanner.scanControllers(contextRoot, controllers);
     }
     
     object routerMatcher extends Matcher() {

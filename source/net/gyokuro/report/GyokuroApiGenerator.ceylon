@@ -55,7 +55,7 @@ shared class GyokuroApiGenerator(Package controllersPkg, Directory output) {
     
     shared void run() {
         print("Scanning controllers...");
-        annotationScanner.scanControllersInPackage("/", controllersPkg, addRoute);
+        annotationScanner.scanControllers("/", controllersPkg, addRoute);
         
         print("Generating report...");
         generateReport();
