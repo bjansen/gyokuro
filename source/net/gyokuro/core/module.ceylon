@@ -1,6 +1,6 @@
-"gyokuro is a framework written in Ceylon, inspired by Sinatra
+"gyokuro is a framework written in Ceylon, similar to Sinatra
  and Spark, for creating web applications with very little boilerplate.
- It is based on the Ceylon SDK and uses ceylon."
+ It is based on the Ceylon SDK and uses `ceylon.http.server`."
 native("jvm")
 module net.gyokuro.core "0.3-SNAPSHOT" {
     shared import net.gyokuro.view.api "0.3-SNAPSHOT";
