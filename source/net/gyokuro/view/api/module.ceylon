@@ -2,6 +2,6 @@
  a template engine."
 native("jvm")
 module net.gyokuro.view.api "0.3-SNAPSHOT" {
-    shared import ceylon.http.server "1.3.1";
-    shared import ceylon.interop.java "1.3.1";
+    shared import ceylon.http.server "1.3.2-SNAPSHOT";
+    shared import ceylon.interop.java "1.3.2-SNAPSHOT";
 }
