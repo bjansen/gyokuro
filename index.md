@@ -101,6 +101,8 @@ reading to get you started on a new project!
 
 ## Getting started
 
+* if you haven't already done so, grab a copy of the current 
+[Ceylon distribution](https://ceylon-lang.org/download/) or a plugin for your favorite IDE  
 * create a new Ceylon project and import gyokuro:
 ^
     module com.example.mymodule "1.0.0" {
@@ -118,6 +120,17 @@ reading to get you started on a new project!
 The above example will bootstrap a web server that runs by default on `0.0.0.0:8080`. The
 path `/hello` will be bound to a handler that takes two parameters, a `Request` and a `Response`,
 and returns a `String` containing `"Hello world"`. This string will be the response body.
+
+### Running examples
+
+The [GitHub repository](https://github.com/bjansen/gyokuro/tree/master/demos/gyokuro/demo) contains
+a few examples that show how to use gyokuro. You can run them very easily with the following commands:
+
+* `git clone https://github.com/bjansen/gyokuro.git`
+* `cd gyokuro`
+* `./ceylonb`
+* `./ceylonb compile`
+* `./ceylonb run gyokuro.demo.rest`
 
 ### Livin' on the edge
 
