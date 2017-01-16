@@ -19,6 +19,9 @@ In addition to the routes we saw before, gyokuro allows you to define **annotate
         route("/:id", {post})
         shared void modifyUser(Integer id) {}
         
+        route("/:id/changeName/:newName", {post})
+        shared void renameUser(Integer id, String newName) {}
+        
         route("/")
         shared void listUsers() {}
     }

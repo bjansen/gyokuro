@@ -38,6 +38,8 @@ Paths can contain **named parameters**:
 
     get("/hello/:who", (req, resp)
         =>  "Hello, ``req.parameter("who") else "John Doe"``!");
+    get("/hello/:who/:message", (req, resp)
+        =>  "Message to ``req.parameter("who") else "John Doe"``: ``req.parameter("message") else "?"``");
 
 Named parameters start with a colon followed by a valid lowercase identifier as defined by
 the [Ceylon specification](http://ceylon-lang.org/documentation/1.2/spec/html/lexical.html#identifiersandkeywords):
@@ -226,6 +228,9 @@ In addition to the routes we saw before, gyokuro allows you to define **annotate
         
         route("/:id", {post})
         shared void modifyUser(Integer id) {}
+        
+        route("/:id/changeName/:newName", {post})
+        shared void renameUser(Integer id, String newName) {}
         
         route("/")
         shared void listUsers() {}

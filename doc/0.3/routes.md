@@ -31,6 +31,8 @@ Paths can contain **named parameters**:
 
     get("/hello/:who", (req, resp)
         =>  "Hello, ``req.parameter("who") else "John Doe"``!");
+    get("/hello/:who/:message", (req, resp)
+        =>  "Message to ``req.parameter("who") else "John Doe"``: ``req.parameter("message") else "?"``");
 
 Named parameters start with a colon followed by a valid lowercase identifier as defined by
 the [Ceylon specification](http://ceylon-lang.org/documentation/1.3/spec/html/lexical.html#identifiersandkeywords):
