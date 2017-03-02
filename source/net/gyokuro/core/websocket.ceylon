@@ -28,6 +28,5 @@ shared abstract class WebSocketHandler() {
 
 "Registers a new web socket handler for the given [[path]]. The handler can be a simple
  'onText' function, or a more advanced [[WebSocketHandler]]."
-// TODO use WSHandler when https://github.com/ceylon/ceylon/issues/6843 is fixed
-shared void websocket(String path, WebSocketHandler|Anything(WebSocketChannel, String) handler)
+shared void websocket(String path, WSHandler handler)
         => router.registerWebSocketHandler(path, handler);
