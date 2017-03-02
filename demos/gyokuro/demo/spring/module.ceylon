@@ -1,9 +1,9 @@
 "Shows how to inject Spring beans in gyokuro controllers."
 native ("jvm")
-module gyokuro.demo.spring "0.3-SNAPSHOT" {
+module gyokuro.demo.spring "0.3" {
     import ceylon.logging "1.3.2";
 
-    import net.gyokuro.core "0.3-SNAPSHOT";
+    import net.gyokuro.core "0.3";
 
     import maven:"org.springframework:spring-core" "4.3.5.RELEASE";
     import maven:"org.springframework:spring-beans" "4.3.5.RELEASE";
