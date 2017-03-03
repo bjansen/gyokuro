@@ -101,12 +101,9 @@ shared object mimeParse {
         value params = HashMap<String,String>();
 
         for (p in parts) {
-            value subParts = p.split('='.equals);
-            value seq = subParts.sequence();
-            if (exists first = seq[0],
-                exists second = seq[1]) {
-                
-                params.put(first.trimmed, second.trimmed);
+            value seq = p.split('='.equals).sequence();
+            if (exists second = seq[1]) {
+                params.put(seq.first.trimmed, second.trimmed);
             }
         }
         
