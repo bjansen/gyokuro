@@ -29,11 +29,11 @@ It is based on the [Ceylon SDK](https://github.com/ceylon/ceylon-sdk) and uses `
 
 <div class="buttons">
     <a href="#getting-started" class="button getting-started"><span>Getting started</span></a>
-    <a href="{{ "/doc/0.2" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>
+    <a href="{{ "/doc/0.3" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>
 </div>
 
 <div class="current-version" markdown="1">
-**Current version**: [0.2 (Nov. 29, 2016)](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.2)
+**Current version**: [0.3 (Mar. 02, 2017)](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.3)
 </div>
 
 <hr>
@@ -74,7 +74,7 @@ declaration.
 <div markdown="1">
 ### Templating
 gyokuro does not ship with any particular templating engine, but it's very easy
-to plug any existing engine via the [View API](https://modules.ceylon-lang.org/repo/1/net/gyokuro/view/api/0.2/module-doc/api/index.html).
+to plug any existing engine via the [View API](https://modules.ceylon-lang.org/repo/1/net/gyokuro/view/api/0.3/module-doc/api/index.html).
 Handlers don't need to be aware of which templating engine is used, they simply call the `render`
 function with a template name and a context map.
 
@@ -94,7 +94,7 @@ function with a template name and a context map.
 
 ### Wait, there's more!
 
-For a complete description of gyokuro's features, head off to the [docs](/docs/0.2), or keep
+For a complete description of gyokuro's features, head off to the [docs](/docs/0.3), or keep
 reading to get you started on a new project!
 
 <hr>
@@ -106,7 +106,7 @@ reading to get you started on a new project!
 * create a new Ceylon project and import gyokuro:
 ^
     module com.example.mymodule "1.0.0" {
-        import net.gyokuro.core "0.2";
+        import net.gyokuro.core "0.3";
     }
   
 * write your first application:
@@ -146,14 +146,14 @@ you can build it from sources:
 
 ## Documentation
 
-The full documentation for the latest version (0.2) is available here:
+The full documentation for the latest version (0.3) is available here:
 
 <div class="buttons">
-    <a href="{{ "/doc/0.2" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>
+    <a href="{{ "/doc/0.3" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>
 </div>
 
-The full documentation for the development version (0.3-SNAPSHOT) is 
-<a href="{{ "/doc/0.3" | prepend: site.baseurl }}">also available</a>.
+The full documentation for the development version (0.4-SNAPSHOT) is 
+<a href="{{ "/doc/0.4" | prepend: site.baseurl }}">also available</a>.
 
 ## Performance
 

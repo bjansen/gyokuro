@@ -5,9 +5,9 @@ toc-start: 1
 title: "What's new in 0.3?"
 ---
 
-# gyokuro 0.3-SNAPSHOT
+# gyokuro 0.3
 {:.no_toc}
-This is the complete documentation for gyokuro 0.3-SNAPSHOT.
+This is the complete documentation for gyokuro 0.3.
 
 {% include toc.md %}
 

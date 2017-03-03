@@ -8,6 +8,10 @@ toc-start: 1
 {:.no_toc}
 This is the complete documentation for gyokuro 0.2.
 
+<div class="gotcha" markdown="1">
+You are browsing an older version of gyokuro, not the [current release](/doc/0.3).
+</div>
+
 {% include toc.md %}
 
 ## What's new in 0.2?
