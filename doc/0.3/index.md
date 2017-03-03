@@ -44,7 +44,7 @@ will be blocked. Thank you [@xkr47](https://github.com/xkr47) for your contribut
 
 ### Application status listener
 
-The `run()` function now accepts a [Status](https://modules.ceylon-lang.org/repo/1/ceylon/http/server/1.3.1/module-doc/api/Status.type.html)
+The `run()` function now accepts a [Status](https://modules.ceylon-lang.org/repo/1/ceylon/http/server/1.3.2/module-doc/api/Status.type.html)
 listener, that allows you to run code right after the application has been started (remember, `run()` is
 a blocking operation 😀).
 

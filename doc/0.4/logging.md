@@ -12,7 +12,7 @@ title: Logging
 Before starting your application, it is a good idea to set up a logger, because gyokuro
 logs useful information during startup (especially when it scans packages for annotations).
 The preferred way do to this is to use
-[ceylon.logging](https://modules.ceylon-lang.org/repo/1/ceylon/logging/1.3.1/module-doc/api/index.html):
+[ceylon.logging](https://modules.ceylon-lang.org/repo/1/ceylon/logging/1.3.2/module-doc/api/index.html):
 
     import ceylon.logging { ... }
     
