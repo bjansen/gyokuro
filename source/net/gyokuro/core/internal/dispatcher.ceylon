@@ -71,13 +71,12 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
         annotationScanner.scanControllers(contextRoot, controllers);
     }
     
-    object routerMatcher extends Matcher() {
-        shared actual Boolean matches(String path)
-                => router.canHandlePath(path);
+    object everyPath extends Matcher() {
+        shared actual Boolean matches(String path) => true;
     }
     
     shared Endpoint endpoint() {
-        return Endpoint(routerMatcher, dispatch,
+        return Endpoint(everyPath, dispatch,
             { options, get, head, post, put, delete, trace, connect, patch });
     }
     
