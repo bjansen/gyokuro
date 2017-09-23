@@ -1,72 +1,93 @@
 import ceylon.http.server {
-    Request
+    Request,
+	UploadedFile,
+	Session
+}
+import ceylon.io {
+	SocketAddress
+}
+import ceylon.http.common {
+	Method
 }
 
 "Allows adding things to a request, like values for `:named` parts of the URL."
 suppressWarnings("deprecation")
-class RequestWrapper(Request req, Map<String,String> namedParams)
+shared class RequestWrapper(Request wrappedRequest,
+	Map<String,String?> newQueryParameters = emptyMap,
+	String?()? contentTypeProvider = null,
+	SocketAddress? newDestinationAddress = null,
+	Map<String,UploadedFile?> newFiles = emptyMap,
+	Map<String,String?> newHeaders = emptyMap,
+	Method? newMethod = null,
+	String? newPath = null,
+	String? newQueryString = null,
+	String()? readCallback = null,
+	String? newRelativePath = null,
+	String? newScheme = null,
+	Session? newSession = null,
+	SocketAddress? newSourceAddress = null,
+	String? newUri = null,
+	Map<String,String?> newFormParameters = emptyMap,
+	Byte[]()? readBinaryCallback = null,
+	String?()? matchedTemplateProvider = null,
+	Map<String,String?> newPathParameters = emptyMap)
         satisfies Request {
     
-    // IMPORTANT STUFF
-
-    shared actual String? queryParameter(String name) {
-        if (namedParams.defines(name)) {
-            return namedParams.get(name);
+    T? from<T>(Map<String,T?> map, T?(String) methodRef, String name) => if (map.defines(name)) then map.get(name) else methodRef(name);
+    
+    T[] sequence<T>(Map<String,T?> map, T[](String) methodRef, String name) {
+        if (map.defines(name)) {
+            return if (is T val = map.get(name)) then [val] else [];
         }
-        return req.queryParameter(name);
+        return  methodRef(name);
     }
+                 
+    queryParameter(String name) => from(newQueryParameters, wrappedRequest.queryParameter, name);
 
-    shared actual String[] queryParameters(String name) {
-        if (namedParams.defines(name)) {
-            assert (exists val = namedParams.get(name));
-            return [val];
-        }
-        return req.queryParameters(name);
-    }
+    queryParameters(String name) =>  sequence(newQueryParameters, wrappedRequest.queryParameters, name);
 
-    // DELEGATION
+    contentType => if (exists contentTypeProvider) then contentTypeProvider() else wrappedRequest.contentType;
+    
+    destinationAddress => newDestinationAddress else wrappedRequest.destinationAddress;
 
-    contentType => req.contentType;
+    file(String name) => from(newFiles, wrappedRequest.file, name);
     
-    destinationAddress => req.destinationAddress;
-    
-    file(String name) => req.file(name);
-    
-    files(String name) => req.files(name);
-    
-    header(String name) => req.header(name);
-    
-    headers(String name) => req.headers(name);
-    
-    method => req.method;
-    
-    path => req.path;
-    
-    queryString => req.queryString;
-    
-    read() => req.read();
-    
-    relativePath => req.relativePath;
-    
-    scheme => req.scheme;
-    
-    session => req.session;
-    
-    sourceAddress => req.sourceAddress;
-    
-    uri => req.uri;
+    files(String name) => sequence(newFiles, wrappedRequest.files, name);
 
-    formParameter(String name) => req.formParameter(name);
-
-    formParameters(String name) => req.formParameters(name);
-
-    parameter(String name, Boolean forceFormParsing) => req.parameter(name, forceFormParsing);
-
-    parameters(String name, Boolean forceFormParsing) => req.parameters(name, forceFormParsing);
-
-    readBinary() => req.readBinary();
+    header(String name) => from(newHeaders, wrappedRequest.header, name);
     
-    matchedTemplate => req.matchedTemplate;
+    headers(String name) =>  sequence(newHeaders, wrappedRequest.headers, name);
     
-    pathParameter(String name) => req.pathParameter(name);
+    method => newMethod else wrappedRequest.method;
+    
+    path => newPath else wrappedRequest.path;
+    
+    queryString => newQueryString else wrappedRequest.queryString;
+    
+    read() => if (exists readCallback) then readCallback() else wrappedRequest.read();
+    
+    relativePath => newRelativePath else wrappedRequest.relativePath;
+    
+    scheme => newScheme else wrappedRequest.scheme;
+    
+    session => newSession else wrappedRequest.session;
+    
+    sourceAddress => newSourceAddress else wrappedRequest.sourceAddress;
+    
+    uri => newUri else wrappedRequest.uri;
+
+    formParameter(String name) => from(newFormParameters, wrappedRequest.formParameter, name);
+    
+    formParameters(String name) =>  sequence(newFormParameters, wrappedRequest.formParameters, name);
+
+    parameter(String name, Boolean forceFormParsing) => wrappedRequest.parameter(name, forceFormParsing);	// deprecated so no rewriting
+
+    parameters(String name, Boolean forceFormParsing) => wrappedRequest.parameters(name, forceFormParsing);	// deprecated so no rewriting
+
+    readBinary() => if (exists readBinaryCallback) then readBinaryCallback() else wrappedRequest.readBinary();
+    
+    matchedTemplate => if (exists matchedTemplateProvider) then matchedTemplateProvider() else wrappedRequest.matchedTemplate;
+
+    pathParameter(String name) => from(newPathParameters, wrappedRequest.pathParameter, name);
+
 }

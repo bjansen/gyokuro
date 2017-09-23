@@ -88,7 +88,6 @@ shared class Application<T>(
         }
         value endpoints = ArrayList<HttpEndpoint|WebSocketEndpoint>();
         
-        endpoints.add(RequestDispatcher(controllers, filter, renderer, transformers).endpoint());
         if (exists modulesPath) {
             endpoints.add(RepositoryEndpoint(modulesPath));
         }
@@ -121,6 +120,8 @@ shared class Application<T>(
                 onBinary = wsHandler.onBinary;
             });
         }
+        
+        endpoints.add(RequestDispatcher(controllers, filter, renderer, transformers).endpoint());
         
         value s = server = newServer(endpoints);
         s.addListener(statusListener);
