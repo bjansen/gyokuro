@@ -1,9 +1,11 @@
 native("jvm")
 module test.net.gyokuro.core "0.4-SNAPSHOT" {
+    value ceylonVersion = "1.3.3";
+
     import net.gyokuro.core "0.4-SNAPSHOT";
-    import ceylon.test "1.3.2";
-    import ceylon.logging "1.3.2";
-    import ceylon.html "1.3.2";
-    import ceylon.http.client "1.3.2";
-    import ceylon.uri "1.3.2";
+    import ceylon.test ceylonVersion;
+    import ceylon.logging ceylonVersion;
+    import ceylon.html ceylonVersion;
+    import ceylon.http.client ceylonVersion;
+    import ceylon.uri ceylonVersion;
 }
