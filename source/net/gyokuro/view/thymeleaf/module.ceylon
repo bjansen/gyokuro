@@ -1,8 +1,8 @@
 "An extension of gyokuro that adds support for 
  [Thymeleaf](http://www.thymeleaf.org/)."
 native("jvm")
-module net.gyokuro.view.thymeleaf "0.4-SNAPSHOT" {
-    shared import net.gyokuro.view.api "0.4-SNAPSHOT";
+module net.gyokuro.view.thymeleaf "0.3.1" {
+    shared import net.gyokuro.view.api "0.3.1";
     shared import maven:"org.thymeleaf:thymeleaf" "3.0.0.BETA01";
     
     import java.base "7";
