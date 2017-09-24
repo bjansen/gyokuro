@@ -2,16 +2,20 @@
 layout: default
 useToc: true
 toc-start: 1
-title: "What's new in 0.3?"
+title: "What's new in 0.3.1?"
 ---
 
-# gyokuro 0.3
+# gyokuro 0.3.1
 {:.no_toc}
-This is the complete documentation for gyokuro 0.3.
+This is the complete documentation for gyokuro 0.3.1.
 
 {% include toc.md %}
 
 ## {{page.title}}
+
+### Compatibility with Ceylon 1.3.3
+
+gyokuro is compatible with Ceylon 1.3.3 applications.
 
 ### Backward incompatible changes
 

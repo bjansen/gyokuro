@@ -33,7 +33,7 @@ It is based on the [Ceylon SDK](https://github.com/ceylon/ceylon-sdk) and uses `
 </div>
 
 <div class="current-version" markdown="1">
-**Current version**: [0.3 (Mar. 02, 2017)](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.3)
+**Current version**: [0.3.1 (Sept. 24, 2017)](https://herd.ceylon-lang.org/modules/net.gyokuro.core/0.3.1)
 </div>
 
 <hr>
@@ -74,7 +74,7 @@ declaration.
 <div markdown="1">
 ### Templating
 gyokuro does not ship with any particular templating engine, but it's very easy
-to plug any existing engine via the [View API](https://modules.ceylon-lang.org/repo/1/net/gyokuro/view/api/0.3/module-doc/api/index.html).
+to plug any existing engine via the [View API](https://modules.ceylon-lang.org/repo/1/net/gyokuro/view/api/0.3.1/module-doc/api/index.html).
 Handlers don't need to be aware of which templating engine is used, they simply call the `render`
 function with a template name and a context map.
 
@@ -106,7 +106,7 @@ reading to get you started on a new project!
 * create a new Ceylon project and import gyokuro:
 ^
     module com.example.mymodule "1.0.0" {
-        import net.gyokuro.core "0.3";
+        import net.gyokuro.core "0.3.1";
     }
   
 * write your first application:
@@ -146,7 +146,7 @@ you can build it from sources:
 
 ## Documentation
 
-The full documentation for the latest version (0.3) is available here:
+The full documentation for the latest version (0.3.1) is available here:
 
 <div class="buttons">
     <a href="{{ "/doc/0.3" | prepend: site.baseurl }}" class="button doc-link"><span>Full documentation</span></a>

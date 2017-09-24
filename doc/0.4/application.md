@@ -78,7 +78,7 @@ have a route that starts with the same path as static assets:
 
 In addition to static assets, gyokuro can also 
 [serve Ceylon modules](http://ceylon-lang.org/blog/2016/02/15/ceylon-browser-again/) to the browser,
-using a [RepositoryEndPoint](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.3.2/module-doc/api/http/server/endpoints/RepositoryEndpoint.type.html).
+using a [RepositoryEndPoint](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.3.3/module-doc/api/http/server/endpoints/RepositoryEndpoint.type.html).
 
     Application {
         modulesPath = "/modules"; 

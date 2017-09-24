@@ -57,8 +57,8 @@ because they use a different verb:
 ### Handlers
  
 In their simplest forms, handlers are functions that take two parameters, 
-a [Request](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.3.2/module-doc/api/http/server/Request.type.html)
-and a [Response](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.3.2/module-doc/api/http/server/Response.type.html)
+a [Request](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.3.3/module-doc/api/http/server/Request.type.html)
+and a [Response](https://modules.ceylon-lang.org/repo/1/ceylon/net/1.3.3/module-doc/api/http/server/Response.type.html)
  
     String myHandler(Request req, Response resp) {
         return "Hello";
@@ -75,7 +75,7 @@ number of parameters to inject GET/POST data by name:
 
 In this case, gyokuro will try to find two parameters named `username` and `password` in the `Request`,
 and automatically pass them to the handler. Note that the route is expecting a 
-[function model](https://modules.ceylon-lang.org/repo/1/ceylon/language/1.3.2/module-doc/api/meta/model/Function.type.html)
+[function model](https://modules.ceylon-lang.org/repo/1/ceylon/language/1.3.3/module-doc/api/meta/model/Function.type.html)
 instead of a simple reference to a function. This is because we need to inspect its signature in order
 to bind parameters correctly.
 
@@ -138,7 +138,7 @@ Session parameters are equivalent to the following code:
 ### Handler return types
 
 In addition to `String`s, handlers can return instances of 
-[ceylon.html](https://modules.ceylon-lang.org/repo/1/ceylon/html/1.3.2/module-doc/api/index.html) nodes
+[ceylon.html](https://modules.ceylon-lang.org/repo/1/ceylon/html/1.3.3/module-doc/api/index.html) nodes
 that will automatically be converted to Strings:
 
     get("/html", (req, resp) =>
