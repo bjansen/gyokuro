@@ -1,6 +1,6 @@
 native("jvm")
 module net.gyokuro.report "0.4-SNAPSHOT" {
-    value ceylonVersion = "1.3.3";
+    value ceylonVersion = "1.3.4-SNAPSHOT";
 
     shared import ceylon.file ceylonVersion;
     

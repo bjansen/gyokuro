@@ -1,6 +1,6 @@
 native("jvm")
 module test.net.gyokuro.core "0.4-SNAPSHOT" {
-    value ceylonVersion = "1.3.3";
+    value ceylonVersion = "1.3.4-SNAPSHOT";
 
     import net.gyokuro.core "0.4-SNAPSHOT";
     import ceylon.test ceylonVersion;

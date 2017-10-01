@@ -1,14 +1,15 @@
 import ceylon.http.server {
     Response
 }
-import ceylon.interop.java {
-    javaAnnotationClass
-}
 import ceylon.logging {
     trace,
     addLogWriter,
     writeSimpleLog,
     defaultPriority
+}
+
+import java.lang {
+    Types
 }
 
 import net.gyokuro.core {
@@ -38,7 +39,7 @@ shared void run() {
 
     print("Starting gyokuro application");
 
-    value controllerAnnotation = javaAnnotationClass<ControllerAnnotation>();
+    value controllerAnnotation = Types.classForAnnotationType<ControllerAnnotation>();
     value controllers = [*springContext.getBeansWithAnnotation(controllerAnnotation).values()];
 
     Application {
@@ -56,14 +57,14 @@ component controller class MyController() {
     "
     late autowired IService service;
 
-    route("/hello")
+    route ("/hello")
     shared void hello(Response resp, String who = "world") {
         resp.writeString(service.greet(who));
     }
 }
 
 interface IService {
-    shared formal String greet(String who);
+    shared formal String greet(String who) ;
 }
 
 "A Spring bean defining a simple service."

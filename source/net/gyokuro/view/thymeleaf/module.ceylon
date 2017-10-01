@@ -6,5 +6,5 @@ module net.gyokuro.view.thymeleaf "0.4-SNAPSHOT" {
     shared import maven:"org.thymeleaf:thymeleaf" "3.0.0.BETA01";
     
     import java.base "7";
-    import ceylon.interop.java "1.3.3";
+    import ceylon.interop.java "1.3.4-SNAPSHOT";
 }

@@ -3,10 +3,10 @@ import ceylon.http.server {
 }
 
 "Allows adding things to a request, like values for `:named` parts of the URL."
-suppressWarnings("deprecation")
+suppressWarnings ("deprecation")
 class RequestWrapper(Request req, Map<String,String> namedParams)
         satisfies Request {
-    
+
     // IMPORTANT STUFF
 
     shared actual String? queryParameter(String name) {
@@ -27,33 +27,33 @@ class RequestWrapper(Request req, Map<String,String> namedParams)
     // DELEGATION
 
     contentType => req.contentType;
-    
+
     destinationAddress => req.destinationAddress;
-    
+
     file(String name) => req.file(name);
-    
+
     files(String name) => req.files(name);
-    
+
     header(String name) => req.header(name);
-    
+
     headers(String name) => req.headers(name);
-    
+
     method => req.method;
-    
+
     path => req.path;
-    
+
     queryString => req.queryString;
-    
+
     read() => req.read();
-    
+
     relativePath => req.relativePath;
-    
+
     scheme => req.scheme;
-    
+
     session => req.session;
-    
+
     sourceAddress => req.sourceAddress;
-    
+
     uri => req.uri;
 
     formParameter(String name) => req.formParameter(name);
@@ -65,8 +65,15 @@ class RequestWrapper(Request req, Map<String,String> namedParams)
     parameters(String name, Boolean forceFormParsing) => req.parameters(name, forceFormParsing);
 
     readBinary() => req.readBinary();
-    
+
     matchedTemplate => req.matchedTemplate;
-    
+
     pathParameter(String name) => req.pathParameter(name);
+
+    locale => req.locale;
+
+    locales => req.locales;
+
+    requestCharset => req.requestCharset;
+
 }

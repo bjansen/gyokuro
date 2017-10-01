@@ -3,7 +3,8 @@ import ceylon.http.server {
     Response
 }
 import java.lang {
-    JString=String
+    JString=String,
+    Types
 }
 import java.util {
     JMap=Map,
@@ -11,7 +12,6 @@ import java.util {
 }
 import ceylon.interop.java {
     JavaList,
-    javaString,
     JavaIterable
 }
 
@@ -51,7 +51,7 @@ shared abstract class JavaTemplateRenderer(contextEnhancer = noop)
             else if (is Iterable<> val) then JavaIterable(val)
             else val;
             
-            result.put(javaString(key), javaVal else null);
+            result.put(Types.nativeString(key), javaVal else null);
         }
         
         return result;

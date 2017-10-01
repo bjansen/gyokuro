@@ -117,9 +117,7 @@ shared object router {
     }
     
     Node findOrCreateNode(Node root, {String*} path) {
-        return path.fold(root)(
-            (node, nosubPath) => node.findOrCreateChild(nosubPath)
-        );
+        return path.fold(root, (node, nosubPath) => node.findOrCreateChild(nosubPath));
     }
     
     shared void clear() {
