@@ -23,6 +23,9 @@ import ceylon.http.server {
     Matcher,
     UploadedFile
 }
+import ceylon.interop.java {
+    createJavaObjectArray
+}
 import ceylon.language.meta {
     classDeclaration,
     type
@@ -41,6 +44,13 @@ import ceylon.language.meta.model {
 }
 import ceylon.logging {
     logger
+}
+
+import java.lang {
+    Types
+}
+import java.lang.reflect {
+    Proxy
 }
 
 import net.gyokuro.core {
@@ -62,25 +72,25 @@ import net.gyokuro.view.api {
 shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
     Anything(Request, Response, Anything(Request, Response)) filter,
     TemplateRenderer<T>? renderer = null, Transformer[] transformers = []) {
-    
+
     value log = logger(`module`);
-    
+
     Converter<out Object>[] converters = [primitiveTypesConverter, listsConverter];
-    
+
     if (exists [contextRoot, controllers] = packageToScan) {
         annotationScanner.scanControllers(contextRoot, controllers);
     }
-    
+
     object routerMatcher extends Matcher() {
         shared actual Boolean matches(String path)
                 => router.canHandlePath(path);
     }
-    
+
     shared Endpoint endpoint() {
         return Endpoint(routerMatcher, dispatch,
             { options, get, head, post, put, delete, trace, connect, patch });
     }
-    
+
     "Dispatch the incoming request to the matching method."
     void dispatch(Request req, Response resp) {
         filter(req, resp, (req, resp) {
@@ -92,8 +102,15 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
                     respond(405, "Method Not Allowed", resp);
                     return;
                 }
-                value enhancedReq = if (namedParams.empty)
-                then req else RequestWrapper(req, namedParams);
+                assert(is Request enhancedReq =
+                        if (namedParams.empty)
+                        then req
+                        else Proxy.newProxyInstance(
+                            Types.classForType<Request>().classLoader,
+                            createJavaObjectArray {Types.classForType<Request>()},
+                            RequestWrapper(req, namedParams)
+                        )
+                );
 
                 if (is [Object?, FunctionDeclaration] handler) {
                     dispatchToController(enhancedReq, resp, handler);
@@ -105,15 +122,15 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
             }
         });
     }
-    
+
     void dispatchToController(Request req, Response resp, [Object?, FunctionDeclaration] handler) {
         value func = handler[1];
         value args = HashMap<String,Anything>();
-        
+
         try {
             for (param in func.parameterDeclarations) {
                 value arg = bindParameter(param, req, resp);
-                
+
                 if (exists arg) {
                     args.put(param.name, arg);
                 } else if (param.defaulted) {
@@ -129,7 +146,7 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
             respond(400, "Bad Request", resp);
             return;
         }
-        
+
         try {
             value method = if (exists o = handler[0])
             then func.memberApply<>(type(o)).bind(o)
@@ -146,7 +163,7 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
             respond(500, "Internal Server Error", resp);
         }
     }
-    
+
     Boolean isOptional(FunctionOrValueDeclaration param) {
         if (is OpenUnion paramType = param.openType, paramType.caseTypes.size == 2) {
             if (exists nullType = paramType.caseTypes.find((elem) => elem == `class Null`.openType)) {
@@ -155,17 +172,17 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
         }
         return false;
     }
-    
+
     OpenType getNonOptionalType(FunctionOrValueDeclaration param) {
         assert (is OpenUnion paramType = param.openType);
-        
+
         value nonOptionalType = paramType.caseTypes.find((elem) => elem != `class Null`.openType);
-        
+
         assert (exists nonOptionalType);
-        
+
         return nonOptionalType;
     }
-    
+
     Anything? bindParameter(FunctionOrValueDeclaration param, Request req, Response resp) {
         if (is ValueDeclaration param) {
             if (param.openType == `interface Response`.openType) {
@@ -180,14 +197,14 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
                 return bindRequestParameter(param, req);
             }
         }
-        
+
         return null;
     }
-    
+
     Anything? bindSessionValue(ValueDeclaration param, Request req) {
         if (exists val = req.session.get(param.name)) {
             value valType = classDeclaration(val).qualifiedName;
-            
+
             if (valType == param.openType.string) {
                 return val;
             } else if (is String val) {
@@ -200,9 +217,9 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
         }
         return null;
     }
-    
+
     Anything? bindRequestParameter(ValueDeclaration param, Request req) {
-        
+
         if (exists val = getValueFromRequest(req, param)) {
             return convertParameter(param, val);
         }
@@ -210,13 +227,13 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
         if (listsConverter.supports(param.openType)) {
             return listsConverter.convert(param.openType, []);
         }
-        
+
         // Try to deserialize using a Transformer
         if (exists contentType = req.contentType,
             is OpenClassType ot = param.openType,
             exists tr = transformers.find((t) => t.contentTypes.contains(contentType)),
             exists meth = `Transformer`.getMethod<>("deserialize", ot.declaration.apply<>())) {
-        
+
             try {
                 return meth.bind(tr).apply(req.read());
             } catch (Exception e) {
@@ -224,21 +241,21 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
                                         ``param.qualifiedName``", e);
             }
         }
-        
+
         return null;
     }
-    
+
     Anything getValueFromRequest(Request req, ValueDeclaration decl) {
         value targetType = if (isOptional(decl))
         then getNonOptionalType(decl)
         else decl.openType;
-        
+
         if (targetType == `UploadedFile`.declaration.openType) {
             return req.file(decl.name);
         } else if (listsConverter.supports(targetType)) {
             if (exists typeArg = listsConverter.getTypeArgument(targetType),
                 typeArg == `UploadedFile`.declaration.openType) {
-                
+
                 return req.files(decl.name);
             }
 
@@ -249,10 +266,10 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
         return req.queryParameter(decl.name)
         else req.formParameter(decl.name);
     }
-    
+
     Anything convertParameter(ValueDeclaration param, Object val) {
         value targetType = if (isOptional(param)) then getNonOptionalType(param) else param.openType;
-        
+
         for (converter in converters) {
             if (converter.supports(targetType)) {
                 if (is String[] val, is MultiConverter converter) {
@@ -262,11 +279,11 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
                 }
             }
         }
-        
+
         throw BindingException("Cannot bind parameter ``param.name``: \
                                       no converter found for type ``param.openType``");
     }
-    
+
     void writeResult(Anything result, Request req, Response resp) {
         if (is AnyTemplate<T> result) {
             if (is TemplateRenderer<T> renderer) {
@@ -296,29 +313,29 @@ shared class RequestDispatcher<T>([String, Package|{Object*}]? packageToScan,
 
     [Transformer, String]? findTransformerFor(Request req) {
         value accept = req.header("Accept") else "*";
-        
+
         for (tr in transformers) {
             if (exists match = mimeParse.bestMatch(tr.contentTypes, accept)) {
                 return [tr, match];
             }
         }
-        
+
         return null;
     }
-    
+
     void respond(Integer code, String? message, Response resp) {
         resp.status = code;
         resp.writeString("<html><head><title>Error</title></head><body>"
                     + code.string + " - " + (message else "") + "</body></html>");
     }
-    
+
     // Checks for HTML nodes without having a hardcoded dependency on `ceylon.html`
     Boolean extendsHtmlNode(Object result)
             => modelExtendsHtmlNode(type(result).extendedType);
-    
+
     Boolean modelExtendsHtmlNode(ClassModel<Anything,Nothing>? extended) {
         value node = "ceylon.html::Node";
-        
+
         if (exists extended) {
             return extended.declaration.qualifiedName == node
                     || modelExtendsHtmlNode(extended.extendedType);

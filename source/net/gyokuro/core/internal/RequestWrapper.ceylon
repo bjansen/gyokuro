@@ -2,78 +2,44 @@ import ceylon.http.server {
     Request
 }
 
+import java.lang {
+    JString=String,
+    ObjectArray
+}
+import java.lang.reflect {
+    InvocationHandler,
+    Method
+}
+
 "Allows adding things to a request, like values for `:named` parts of the URL."
-suppressWarnings ("deprecation")
 class RequestWrapper(Request req, Map<String,String> namedParams)
-        satisfies Request {
+        satisfies InvocationHandler {
 
-    // IMPORTANT STUFF
+    shared actual Object? invoke(Object proxy, Method method, ObjectArray<Object>? args) {
+        if (method.name == "queryParameter", exists args, args.size == 1, is JString arg = args[0]) {
+            return queryParameter(req, arg.string);
+        }
+        if (method.name == "queryParameters", exists args, args.size == 1, is JString arg = args[0]) {
+            return queryParameters(req, arg.string);
+        }
 
-    shared actual String? queryParameter(String name) {
+        return if (exists args)
+        then method.invoke(req,  *args)
+        else method.invoke(req);
+    }
+
+    shared String? queryParameter(Request req, String name) {
         if (namedParams.defines(name)) {
             return namedParams.get(name);
         }
         return req.queryParameter(name);
     }
 
-    shared actual String[] queryParameters(String name) {
+    shared String[] queryParameters(Request req, String name) {
         if (namedParams.defines(name)) {
             assert (exists val = namedParams.get(name));
             return [val];
         }
         return req.queryParameters(name);
     }
-
-    // DELEGATION
-
-    contentType => req.contentType;
-
-    destinationAddress => req.destinationAddress;
-
-    file(String name) => req.file(name);
-
-    files(String name) => req.files(name);
-
-    header(String name) => req.header(name);
-
-    headers(String name) => req.headers(name);
-
-    method => req.method;
-
-    path => req.path;
-
-    queryString => req.queryString;
-
-    read() => req.read();
-
-    relativePath => req.relativePath;
-
-    scheme => req.scheme;
-
-    session => req.session;
-
-    sourceAddress => req.sourceAddress;
-
-    uri => req.uri;
-
-    formParameter(String name) => req.formParameter(name);
-
-    formParameters(String name) => req.formParameters(name);
-
-    parameter(String name, Boolean forceFormParsing) => req.parameter(name, forceFormParsing);
-
-    parameters(String name, Boolean forceFormParsing) => req.parameters(name, forceFormParsing);
-
-    readBinary() => req.readBinary();
-
-    matchedTemplate => req.matchedTemplate;
-
-    pathParameter(String name) => req.pathParameter(name);
-
-    locale => req.locale;
-
-    locales => req.locales;
-
-    requestCharset => req.requestCharset;
-
 }
